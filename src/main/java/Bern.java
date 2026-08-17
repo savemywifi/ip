@@ -1,7 +1,11 @@
 import java.util.Scanner;
 
 public class Bern {
+    // message string-related constants
+    /** Line that bookends every message */
     private static final String MESSAGE_LINE = "____________________________________\n";
+
+    /** Constants for chatbot identity */
     private static final String CHATBOT_BANNER = " ____                  \n"
             + "|  _ \\                 \n"
             + "| |_) | ___ _ __ _ __  \n"
@@ -13,14 +17,22 @@ public class Bern {
             + MESSAGE_LINE
             + "> Hello! I'm %s.\n"
             + "> What can I do for you?\n";
+
+    /** keywords for chatbot commands */
     private static final String KEYWORD_EXIT = "bye";
+    private static final String KEYWORD_LIST_TASKS = "list";
+
+    /** task-related variables */
+    private static String[] tasks = new String[100];
+    private static int taskCount = 0;
+
     /**
      * Returns greeting message as a String.
      *
      * @return Greeting message to the user.
      */
-    private static String getGreetingMessage() {
-        return MESSAGE_LINE + String.format(GREETING_TEMPLATE, CHATBOT_BANNER, CHATBOT_NAME) + MESSAGE_LINE;
+    private static void greetUser() {
+        System.out.print(MESSAGE_LINE + String.format(GREETING_TEMPLATE, CHATBOT_BANNER, CHATBOT_NAME) + MESSAGE_LINE);
     }
 
     /**
@@ -28,8 +40,8 @@ public class Bern {
      *
      * @return Exit message to the user.
      */
-    private static String getExitMessage() {
-        return "> Bye. Hope to see you again soon!\n" + MESSAGE_LINE + MESSAGE_LINE;
+    private static void exitBot() {
+        System.out.print("> Bye. Hope to see you again soon!\n" + MESSAGE_LINE + MESSAGE_LINE);
     }
 
     /**
@@ -59,10 +71,44 @@ public class Bern {
         System.out.print("> " + msg + "\n" + MESSAGE_LINE);
     }
 
+    /**
+     * Adds the given message to a list of text, then prints the action
+     *
+     * @param task The message to add
+     */
+    private static void addTask(String task) {
+        if (taskCount == tasks.length) {
+            System.out.print("> No more tasks can be added.\n" + MESSAGE_LINE);
+            return;
+        }
+
+        tasks[taskCount++] = task;
+
+        System.out.print("> added: " + task + "\n" + MESSAGE_LINE);
+    }
+
+    /**
+     * Lists the stored tasks in the standard output
+     */
+    private static void listTasks() {
+        if (taskCount <= 0) {
+            System.out.print("> You have no tasks.\n" + MESSAGE_LINE);
+            return;
+        }
+
+        System.out.println("> Here are your current tasks: ");
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < taskCount; i++) {
+            sb.append(String.format("%d. %s\n", i + 1, tasks[i]));
+        }
+        sb.append(MESSAGE_LINE);
+        System.out.println(sb.toString());
+    }
+
 
     public static void main(String[] args) {
-        System.out.print(getGreetingMessage());
-
+        greetUser();
         Scanner sc = new Scanner(System.in);
 
         while (true) {
@@ -70,12 +116,14 @@ public class Bern {
 
             if (input.equalsIgnoreCase(KEYWORD_EXIT)) {
                 break;
+            } else if (input.equalsIgnoreCase(KEYWORD_LIST_TASKS)) {
+                listTasks();
+            } else {
+                addTask(input);
             }
-
-            echoMessage(input);
         }
 
         sc.close();
-        System.out.print(getExitMessage());
+        exitBot();
     }
 }
