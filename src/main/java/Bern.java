@@ -1,7 +1,6 @@
 public class Bern {
-
     private static final String messageLine = "____________________________________\n";
-    public static final String chatbotBanner = " ____                  \n"
+    private static final String chatbotBanner = " ____                  \n"
             + "|  _ \\                 \n"
             + "| |_) | ___ _ __ _ __  \n"
             + "|  _ < / _ \\ '__| '_ \\ \n"
