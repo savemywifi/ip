@@ -40,9 +40,14 @@ public class Bern {
      * @return Received input, stripped of whitespace
      */
     private static String promptForInput(Scanner sc) {
-        String input = sc.nextLine();
+        String input = "";
+
+        while (input.length() <= 0) {
+            input = sc.nextLine().strip();
+        }
+
         System.out.print(MESSAGE_LINE);
-        return input.strip();
+        return input;
     }
 
     /**
