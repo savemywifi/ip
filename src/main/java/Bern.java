@@ -25,16 +25,25 @@ public class Bern {
     private static int taskCount = 0;
 
     /**
+     * Prints a message to the standard output, appended with a message line
+     *
+     * @param msg The message to be printed
+     */
+    private static void printMessage(String msg) {
+        System.out.print(msg + "\n" + MESSAGE_LINE);
+    }
+
+    /**
      * Returns greeting message as a String.
      *
      * @return Greeting message to the user.
      */
     private static void greetUser() {
-        String GREETING_TEMPLATE = "%s\n"
-                + MESSAGE_LINE
-                + "> Hello! I'm %s.\n"
-                + "> What can I do for you?\n";
-        System.out.print(MESSAGE_LINE + String.format(GREETING_TEMPLATE, CHATBOT_BANNER, CHATBOT_NAME) + MESSAGE_LINE);
+        String GREETING_TEMPLATE = "> Hello! I'm %s.\n"
+                + "> What can I do for you?";
+        System.out.print(MESSAGE_LINE);
+        printMessage(CHATBOT_BANNER);
+        printMessage(String.format(GREETING_TEMPLATE, CHATBOT_NAME));
     }
 
     /**
@@ -43,7 +52,8 @@ public class Bern {
      * @return Exit message to the user.
      */
     private static void exitBot() {
-        System.out.print("> Bye. Hope to see you again soon!\n" + MESSAGE_LINE + MESSAGE_LINE);
+        printMessage("> Bye. Hope to see you again soon!");
+        System.out.print(MESSAGE_LINE);
     }
 
     /**
@@ -56,7 +66,7 @@ public class Bern {
     private static String promptForInput(Scanner sc) {
         String input = "";
 
-        while (input.length() <= 0) {
+        while (input.isEmpty()) {
             input = sc.nextLine().strip();
         }
 
@@ -70,7 +80,7 @@ public class Bern {
      * @param msg The message to echo
      */
     private static void echoMessage(String msg) {
-        System.out.print("> " + msg + "\n" + MESSAGE_LINE);
+        printMessage("> " + msg);
     }
 
     /**
@@ -80,13 +90,13 @@ public class Bern {
      */
     private static void addTask(String taskName) {
         if (taskCount == tasks.length) {
-            System.out.print("> No more tasks can be added.\n" + MESSAGE_LINE);
+            printMessage("> No more tasks can be added.\n");
             return;
         }
 
         tasks[taskCount++] = new Task(taskName);
 
-        System.out.print("> added: " + taskName + "\n" + MESSAGE_LINE);
+        printMessage("> added: " + taskName);
     }
 
     /**
@@ -94,18 +104,17 @@ public class Bern {
      */
     private static void listTasks() {
         if (taskCount <= 0) {
-            System.out.print("> You have no tasks.\n" + MESSAGE_LINE);
+            printMessage("> You have no tasks.");
             return;
         }
 
-        System.out.println("> Here are your current tasks: ");
+        System.out.print("> Here are your current tasks: ");
 
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < taskCount; i++) {
-            sb.append(String.format("%d. %s\n", i + 1, tasks[i]));
+            sb.append(String.format("\n%d. %s", i + 1, tasks[i]));
         }
-        sb.append(MESSAGE_LINE);
-        System.out.print(sb.toString());
+        printMessage(sb.toString());
     }
 
     public static void main(String[] args) {
@@ -119,91 +128,77 @@ public class Bern {
             switch (inputTokens[0].toLowerCase()) {
                 case KEYWORD_EXIT:
                     if (inputTokens.length != 1) {
-                        System.out.print(String.format("Incorrect usage of %s. Expected: %s\n" + MESSAGE_LINE, KEYWORD_EXIT, KEYWORD_EXIT));
+                        printMessage(String.format("Incorrect usage of %s. Expected: %s", KEYWORD_EXIT, KEYWORD_EXIT));
                         break;
                     }
                     isReadingInput = false;
                     break;
                 case KEYWORD_LIST_TASKS:
                     if (inputTokens.length != 1) {
-                        System.out.print(String.format("Incorrect usage of %s. Expected: %s\n" + MESSAGE_LINE, KEYWORD_LIST_TASKS, KEYWORD_LIST_TASKS));
+                        printMessage(String.format("Incorrect usage of %s. Expected: %s", KEYWORD_LIST_TASKS, KEYWORD_LIST_TASKS));
                         break;
                     }
                     listTasks();
                     break;
                 case KEYWORD_TASK_MARK:
                     if (inputTokens.length != 2) {
-                        System.out.print(String.format("Incorrect usage of %s. Expected: %s [integer]\n" + MESSAGE_LINE, KEYWORD_TASK_MARK, KEYWORD_TASK_MARK));
+                        printMessage(String.format("Incorrect usage of %s. Expected: %s [integer]", KEYWORD_TASK_MARK, KEYWORD_TASK_MARK));
                         break;
                     }
                     try {
                         int taskIndex = Integer.parseInt(inputTokens[1]);
 
                         if (taskCount == 0) {
-                            System.out.print(String.format("There are no tasks to mark.\n" + MESSAGE_LINE));
+                            printMessage(String.format("There are no tasks to mark."));
                             break;
                         }
 
                         if (taskIndex < 1 || taskIndex > taskCount) {
-                            System.out.print(String.format("Given task number must be from %d to %d\n" + MESSAGE_LINE, 1, taskCount));
+                            printMessage(String.format("Given task number must be from %d to %d", 1, taskCount));
                             break;
                         }
 
                         Task targetTask = tasks[taskIndex - 1];
                         if (targetTask.isDone()) {
-                            System.out.print(String.format("The following task is already marked as done:\n%s\n%s",
-                                    targetTask,
-                                    MESSAGE_LINE
-                            ));
+                            printMessage("The following task is already marked as done:\n" + targetTask);
                             break;
                         }
 
-                        tasks[taskIndex - 1].setDone(true);
-
-                        System.out.print(String.format("Nice! I've marked this task as done:\n%s\n%s",
-                                tasks[taskIndex - 1],
-                                MESSAGE_LINE
-                        ));
+                        targetTask.setDone(true);
+                        printMessage("Nice! I've marked this task as done:\n" + targetTask);
 
                     } catch (NumberFormatException e) {
-                        System.out.print(String.format("Argument after %s must correspond to an existing task number\n" + MESSAGE_LINE, KEYWORD_TASK_MARK));
+                        printMessage(String.format("Argument after %s must correspond to an existing task number", KEYWORD_TASK_MARK));
                         break;
                     }
                     break;
                 case KEYWORD_TASK_UNMARK:
                     if (inputTokens.length != 2) {
-                        System.out.print(String.format("Incorrect usage of %s. Expected: %s [integer]\n" + MESSAGE_LINE, KEYWORD_TASK_MARK, KEYWORD_TASK_MARK));
+                        printMessage(String.format("Incorrect usage of %s. Expected: %s [integer]", KEYWORD_TASK_MARK, KEYWORD_TASK_MARK));
                         break;
                     }
                     try {
                         int taskIndex = Integer.parseInt(inputTokens[1]);
 
                         if (taskCount == 0) {
-                            System.out.print(String.format("There are no tasks to unmark.\n" + MESSAGE_LINE));
+                            printMessage(String.format("There are no tasks to unmark."));
                             break;
                         }
 
                         if (taskIndex < 1 || taskIndex > taskCount) {
-                            System.out.print(String.format("Given task number must be from %d to %d\n" + MESSAGE_LINE, 1, taskCount));
+                            printMessage(String.format("Given task number must be from %d to %d", 1, taskCount));
                             break;
                         }
 
                         Task targetTask = tasks[taskIndex - 1];
                         if (!targetTask.isDone()) {
-                            System.out.print(String.format("The following task is already marked as undone:\n%s\n%s",
-                                    targetTask,
-                                    MESSAGE_LINE
-                            ));
+                            printMessage("The following task is already marked as undone:\n" + targetTask);
                             break;
                         }
 
-                        tasks[taskIndex - 1].setDone(false);
+                        targetTask.setDone(false);
 
-                        System.out.print(String.format("OK, I've marked this task as not done yet:\n%s\n%s",
-                                tasks[taskIndex - 1],
-                                MESSAGE_LINE
-                        ));
-
+                        printMessage("OK, I've marked this task as not done yet:\n" + targetTask);
                     } catch (NumberFormatException e) {
                         System.out.print(String.format("Argument after %s must correspond to an existing task number\n" + MESSAGE_LINE, KEYWORD_TASK_MARK));
                         break;
