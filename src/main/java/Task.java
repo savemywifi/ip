@@ -1,6 +1,9 @@
-class Task {
+abstract class Task {
+    protected abstract String getSymbol();
+
     private boolean done;
     private String name;
+
     /**
      * Constructor for Task object
      * @param name The name of the task
@@ -36,7 +39,8 @@ class Task {
      */
     @Override
     public String toString() {
-        return String.format("[%s] %s",
+        return String.format("[%s][%s] %s",
+                getSymbol(),
                 done ? "X" : " ",
                 name
         );

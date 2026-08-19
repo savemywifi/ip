@@ -19,6 +19,9 @@ public class Bern {
     private static final String KEYWORD_LIST_TASKS = "list";
     private static final String KEYWORD_TASK_MARK = "mark";
     private static final String KEYWORD_TASK_UNMARK = "unmark";
+    private static final String KEYWORD_ADD_TASK_TODO = "todo";
+    private static final String KEYWORD_ADD_TASK_DEADLINE = "deadline";
+    private static final String KEYWORD_ADD_TASK_EVENT = "event";
 
     /** task-related variables */
     private static Task[] tasks = new Task[100];
@@ -84,19 +87,19 @@ public class Bern {
     }
 
     /**
-     * Adds the given message to a list of text, then prints the action
+     * Adds a given task to the list of tasks
      *
-     * @param taskName The message to add
+     * @param task The task to add
      */
-    private static void addTask(String taskName) {
+    private static void addTask(Task task) {
         if (taskCount == tasks.length) {
             printMessage("> No more tasks can be added.\n");
             return;
         }
 
-        tasks[taskCount++] = new Task(taskName);
+        tasks[taskCount++] = task;
 
-        printMessage("> added: " + taskName);
+        printMessage("> added: " + task);
     }
 
     /**
@@ -204,8 +207,15 @@ public class Bern {
                         break;
                     }
                     break;
-                default:
-                    addTask(input);
+                case KEYWORD_ADD_TASK_TODO:
+                    addTask(TaskFactory.makeTodo(inputTokens));
+                    break;
+                case KEYWORD_ADD_TASK_DEADLINE:
+                    addTask(TaskFactory.makeDeadline(inputTokens));
+                    break;
+                case KEYWORD_ADD_TASK_EVENT:
+                    addTask(TaskFactory.makeEvent(inputTokens));
+                    break;
             }
         }
 
