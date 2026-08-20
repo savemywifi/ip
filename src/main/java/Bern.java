@@ -1,4 +1,5 @@
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Bern {
@@ -18,12 +19,11 @@ public class Bern {
         BYE,
         LIST,
         MARK, UNMARK,
-        TODO, DEADLINE, EVENT
+        TODO, DEADLINE, EVENT, DELETE
     }
 
     /** task-related variables */
-    private static final Task[] tasks = new Task[100];
-    private static int taskCount = 0;
+    private static final ArrayList<Task> tasks = new ArrayList<Task>();
 
     /**
      * Prints a message to the standard output, appended with a message line
@@ -86,12 +86,7 @@ public class Bern {
      * @param task The task to add
      */
     private static void addTask(Task task) {
-        if (taskCount == tasks.length) {
-            printMessage("> No more tasks can be added.\n");
-            return;
-        }
-
-        tasks[taskCount++] = task;
+        tasks.add(task);
 
         printMessage("> added: " + task);
     }
@@ -100,7 +95,7 @@ public class Bern {
      * Lists the stored tasks in the standard output
      */
     private static void listTasks() {
-        if (taskCount <= 0) {
+        if (tasks.isEmpty()) {
             printMessage("> You have no tasks.");
             return;
         }
@@ -108,8 +103,8 @@ public class Bern {
         System.out.print("> Here are your current tasks: ");
 
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < taskCount; i++) {
-            sb.append(String.format("\n%d. %s", i + 1, tasks[i]));
+        for (int i = 0; i < tasks.size(); i++) {
+            sb.append(String.format("\n%d. %s", i + 1, tasks.get(i)));
         }
         printMessage(sb.toString());
     }
@@ -140,7 +135,7 @@ public class Bern {
     }
 
     private static int tryGetTaskNumber(String[] inputTokens) {
-        if (taskCount == 0) {
+        if (tasks.isEmpty()) {
             printMessage("There are no tasks.");
             return -1;
         }
@@ -155,12 +150,12 @@ public class Bern {
         try {
             taskIndex = Integer.parseInt(inputTokens[1]);
         } catch (NumberFormatException e) {
-            printMessage(String.format("Argument after %s must correspond to an existing task number from 1 to %d", inputTokens[0], taskCount));
+            printMessage(String.format("Argument after %s must correspond to an existing task number from 1 to %d", inputTokens[0], tasks.size()));
             return -1;
         }
 
-        if (taskIndex < 1 || taskIndex > taskCount) {
-            printMessage(String.format("Given task number must be from %d to %d", 1, taskCount));
+        if (taskIndex < 1 || taskIndex > tasks.size()) {
+            printMessage(String.format("Given task number must be from %d to %d", 1, tasks.size()));
             return -1;
         }
 
@@ -173,7 +168,7 @@ public class Bern {
             return false;
         }
 
-        Task target = tasks[taskNumber - 1];
+        Task target = tasks.get(taskNumber - 1);
         if (target.isDone()) {
             printMessage("The following task is already marked as done:\n" + target);
             return false;
@@ -190,7 +185,7 @@ public class Bern {
             return false;
         }
 
-        Task target = tasks[taskNumber - 1];
+        Task target = tasks.get(taskNumber - 1);
         if (!target.isDone()) {
             printMessage("The following task is already marked as undone:\n" + target);
             return false;
@@ -198,6 +193,18 @@ public class Bern {
 
         target.setDone(false);
         printMessage("OK, I've marked this task as not done yet:\n" + target);
+        return true;
+    }
+
+    private static boolean attemptDeleteTask(String[] inputTokens) {
+        int taskNumber = tryGetTaskNumber(inputTokens);
+        if (taskNumber == -1) {
+            return false;
+        }
+
+        Task target = tasks.get(taskNumber - 1);
+        tasks.remove(taskNumber - 1);
+        printMessage("OK, I've removed this task:\n" + target);
         return true;
     }
 
@@ -255,9 +262,12 @@ public class Bern {
                                 + "Command syntax: event <task name> /from <start date time> /to <end date time>");
                     }
                     break;
+                case Keyword.DELETE:
+                    attemptDeleteTask(inputTokens);
+                    break;
                 default:
                     printMessage("Command not recognised.\n"
-                            + "List of commands: todo, deadline, event, mark, unmark, list, bye");
+                            + "List of commands: todo, deadline, event, mark, unmark, delete, list, bye");
                     break;
             }
         }
