@@ -1,3 +1,4 @@
+import java.text.ParseException;
 import java.util.Scanner;
 
 public class Bern {
@@ -120,6 +121,14 @@ public class Bern {
         printMessage(sb.toString());
     }
 
+    private static String getParseExceptionResponse(ParseException e, String[] inputTokens) {
+        if (e.getErrorOffset() == -1) {
+            // Missing argument
+            return String.format("Argument(s) for %s keyword not specified\n", e.getMessage());
+        }
+        return String.format("Missing keyword: %s\n", e.getMessage());
+    }
+
     public static void main(String[] args) {
         greetUser();
         Scanner sc = new Scanner(System.in);
@@ -145,7 +154,7 @@ public class Bern {
                     break;
                 case KEYWORD_TASK_MARK:
                     if (inputTokens.length != 2) {
-                        printMessage(String.format("Incorrect usage of %s. Expected: %s [integer]", KEYWORD_TASK_MARK, KEYWORD_TASK_MARK));
+                        printMessage(String.format("Incorrect usage of %s. Expected: %s [task number]", KEYWORD_TASK_MARK, KEYWORD_TASK_MARK));
                         break;
                     }
                     try {
@@ -177,7 +186,7 @@ public class Bern {
                     break;
                 case KEYWORD_TASK_UNMARK:
                     if (inputTokens.length != 2) {
-                        printMessage(String.format("Incorrect usage of %s. Expected: %s [integer]", KEYWORD_TASK_MARK, KEYWORD_TASK_MARK));
+                        printMessage(String.format("Incorrect usage of %s. Expected: %s [task number]", KEYWORD_TASK_MARK, KEYWORD_TASK_MARK));
                         break;
                     }
                     try {
@@ -208,13 +217,32 @@ public class Bern {
                     }
                     break;
                 case KEYWORD_ADD_TASK_TODO:
-                    addTask(TaskFactory.makeTodo(inputTokens));
+                    try {
+                        addTask(TaskFactory.makeTodo(inputTokens));
+                    } catch (ParseException e) {
+                        printMessage(getParseExceptionResponse(e, inputTokens)
+                                + "Command syntax: todo <task name>");
+                    }
                     break;
                 case KEYWORD_ADD_TASK_DEADLINE:
-                    addTask(TaskFactory.makeDeadline(inputTokens));
+                    try {
+                        addTask(TaskFactory.makeDeadline(inputTokens));
+                    } catch (ParseException e) {
+
+                        printMessage(getParseExceptionResponse(e, inputTokens)
+                                + "Command syntax: deadline <task name> /by <due date>");
+                    }
                     break;
                 case KEYWORD_ADD_TASK_EVENT:
-                    addTask(TaskFactory.makeEvent(inputTokens));
+                    try {
+                        addTask(TaskFactory.makeEvent(inputTokens));
+                    } catch (ParseException e) {
+                        printMessage(getParseExceptionResponse(e, inputTokens)
+                                + "Command syntax: event <task name> /from <start date time> /to <end date time>");
+                    }
+                    break;
+                default:
+                    printMessage("Command not recognised. List of commands: todo, deadline, event, mark, unmark, list");
                     break;
             }
         }
