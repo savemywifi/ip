@@ -2,7 +2,6 @@ import java.text.ParseException;
 import java.util.Scanner;
 
 public class Bern {
-    // message string-related constants
     /** Line that bookends every message */
     private static final String MESSAGE_LINE = "____________________________________\n";
 
@@ -13,19 +12,17 @@ public class Bern {
             + "|  _ < / _ \\ '__| '_ \\ \n"
             + "| |_) |  __/ |  | | | |\n"
             + "|____/ \\___|_|  |_| |_|";
-    private static final String CHATBOT_NAME = "Bern Tokens";
 
-    /** keywords for chatbot commands */
-    private static final String KEYWORD_EXIT = "bye";
-    private static final String KEYWORD_LIST_TASKS = "list";
-    private static final String KEYWORD_TASK_MARK = "mark";
-    private static final String KEYWORD_TASK_UNMARK = "unmark";
-    private static final String KEYWORD_ADD_TASK_TODO = "todo";
-    private static final String KEYWORD_ADD_TASK_DEADLINE = "deadline";
-    private static final String KEYWORD_ADD_TASK_EVENT = "event";
+    private static final String CHATBOT_NAME = "Bern Tokens";
+    private enum Keyword {
+        BYE,
+        LIST,
+        MARK, UNMARK,
+        TODO, DEADLINE, EVENT
+    }
 
     /** task-related variables */
-    private static Task[] tasks = new Task[100];
+    private static final Task[] tasks = new Task[100];
     private static int taskCount = 0;
 
     /**
@@ -39,8 +36,6 @@ public class Bern {
 
     /**
      * Returns greeting message as a String.
-     *
-     * @return Greeting message to the user.
      */
     private static void greetUser() {
         String GREETING_TEMPLATE = "> Hello! I'm %s.\n"
@@ -52,8 +47,6 @@ public class Bern {
 
     /**
      * Returns exit message as a String.
-     *
-     * @return Exit message to the user.
      */
     private static void exitBot() {
         printMessage("> Bye. Hope to see you again soon!");
@@ -121,7 +114,7 @@ public class Bern {
         printMessage(sb.toString());
     }
 
-    private static String getParseExceptionResponse(ParseException e, String[] inputTokens) {
+    private static String getParseExceptionResponse(ParseException e) {
         if (e.getErrorOffset() == -1) {
             // Missing argument
             return String.format("Argument(s) for %s keyword not specified\n", e.getMessage());
@@ -129,120 +122,142 @@ public class Bern {
         return String.format("Missing keyword: %s\n", e.getMessage());
     }
 
+    private static boolean attemptExitAction(String[] inputTokens) {
+        if (inputTokens.length != 1) {
+            printMessage(String.format("Incorrect usage of %s. Expected: %s", Keyword.BYE, Keyword.BYE));
+            return false;
+        }
+        return true;
+    }
+
+    private static boolean attemptListTasksAction(String[] inputTokens) {
+        if (inputTokens.length != 1) {
+            printMessage(String.format("Incorrect usage of %s. Expected: %s", Keyword.LIST, Keyword.LIST));
+            return false;
+        }
+        listTasks();
+        return true;
+    }
+
+    private static int tryGetTaskNumber(String[] inputTokens) {
+        if (taskCount == 0) {
+            printMessage("There are no tasks.");
+            return -1;
+        }
+
+        if (inputTokens.length != 2) {
+            printMessage(String.format("Incorrect usage of %s. Expected %s [task number]", inputTokens[0], inputTokens[0]));
+            return -1;
+        }
+
+        int taskIndex;
+
+        try {
+            taskIndex = Integer.parseInt(inputTokens[1]);
+        } catch (NumberFormatException e) {
+            printMessage(String.format("Argument after %s must correspond to an existing task number from 1 to %d", inputTokens[0], taskCount));
+            return -1;
+        }
+
+        if (taskIndex < 1 || taskIndex > taskCount) {
+            printMessage(String.format("Given task number must be from %d to %d", 1, taskCount));
+            return -1;
+        }
+
+        return taskIndex;
+    }
+
+    private static boolean attemptMarkTask(String[] inputTokens) {
+        int taskNumber = tryGetTaskNumber(inputTokens);
+        if (taskNumber == -1) {
+            return false;
+        }
+
+        Task target = tasks[taskNumber - 1];
+        if (target.isDone()) {
+            printMessage("The following task is already marked as done:\n" + target);
+            return false;
+        }
+
+        target.setDone(true);
+        printMessage("Nice! I've marked this task as done:\n" + target);
+        return true;
+    }
+
+    private static boolean attemptUnmarkTask(String[] inputTokens) {
+        int taskNumber = tryGetTaskNumber(inputTokens);
+        if (taskNumber == -1) {
+            return false;
+        }
+
+        Task target = tasks[taskNumber - 1];
+        if (!target.isDone()) {
+            printMessage("The following task is already marked as undone:\n" + target);
+            return false;
+        }
+
+        target.setDone(false);
+        printMessage("OK, I've marked this task as not done yet:\n" + target);
+        return true;
+    }
+
     public static void main(String[] args) {
         greetUser();
+
         Scanner sc = new Scanner(System.in);
         boolean isReadingInput = true;
+        Keyword keyword;
+
         while (isReadingInput) {
             String input = promptForInput(sc);
             String[] inputTokens = input.split(" ");
 
-            switch (inputTokens[0].toLowerCase()) {
-                case KEYWORD_EXIT:
-                    if (inputTokens.length != 1) {
-                        printMessage(String.format("Incorrect usage of %s. Expected: %s", KEYWORD_EXIT, KEYWORD_EXIT));
-                        break;
-                    }
-                    isReadingInput = false;
+            try {
+                keyword = Keyword.valueOf(inputTokens[0].toUpperCase());
+            } catch (IllegalArgumentException e) {
+                printMessage("Command not recognised. List of commands: todo, deadline, event, mark, unmark, list");
+                continue;
+            }
+
+            switch (keyword) {
+                case Keyword.BYE:
+                    isReadingInput = !attemptExitAction(inputTokens);
                     break;
-                case KEYWORD_LIST_TASKS:
-                    if (inputTokens.length != 1) {
-                        printMessage(String.format("Incorrect usage of %s. Expected: %s", KEYWORD_LIST_TASKS, KEYWORD_LIST_TASKS));
-                        break;
-                    }
-                    listTasks();
+                case Keyword.LIST:
+                    attemptListTasksAction(inputTokens);
                     break;
-                case KEYWORD_TASK_MARK:
-                    if (inputTokens.length != 2) {
-                        printMessage(String.format("Incorrect usage of %s. Expected: %s [task number]", KEYWORD_TASK_MARK, KEYWORD_TASK_MARK));
-                        break;
-                    }
-                    try {
-                        int taskIndex = Integer.parseInt(inputTokens[1]);
-
-                        if (taskCount == 0) {
-                            printMessage(String.format("There are no tasks to mark."));
-                            break;
-                        }
-
-                        if (taskIndex < 1 || taskIndex > taskCount) {
-                            printMessage(String.format("Given task number must be from %d to %d", 1, taskCount));
-                            break;
-                        }
-
-                        Task targetTask = tasks[taskIndex - 1];
-                        if (targetTask.isDone()) {
-                            printMessage("The following task is already marked as done:\n" + targetTask);
-                            break;
-                        }
-
-                        targetTask.setDone(true);
-                        printMessage("Nice! I've marked this task as done:\n" + targetTask);
-
-                    } catch (NumberFormatException e) {
-                        printMessage(String.format("Argument after %s must correspond to an existing task number", KEYWORD_TASK_MARK));
-                        break;
-                    }
+                case Keyword.MARK:
+                    attemptMarkTask(inputTokens);
                     break;
-                case KEYWORD_TASK_UNMARK:
-                    if (inputTokens.length != 2) {
-                        printMessage(String.format("Incorrect usage of %s. Expected: %s [task number]", KEYWORD_TASK_MARK, KEYWORD_TASK_MARK));
-                        break;
-                    }
-                    try {
-                        int taskIndex = Integer.parseInt(inputTokens[1]);
-
-                        if (taskCount == 0) {
-                            printMessage(String.format("There are no tasks to unmark."));
-                            break;
-                        }
-
-                        if (taskIndex < 1 || taskIndex > taskCount) {
-                            printMessage(String.format("Given task number must be from %d to %d", 1, taskCount));
-                            break;
-                        }
-
-                        Task targetTask = tasks[taskIndex - 1];
-                        if (!targetTask.isDone()) {
-                            printMessage("The following task is already marked as undone:\n" + targetTask);
-                            break;
-                        }
-
-                        targetTask.setDone(false);
-
-                        printMessage("OK, I've marked this task as not done yet:\n" + targetTask);
-                    } catch (NumberFormatException e) {
-                        System.out.print(String.format("Argument after %s must correspond to an existing task number\n" + MESSAGE_LINE, KEYWORD_TASK_MARK));
-                        break;
-                    }
+                case Keyword.UNMARK:
+                    attemptUnmarkTask(inputTokens);
                     break;
-                case KEYWORD_ADD_TASK_TODO:
+                case Keyword.TODO:
                     try {
                         addTask(TaskFactory.makeTodo(inputTokens));
                     } catch (ParseException e) {
-                        printMessage(getParseExceptionResponse(e, inputTokens)
-                                + "Command syntax: todo <task name>");
+                        printMessage(getParseExceptionResponse(e) + "Command syntax: todo <task name>");
                     }
                     break;
-                case KEYWORD_ADD_TASK_DEADLINE:
+                case Keyword.DEADLINE:
                     try {
                         addTask(TaskFactory.makeDeadline(inputTokens));
                     } catch (ParseException e) {
-
-                        printMessage(getParseExceptionResponse(e, inputTokens)
+                        printMessage(getParseExceptionResponse(e)
                                 + "Command syntax: deadline <task name> /by <due date>");
                     }
                     break;
-                case KEYWORD_ADD_TASK_EVENT:
+                case Keyword.EVENT:
                     try {
                         addTask(TaskFactory.makeEvent(inputTokens));
                     } catch (ParseException e) {
-                        printMessage(getParseExceptionResponse(e, inputTokens)
+                        printMessage(getParseExceptionResponse(e)
                                 + "Command syntax: event <task name> /from <start date time> /to <end date time>");
                     }
                     break;
                 default:
-                    printMessage("Command not recognised. List of commands: todo, deadline, event, mark, unmark, list");
+                    printMessage("Command not recognised.\n"
+                            + "List of commands: todo, deadline, event, mark, unmark, list, bye");
                     break;
             }
         }
