@@ -8,12 +8,13 @@ public class Bern {
     private static final String MESSAGE_LINE = "____________________________________\n";
 
     /** Constants for chatbot identity */
-    private static final String CHATBOT_BANNER = " ____                  \n"
-            + "|  _ \\                 \n"
-            + "| |_) | ___ _ __ _ __  \n"
-            + "|  _ < / _ \\ '__| '_ \\ \n"
-            + "| |_) |  __/ |  | | | |\n"
-            + "|____/ \\___|_|  |_| |_|";
+    private static final String CHATBOT_BANNER = """
+             ____                 \s
+            |  _ \\                \s
+            | |_) | ___ _ __ _ __ \s
+            |  _ < / _ \\ '__| '_ \\\s
+            | |_) |  __/ |  | | | |
+            |____/ \\___|_|  |_| |_|""";
 
     /** Chatbot name */
     private static final String CHATBOT_NAME = "Bern Tokens";
@@ -33,7 +34,7 @@ public class Bern {
     }
 
     /** task-related variables */
-    private static final ArrayList<Task> tasks = new ArrayList<Task>();
+    private static final ArrayList<Task> tasks = new ArrayList<>();
 
     /**
      * Prints a message to the standard output, appended with a message line
@@ -145,6 +146,10 @@ public class Bern {
             printMessage(String.format("Incorrect usage of %s. Expected: %s", Keyword.BYE, Keyword.BYE));
             return false;
         }
+        if (!SaveDataController.saveTaskData(tasks)) {
+            printMessage(String.format("Unable to save task data."));
+        };
+
         return true;
     }
 
@@ -327,6 +332,15 @@ public class Bern {
         boolean isReadingInput = true;
         Keyword keyword;
 
+        if (!SaveDataController.readTaskDataTo(tasks)) {
+            printMessage("Couldn't access a previous save for some reason."
+                    + "It could be corrupted or the file could not be written to.");
+        }
+
+        if (!tasks.isEmpty()) {
+            printMessage("You have saved tasks. Use list to view them.");
+        }
+
         while (isReadingInput) {
             String input = promptForInput(sc);
             String[] inputTokens = input.split(" ");
@@ -341,6 +355,7 @@ public class Bern {
 
             keyword.action.accept(inputTokens);
 
+            // Manual check for Keyword.BYE
             if (keyword.equals(Keyword.BYE) && inputTokens.length == 1) {
                 isReadingInput = false;
             }

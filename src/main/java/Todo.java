@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 class Todo extends Task {
     public Todo(String name) {
         super(name);
@@ -6,5 +8,10 @@ class Todo extends Task {
     @Override
     protected String getSymbol() {
         return "T";
+    }
+
+    @Override
+    protected ArrayList<String> toDataList() {
+        return super.toDataList();
     }
 }
