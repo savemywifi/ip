@@ -1,9 +1,9 @@
 import java.util.ArrayList;
 
 class Deadline extends Task {
-    private String deadlineDateTime;
+    private final DateTime deadlineDateTime;
 
-    public Deadline(String name, String deadlineDateTime) {
+    public Deadline(String name, DateTime deadlineDateTime) {
         super(name);
         this.deadlineDateTime = deadlineDateTime;
     }

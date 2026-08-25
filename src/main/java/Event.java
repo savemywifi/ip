@@ -1,10 +1,10 @@
 import java.util.ArrayList;
 
 class Event extends Task {
-    private String startDateTime;
-    private String endDateTime;
+    private final DateTime startDateTime;
+    private final DateTime endDateTime;
 
-    public Event(String name, String startDateTime, String endDateTime) {
+    public Event(String name, DateTime startDateTime, DateTime endDateTime) {
         super(name);
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
