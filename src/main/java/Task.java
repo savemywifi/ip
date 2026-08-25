@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 abstract class Task {
     protected abstract String getSymbol();
 
@@ -11,6 +14,10 @@ abstract class Task {
     public Task(String name) {
         this.name = name;
         this.done = false;
+    }
+
+    public String getName() {
+        return this.name;
     }
 
     /**
@@ -44,5 +51,18 @@ abstract class Task {
                 done ? "X" : " ",
                 name
         );
+    }
+
+    /**
+     * The string list representation of the task in the save file.
+     *
+     * @return The string list representation of the task as described above.
+     */
+    protected ArrayList<String> toDataList() {
+        ArrayList<String> dataList = new ArrayList<>();
+        dataList.add(getSymbol());
+        dataList.add(isDone() ? "1" : "0");
+        dataList.add(getName());
+        return dataList;
     }
 }

@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 class Event extends Task {
     private String startDateTime;
     private String endDateTime;
@@ -16,5 +18,13 @@ class Event extends Task {
     @Override
     public String toString() {
         return String.format("%s (from: %s to: %s)", super.toString(), this.startDateTime, this.endDateTime);
+    }
+
+    @Override
+    protected ArrayList<String> toDataList() {
+        ArrayList<String> out = super.toDataList();
+        out.add(startDateTime);
+        out.add(endDateTime);
+        return out;
     }
 }
