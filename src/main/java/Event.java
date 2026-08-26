@@ -1,10 +1,10 @@
 import java.util.ArrayList;
 
 class Event extends Task {
-    private String startDateTime;
-    private String endDateTime;
+    private final DateTime startDateTime;
+    private final DateTime endDateTime;
 
-    public Event(String name, String startDateTime, String endDateTime) {
+    public Event(String name, DateTime startDateTime, DateTime endDateTime) {
         super(name);
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
@@ -23,8 +23,8 @@ class Event extends Task {
     @Override
     protected ArrayList<String> toDataList() {
         ArrayList<String> out = super.toDataList();
-        out.add(startDateTime);
-        out.add(endDateTime);
+        out.add(startDateTime.toString());
+        out.add(endDateTime.toString());
         return out;
     }
 }

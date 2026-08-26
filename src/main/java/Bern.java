@@ -1,4 +1,5 @@
 import java.text.ParseException;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.function.Consumer;
@@ -284,6 +285,10 @@ public class Bern {
             printMessage(getParseExceptionResponse(e)
                     + "Command syntax: deadline <task name> /by <due date>");
             return false;
+        } catch (DateTimeParseException e) {
+            // TODO: improve error messages
+            printMessage(String.format("%s is not a valid date or time", e.getParsedString()));
+            return false;
         }
         return true;
     }
@@ -301,6 +306,13 @@ public class Bern {
         } catch (ParseException e) {
             printMessage(getParseExceptionResponse(e)
                     + "Command syntax: event <task name> /from <start date time> /to <end date time>");
+            return false;
+        } catch (DateTimeParseException e) {
+            // TODO: improve error messages
+            printMessage(String.format("%s is not a valid date or time", e.getParsedString()));
+            return false;
+        } catch (IllegalArgumentException e) {
+            printMessage(e.getMessage());
             return false;
         }
         return true;
