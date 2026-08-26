@@ -31,7 +31,10 @@ class DateTimeFactory {
         LocalTime lt = null;
         LocalDate ld = null;
 
-        if (isTime(tokens[0])) {
+        if (isTime(dateTimeString)) {
+            lt = parseTime(dateTimeString);
+            ld = LocalDate.now();
+        } else if (isTime(tokens[0])) {
             lt = parseTime(tokens[0]);
             ld = parseDate(String.join(" ", Arrays.stream(tokens, 1, tokens.length).toList()));
         } else if (isTime(tokens[tokens.length - 1])) {

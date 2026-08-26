@@ -7,6 +7,7 @@ class ParseFactory {
         int next = 1;
         for (int i = 0; i < keywords.length; i++) {
             StringBuilder sb = new StringBuilder();
+
             try {
                 next = joinTokensFromIndexUntil(tokens, next, sb, keywords[i]);
             } catch (NoSuchElementException e) {
@@ -14,6 +15,7 @@ class ParseFactory {
                 throw new ParseException(keywords[i], i);
             }
             parsedData[i] = sb.toString().strip();
+
             if (parsedData[i].isEmpty()) {
                 // parsed argument is empty
                 throw new ParseException(i == 0 ? tokens[0] : keywords[i-1], -1);

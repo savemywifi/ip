@@ -54,7 +54,6 @@ class TaskFactory extends ParseFactory {
 
     public static Event makeEvent(String[] inputTokens) throws ParseException, DateTimeParseException, IllegalArgumentException {
         String[] data = parseData(inputTokens, new String[]{"/from", "/to"});
-        // TODO: give specific feedback about which parseDateTime threw the error
 
         DateTime startDateTime = DateTimeFactory.parseDateTime(data[1]);
         DateTime endDateTime = DateTimeFactory.parseDateTime(data[2]);
