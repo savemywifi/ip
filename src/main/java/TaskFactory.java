@@ -19,13 +19,16 @@ class TaskFactory extends ParseFactory {
                 if (data.length != 4) {
                     throw new IllegalArgumentException("Stored deadline has incorrect number of arguments");
                 }
-                task = new Deadline(data[2], DateTimeFactory.parseDateTime(data[3]));
+                task = new Deadline(data[2], DateTimeFactory.makeDateFromDataString(data[3]));
                 break;
             case "E":
                 if (data.length != 5) {
                     throw new IllegalArgumentException("Stored event has incorrect number of arguments");
                 }
-                task = new Event(data[2], DateTimeFactory.parseDateTime(data[3]), DateTimeFactory.parseDateTime(data[4]));
+                task = new Event(data[2],
+                        DateTimeFactory.makeDateFromDataString(data[3]),
+                        DateTimeFactory.makeDateFromDataString(data[4])
+                );
                 break;
             default:
                 throw new ParseException("Invalid task type", -1);
@@ -52,13 +55,12 @@ class TaskFactory extends ParseFactory {
     public static Event makeEvent(String[] inputTokens) throws ParseException, DateTimeParseException, IllegalArgumentException {
         String[] data = parseData(inputTokens, new String[]{"/from", "/to"});
         // TODO: give specific feedback about which parseDateTime threw the error
-        // TODO: do a check if the first date is before the second one
 
         DateTime startDateTime = DateTimeFactory.parseDateTime(data[1]);
         DateTime endDateTime = DateTimeFactory.parseDateTime(data[2]);
 
         // Date is wrong
-        if (startDateTime.compareTo(endDateTime) <= 0) {
+        if (startDateTime.compareTo(endDateTime) >= 0) {
             throw new IllegalArgumentException("Start date must be before end date");
         }
 

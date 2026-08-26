@@ -6,6 +6,7 @@ import java.time.temporal.ChronoUnit;
 class DateTime implements Comparable<DateTime> {
     private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
     private static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh.mma");
+    static final String separator = " @ ";
 
     private final LocalDate localDate;
     private final LocalTime localTime;
@@ -21,7 +22,7 @@ class DateTime implements Comparable<DateTime> {
             return this.localDate.format(dateFormatter);
         }
 
-        return String.format("%s @ %s", localDate.format(dateFormatter), localTime.format(timeFormatter));
+        return String.format("%s%s%s", localDate.format(dateFormatter), separator, localTime.format(timeFormatter));
     }
 
     @Override
@@ -31,7 +32,6 @@ class DateTime implements Comparable<DateTime> {
             return dayDifference;
         }
 
-        int timeDifference = (int) ChronoUnit.MINUTES.between(other.localTime, this.localTime);
-        return timeDifference;
+        return (int) ChronoUnit.MINUTES.between(other.localTime, this.localTime);
     }
 }

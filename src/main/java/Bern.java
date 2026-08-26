@@ -287,7 +287,7 @@ public class Bern {
             return false;
         } catch (DateTimeParseException e) {
             // TODO: improve error messages
-            printMessage("Date is in an incorrect format.");
+            printMessage(String.format("%s is not a valid date or time", e.getParsedString()));
             return false;
         }
         return true;
@@ -309,7 +309,7 @@ public class Bern {
             return false;
         } catch (DateTimeParseException e) {
             // TODO: improve error messages
-            printMessage("Date is in an incorrect format.");
+            printMessage(String.format("%s is not a valid date or time", e.getParsedString()));
             return false;
         } catch (IllegalArgumentException e) {
             printMessage(e.getMessage());

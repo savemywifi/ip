@@ -21,7 +21,7 @@ class Deadline extends Task {
     @Override
     protected ArrayList<String> toDataList() {
         ArrayList<String> out = super.toDataList();
-        out.add(deadlineDateTime);
+        out.add(deadlineDateTime.toString());
         return out;
     }
 }

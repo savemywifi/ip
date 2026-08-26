@@ -44,6 +44,16 @@ class DateTimeFactory {
         return new DateTime(ld, lt);
     }
 
+    public static DateTime makeDateFromDataString(String dataString) {
+        String[] tokens = dataString.split(DateTime.separator);
+
+        if (tokens.length != 2) {
+            throw new IllegalArgumentException("Data has insufficient arguments for date and time");
+        }
+
+        return new DateTime(parseDate(tokens[0]), parseTime(tokens[1]));
+    }
+
     private static LocalDate parseDate(String dateString) throws DateTimeParseException {
         LocalDate date = null;
         DateTimeParseException firstSeenException = null;

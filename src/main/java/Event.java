@@ -23,8 +23,8 @@ class Event extends Task {
     @Override
     protected ArrayList<String> toDataList() {
         ArrayList<String> out = super.toDataList();
-        out.add(startDateTime);
-        out.add(endDateTime);
+        out.add(startDateTime.toString());
+        out.add(endDateTime.toString());
         return out;
     }
 }
