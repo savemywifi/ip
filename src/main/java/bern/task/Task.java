@@ -2,6 +2,9 @@ package bern.task;
 
 import java.util.ArrayList;
 
+/**
+ * A task that is to be completed. Contains a String description and can be marked as done or not done.
+ */
 public abstract class Task {
     protected abstract String getSymbol();
 
@@ -9,10 +12,10 @@ public abstract class Task {
     private String name;
 
     /**
-     * Constructor for bern.task.Task object
+     * Constructor for Task object
      * @param name The name of the task
      */
-    public Task(String name) {
+    Task(String name) {
         this.name = name;
         this.done = false;
     }

@@ -3,6 +3,9 @@ package bern.parser;
 import java.text.ParseException;
 import java.util.NoSuchElementException;
 
+/**
+ * A factory class for parsing text, with its subclasses defining what objects the text will be parsed into.
+ */
 public class ParseFactory {
     protected static String[] parseData(String[] tokens, String[] keywords) throws ParseException {
         String[] parsedData = new String[keywords.length + 1];

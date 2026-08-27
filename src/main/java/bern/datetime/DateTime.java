@@ -5,6 +5,10 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
+/**
+ * Stores a given date, and optionally, a given time. A <code>DateTime</code> object corresponds to a date and time
+ * represented using Java's LocalDate and LocalTime classes e.g. 28 August 2026 @ 12.24pm
+ */
 public class DateTime implements Comparable<DateTime> {
     static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
     static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh.mma");
@@ -13,11 +17,22 @@ public class DateTime implements Comparable<DateTime> {
     private final LocalDate localDate;
     private final LocalTime localTime;
 
+    /**
+     * A constructor for the DateTime class
+     *
+     * @param localDate The date stored
+     * @param localTime The time stored, or null
+     */
     DateTime(LocalDate localDate, LocalTime localTime) {
         this.localDate = localDate;
         this.localTime = localTime;
     }
 
+    /**
+     * A string representation of the DateTime
+     *
+     * @return A string in the form dd MMMM yyyy @ hh.mm am/pm
+     */
     @Override
     public String toString() {
         if (this.localTime == null) {
