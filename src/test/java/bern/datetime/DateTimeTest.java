@@ -1,11 +1,12 @@
 package bern.datetime;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DateTimeTest {
     @Test
@@ -15,7 +16,7 @@ public class DateTimeTest {
         DateTime dateTime = new DateTime(date, null);
 
         assertEquals(
-                date.format(DateTime.dateFormatter),
+                date.format(DateTime.DATE_FORMATTER),
                 dateTime.toString()
         );
     }
@@ -23,7 +24,7 @@ public class DateTimeTest {
     @Test
     public void dateTimeString_nullTime_comparisons() {
         LocalDate date = LocalDate.of(2026, 8, 27);
-        LocalTime time = LocalTime.of(6,7);
+        LocalTime time = LocalTime.of(6, 7);
 
         DateTime nullDateTime1 = new DateTime(date, null);
         DateTime nullDateTime2 = new DateTime(date, null);

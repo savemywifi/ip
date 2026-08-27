@@ -1,22 +1,27 @@
 package bern;
 
-import bern.storage.SaveDataController;
-import bern.task.TaskFactory;
-import bern.task.TaskManager;
-import bern.ui.Ui;
-
 import java.text.ParseException;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 import java.util.function.Consumer;
 
+import bern.storage.SaveDataController;
+import bern.task.TaskFactory;
+import bern.task.TaskManager;
+import bern.ui.Ui;
+
+/** Runs the Bern task management application. */
 public class Bern {
-    /** Enum containing keywords */
+    /** Stores the commands supported by the application and their handlers. */
     private enum Keyword {
         BYE(Bern::attemptExit),
         LIST(Bern::attemptListTasks),
-        MARK(Bern::attemptMarkTask), UNMARK(Bern::attemptUnmarkTask),
-        TODO(Bern::attemptMakeTodo), DEADLINE(Bern::attemptMakeDeadline), EVENT(Bern::attemptMakeEvent), DELETE(Bern::attemptDeleteTask);
+        MARK(Bern::attemptMarkTask),
+        UNMARK(Bern::attemptUnmarkTask),
+        TODO(Bern::attemptMakeTodo),
+        DEADLINE(Bern::attemptMakeDeadline),
+        EVENT(Bern::attemptMakeEvent),
+        DELETE(Bern::attemptDeleteTask);
 
         private final Consumer<String[]> action;
 
@@ -223,6 +228,7 @@ public class Bern {
         Ui.getInstance().printMessage(TaskManager.getInstance().deleteTask(taskNumber));
     }
 
+    /** Starts the command-line application. */
     public static void main(String[] args) {
         Ui.getInstance().greetUser();
 

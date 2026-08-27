@@ -1,13 +1,15 @@
 package bern.task;
 
+import java.text.ParseException;
+import java.time.format.DateTimeParseException;
+
 import bern.datetime.DateTime;
 import bern.datetime.DateTimeFactory;
 import bern.parser.ParseFactory;
 
-import java.text.ParseException;
-import java.time.format.DateTimeParseException;
-
+/** Creates task objects from command input or saved task data. */
 public class TaskFactory extends ParseFactory {
+    /** Returns a task reconstructed from a saved task record. */
     public static Task makeTaskFromData(String[] data) throws ParseException, IllegalArgumentException {
         Task task = null;
         if (data.length < 3) {
@@ -48,17 +50,21 @@ public class TaskFactory extends ParseFactory {
         return task;
     }
 
+    /** Returns a todo task created from command input. */
     public static Todo makeTodo(String[] inputTokens) throws ParseException {
         String[] data = parseData(inputTokens, new String[]{});
         return new Todo(data[0]);
     }
 
+    /** Returns a deadline task created from command input. */
     public static Deadline makeDeadline(String[] inputTokens) throws ParseException, DateTimeParseException {
         String[] data = parseData(inputTokens, new String[]{"/by"});
         return new Deadline(data[0], DateTimeFactory.parseDateTime(data[1]));
     }
 
-    public static Event makeEvent(String[] inputTokens) throws ParseException, DateTimeParseException, IllegalArgumentException {
+    /** Returns an event task created from command input. */
+    public static Event makeEvent(String[] inputTokens)
+            throws ParseException, DateTimeParseException, IllegalArgumentException {
         String[] data = parseData(inputTokens, new String[]{"/from", "/to"});
 
         DateTime startDateTime = DateTimeFactory.parseDateTime(data[1]);

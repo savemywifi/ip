@@ -1,12 +1,14 @@
 package bern.task;
 
-import bern.datetime.DateTime;
-
 import java.util.ArrayList;
 
+import bern.datetime.DateTime;
+
+/** Represents a task that must be completed by a specified date and time. */
 class Deadline extends Task {
     private final DateTime deadlineDateTime;
 
+    /** Creates a deadline task. */
     public Deadline(String name, DateTime deadlineDateTime) {
         super(name);
         this.deadlineDateTime = deadlineDateTime;
@@ -19,7 +21,7 @@ class Deadline extends Task {
 
     @Override
     public String toString() {
-        return String.format("%s (by: %s)", super.toString(), this.deadlineDateTime);
+        return String.format("%s (by: %s)", super.toString(), deadlineDateTime);
     }
 
     @Override

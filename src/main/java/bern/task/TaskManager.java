@@ -3,6 +3,7 @@ package bern.task;
 import java.util.ArrayList;
 import java.util.List;
 
+/** Stores and manages the application's tasks. */
 public class TaskManager {
     private static TaskManager instance;
 
@@ -11,6 +12,7 @@ public class TaskManager {
     private TaskManager() {
     }
 
+    /** Returns the singleton task manager instance. */
     public static TaskManager getInstance() {
         if (instance == null) {
             instance = new TaskManager();
@@ -19,18 +21,22 @@ public class TaskManager {
         return instance;
     }
 
+    /** Returns whether at least one task is stored. */
     public boolean hasTasks() {
         return !tasks.isEmpty();
     }
 
+    /** Returns the number of stored tasks. */
     public int size() {
         return tasks.size();
     }
 
+    /** Returns a copy of the stored task list. */
     public List<Task> getTaskList() {
-        return new ArrayList<Task>(tasks);
+        return new ArrayList<>(tasks);
     }
 
+    /** Loads tasks into the manager if it has not already been populated. */
     public void loadTaskList(List<Task> taskList) {
         if (hasTasks()) {
             // Reject operation if task list already has tasks in it
@@ -41,12 +47,14 @@ public class TaskManager {
         tasks.addAll(taskList);
     }
 
+    /** Adds a task and returns the corresponding confirmation message. */
     public String addTask(Task task) {
         tasks.add(task);
 
         return "> added: " + task;
     }
 
+    /** Returns a formatted list of the current tasks. */
     public String listTasks() {
         if (tasks.isEmpty()) {
             return "> You have no tasks.";
@@ -61,6 +69,7 @@ public class TaskManager {
         return sb.toString();
     }
 
+    /** Marks the task at the one-based index as done. */
     public String markTask(int i) {
         Task task = tasks.get(i - 1);
 
@@ -73,6 +82,7 @@ public class TaskManager {
         return "Nice! I've marked this task as done:\n" + task;
     }
 
+    /** Marks the task at the one-based index as not done. */
     public String unmarkTask(int i) {
         Task task = tasks.get(i - 1);
 
@@ -85,6 +95,7 @@ public class TaskManager {
         return "OK, I've marked this task as not done yet:\n" + task;
     }
 
+    /** Deletes the task at the one-based index. */
     public String deleteTask(int i) {
         Task task = tasks.get(i - 1);
 

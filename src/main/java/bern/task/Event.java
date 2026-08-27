@@ -1,13 +1,15 @@
 package bern.task;
 
-import bern.datetime.DateTime;
-
 import java.util.ArrayList;
 
+import bern.datetime.DateTime;
+
+/** Represents a task that takes place between two date-time values. */
 class Event extends Task {
     private final DateTime startDateTime;
     private final DateTime endDateTime;
 
+    /** Creates an event task. */
     public Event(String name, DateTime startDateTime, DateTime endDateTime) {
         super(name);
         this.startDateTime = startDateTime;
@@ -21,7 +23,7 @@ class Event extends Task {
 
     @Override
     public String toString() {
-        return String.format("%s (from: %s to: %s)", super.toString(), this.startDateTime, this.endDateTime);
+        return String.format("%s (from: %s to: %s)", super.toString(), startDateTime, endDateTime);
     }
 
     @Override

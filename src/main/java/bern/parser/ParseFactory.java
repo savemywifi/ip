@@ -3,7 +3,9 @@ package bern.parser;
 import java.text.ParseException;
 import java.util.NoSuchElementException;
 
+/** Provides utilities for extracting keyword arguments from command tokens. */
 public class ParseFactory {
+    /** Parses command arguments separated by the supplied keywords. */
     protected static String[] parseData(String[] tokens, String[] keywords) throws ParseException {
         String[] parsedData = new String[keywords.length + 1];
         int next = 1;
@@ -20,7 +22,7 @@ public class ParseFactory {
 
             if (parsedData[i].isEmpty()) {
                 // parsed argument is empty
-                throw new ParseException(i == 0 ? tokens[0] : keywords[i-1], -1);
+                throw new ParseException(i == 0 ? tokens[0] : keywords[i - 1], -1);
             }
         }
         StringBuilder sb = new StringBuilder();
@@ -35,6 +37,7 @@ public class ParseFactory {
         return parsedData;
     }
 
+    /** Appends all tokens after the given index to the builder. */
     private static void joinTokensFromIndex(String[] tokens, int index, StringBuilder sb) {
         while (index < tokens.length) {
             sb.append(tokens[index]);
@@ -43,6 +46,7 @@ public class ParseFactory {
         }
     }
 
+    /** Appends tokens until a keyword is found and returns the next index. */
     private static int joinTokensFromIndexUntil(
             String[] tokens, int index, StringBuilder sb, String keyword) throws NoSuchElementException {
         if (index == tokens.length) {

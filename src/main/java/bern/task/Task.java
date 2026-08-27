@@ -2,15 +2,15 @@ package bern.task;
 
 import java.util.ArrayList;
 
+/** Represents a task that can be completed and persisted. */
 public abstract class Task {
-    protected abstract String getSymbol();
-
     private boolean done;
     private String name;
 
     /**
-     * Constructor for bern.task.Task object
-     * @param name The name of the task
+     * Creates an incomplete task with the given name.
+     *
+     * @param name The name of the task.
      */
     public Task(String name) {
         this.name = name;
@@ -18,7 +18,7 @@ public abstract class Task {
     }
 
     public String getName() {
-        return this.name;
+        return name;
     }
 
     /**
@@ -27,7 +27,7 @@ public abstract class Task {
      * @return true if the task is done, false otherwise
      */
     public boolean isDone() {
-        return this.done;
+        return done;
     }
 
     /**
@@ -36,14 +36,13 @@ public abstract class Task {
      * @param isDone the state to set the task to
      */
     public void setDone(boolean isDone) {
-        this.done = isDone;
+        done = isDone;
     }
 
     /**
      * The string representation of the task.
      *
-     * @return The string representation of the task as described above. [X] indicates the task
-     * is done, while [ ] indicates it is not done.
+     * @return The task's display string; [X] means done and [ ] means incomplete.
      */
     @Override
     public String toString() {
@@ -66,4 +65,7 @@ public abstract class Task {
         dataList.add(getName());
         return dataList;
     }
+
+    /** Returns the one-letter symbol used when displaying this task. */
+    protected abstract String getSymbol();
 }

@@ -1,9 +1,5 @@
 package bern.storage;
 
-import bern.ui.Ui;
-import bern.task.Task;
-import bern.task.TaskFactory;
-
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,24 +9,33 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SaveDataController {
-    public static final String separator = "\0|";
-    private static final String separatorRegex = "\0\\|";
-    private static final String saveDir = "data";
-    private static final String saveFile = "tasks.txt";
+import bern.task.Task;
+import bern.task.TaskFactory;
+import bern.ui.Ui;
 
+/** Saves tasks to and loads tasks from the application's data file. */
+public class SaveDataController {
+    /** Separates fields in a saved task record. */
+    public static final String SEPARATOR = "\0|";
+
+    private static final String SEPARATOR_REGEX = "\0\\|";
+    private static final String SAVE_DIRECTORY = "data";
+    private static final String SAVE_FILE = "tasks.txt";
+
+    /** Saves the supplied tasks to the application's data file. */
     public static boolean saveTaskData(List<Task> tasks) {
         String dataString = tasksToDataString(tasks);
 
         try {
-            // note that this will do nothing if the directory exists, or create a new one if it does not exist
-            Files.createDirectories(Paths.get(System.getProperty("user.dir"), saveDir));
+            // This does nothing if the directory exists, or creates it otherwise.
+            Files.createDirectories(Paths.get(System.getProperty("user.dir"), SAVE_DIRECTORY));
         } catch (IOException e) {
             Ui.getInstance().printDirectoryError();
             return false;
         }
 
-        try (FileWriter fw = new FileWriter(Paths.get(System.getProperty("user.dir"), saveDir, saveFile).toString())) {
+        try (FileWriter fw = new FileWriter(Paths.get(System.getProperty("user.dir"), SAVE_DIRECTORY,
+                SAVE_FILE).toString())) {
             fw.write(dataString);
         } catch (IOException e) {
             System.out.println("Unable to write to file.");
@@ -40,11 +45,13 @@ public class SaveDataController {
         return true;
     }
 
+    /** Returns all tasks that can be read from the application's data file. */
     public static List<Task> readTaskData() {
         List<String> savedData;
         ArrayList<Task> savedTasks = new ArrayList<>();
         boolean success = true;
-        try (FileReader fr = new FileReader(Paths.get(System.getProperty("user.dir"), saveDir, saveFile).toString())) {
+        try (FileReader fr = new FileReader(Paths.get(System.getProperty("user.dir"), SAVE_DIRECTORY,
+                SAVE_FILE).toString())) {
             savedData = fr.readAllLines();
             for (String taskString : savedData) {
                 try {
@@ -64,17 +71,20 @@ public class SaveDataController {
         return savedTasks;
     }
 
+    /** Returns the save-file representation of the supplied tasks. */
     private static String tasksToDataString(List<Task> tasks) {
         StringBuilder dataString = new StringBuilder();
         for (Task task : tasks) {
-            dataString.append(String.join(separator,task.toDataList()));
+            dataString.append(String.join(SEPARATOR, task.toDataList()));
             dataString.append('\n');
         }
         return dataString.toString();
     }
 
-    private static Task dataStringToTask(String dataString) throws ParseException, IllegalArgumentException {
-        String[] data = dataString.split(separatorRegex);
+    /** Returns a task reconstructed from one save-file record. */
+    private static Task dataStringToTask(String dataString)
+            throws ParseException, IllegalArgumentException {
+        String[] data = dataString.split(SEPARATOR_REGEX);
         return TaskFactory.makeTaskFromData(data);
     }
 }
