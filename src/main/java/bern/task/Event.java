@@ -1,3 +1,7 @@
+package bern.task;
+
+import bern.datetime.DateTime;
+
 import java.util.ArrayList;
 
 class Event extends Task {
@@ -21,7 +25,7 @@ class Event extends Task {
     }
 
     @Override
-    protected ArrayList<String> toDataList() {
+    public ArrayList<String> toDataList() {
         ArrayList<String> out = super.toDataList();
         out.add(startDateTime.toString());
         out.add(endDateTime.toString());

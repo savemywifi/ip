@@ -1,6 +1,10 @@
+package bern.ui;
+
+import bern.task.TaskManager;
+
 import java.util.Scanner;
 
-class Ui {
+public class Ui {
     private static Ui instance;
 
     /** Messages */
@@ -18,7 +22,7 @@ class Ui {
             |____/ \\___|_|  |_| |_|""";
 
     /** Chatbot name */
-    private static final String CHATBOT_NAME = "Bern Tokens";
+    private static final String CHATBOT_NAME = "bern.Bern Tokens";
 
     /** Templates */
     private static final String TEMPLATE_GREETING = "> Hello! I'm %s. \n"
@@ -42,7 +46,7 @@ class Ui {
     private Ui() {
     }
 
-    static Ui getInstance() {
+    public static Ui getInstance() {
         if (instance == null) {
             instance = new Ui();
         }
@@ -57,7 +61,7 @@ class Ui {
      *
      * @return Received input, stripped of whitespace
      */
-    String promptForInput(Scanner sc) {
+    public String promptForInput(Scanner sc) {
         String input = "";
 
         while (input.isEmpty()) {
@@ -68,55 +72,55 @@ class Ui {
         return input;
     }
 
-    void greetUser() {
+    public void greetUser() {
         System.out.println(MESSAGE_LINE);
         printMessage(CHATBOT_BANNER);
         printMessage(String.format(TEMPLATE_GREETING, CHATBOT_NAME));
     }
 
-    void printLoadedTasks() {
+    public void printLoadedTasks() {
         printMessage(MESSAGE_TASK_LOADED);
     }
 
-    void sayGoodbye() {
+    public void sayGoodbye() {
         printMessage(MESSAGE_GOODBYE);
         System.out.print(MESSAGE_LINE);
     }
 
     //TODO: reframe to keyword
-    void printIncorrectKeywordUsageError(Object keyword, Object expected) {
+    public void printIncorrectKeywordUsageError(Object keyword, Object expected) {
         printMessage(String.format(ERROR_TEMPLATE_INCORRECT_KEYWORD_USAGE, keyword, expected));
     }
 
-    void printNoTasksError() {
+    public void printNoTasksError() {
         printMessage(ERROR_NO_TASKS);
     }
 
-    void printInvalidTaskNumberError() {
+    public void printInvalidTaskNumberError() {
         printMessage(String.format(ERROR_TEMPLATE_INVALID_TASK_NUMBER, TaskManager.getInstance().size()));
     }
 
-    void printInvalidDateTimeError(String invalidDateTime) {
+    public void printInvalidDateTimeError(String invalidDateTime) {
         printMessage(String.format(ERROR_TEMPLATE_INVALID_DATE_TIME, invalidDateTime));
     }
 
-    void printDirectoryError() {
+    public void printDirectoryError() {
         printMessage(ERROR_DIRECTORY);
     }
 
-    void printSaveError() {
+    public void printSaveError() {
         printMessage(ERROR_SAVE);
     }
 
-    void printLoadError() {
+    public void printLoadError() {
         printMessage(ERROR_LOAD);
     }
 
-    void printLoadTaskError() {
+    public void printLoadTaskError() {
         printMessage(ERROR_LOAD_TASK);
     }
 
-    void printKeywordInvalidError() {
+    public void printKeywordInvalidError() {
         printMessage(ERROR_KEYWORD_INVALID);
     }
 
@@ -125,7 +129,7 @@ class Ui {
      *
      * @param msg The message to be printed
      */
-    void printMessage(String msg) {
+    public void printMessage(String msg) {
         System.out.print(msg + "\n" + MESSAGE_LINE);
     }
 }

@@ -1,9 +1,11 @@
+package bern.datetime;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
-class DateTime implements Comparable<DateTime> {
+public class DateTime implements Comparable<DateTime> {
     private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
     private static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh.mma");
     static final String separator = " @ ";

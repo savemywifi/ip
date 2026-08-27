@@ -1,3 +1,9 @@
+package bern.storage;
+
+import bern.ui.Ui;
+import bern.task.Task;
+import bern.task.TaskFactory;
+
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -7,7 +13,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-class SaveDataController {
+public class SaveDataController {
     public static final String separator = "\0|";
     private static final String separatorRegex = "\0\\|";
     private static final String saveDir = "data";

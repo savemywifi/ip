@@ -1,7 +1,9 @@
+package bern.task;
+
 import java.util.ArrayList;
 import java.util.List;
 
-class TaskManager {
+public class TaskManager {
     private static TaskManager instance;
 
     private final ArrayList<Task> tasks = new ArrayList<>();
@@ -9,7 +11,7 @@ class TaskManager {
     private TaskManager() {
     }
 
-    static TaskManager getInstance() {
+    public static TaskManager getInstance() {
         if (instance == null) {
             instance = new TaskManager();
         }
@@ -17,19 +19,19 @@ class TaskManager {
         return instance;
     }
 
-    boolean hasTasks() {
+    public boolean hasTasks() {
         return !tasks.isEmpty();
     }
 
-    int size() {
+    public int size() {
         return tasks.size();
     }
 
-    List<Task> getTaskList() {
+    public List<Task> getTaskList() {
         return new ArrayList<Task>(tasks);
     }
 
-    void loadTaskList(List<Task> taskList) {
+    public void loadTaskList(List<Task> taskList) {
         if (hasTasks()) {
             // Reject operation if task list already has tasks in it
             // TODO: have better error messages
@@ -39,13 +41,13 @@ class TaskManager {
         tasks.addAll(taskList);
     }
 
-    String addTask(Task task) {
+    public String addTask(Task task) {
         tasks.add(task);
 
         return "> added: " + task;
     }
 
-    String listTasks() {
+    public String listTasks() {
         if (tasks.isEmpty()) {
             return "> You have no tasks.";
         }
@@ -59,7 +61,7 @@ class TaskManager {
         return sb.toString();
     }
 
-    String markTask(int i) {
+    public String markTask(int i) {
         Task task = tasks.get(i - 1);
 
         if (task.isDone()) {
@@ -71,7 +73,7 @@ class TaskManager {
         return "Nice! I've marked this task as done:\n" + task;
     }
 
-    String unmarkTask(int i) {
+    public String unmarkTask(int i) {
         Task task = tasks.get(i - 1);
 
         if (!task.isDone()) {
@@ -83,7 +85,7 @@ class TaskManager {
         return "OK, I've marked this task as not done yet:\n" + task;
     }
 
-    String deleteTask(int i) {
+    public String deleteTask(int i) {
         Task task = tasks.get(i - 1);
 
         tasks.remove(i - 1);

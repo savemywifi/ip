@@ -1,4 +1,4 @@
-# Bern User Guide
+# bern.Bern User Guide
 
 // Update the title above to match the actual product name
 

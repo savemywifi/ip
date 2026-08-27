@@ -1,3 +1,5 @@
+package bern.datetime;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -6,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-class DateTimeFactory {
+public class DateTimeFactory {
     LocalDate date;
     LocalTime time;
 

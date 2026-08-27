@@ -1,3 +1,5 @@
+package bern.task;
+
 import java.util.ArrayList;
 
 class Todo extends Task {
@@ -11,7 +13,7 @@ class Todo extends Task {
     }
 
     @Override
-    protected ArrayList<String> toDataList() {
+    public ArrayList<String> toDataList() {
         return super.toDataList();
     }
 }

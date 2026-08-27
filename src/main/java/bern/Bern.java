@@ -1,3 +1,10 @@
+package bern;
+
+import bern.storage.SaveDataController;
+import bern.task.TaskFactory;
+import bern.task.TaskManager;
+import bern.ui.Ui;
+
 import java.text.ParseException;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
@@ -19,7 +26,7 @@ public class Bern {
     }
 
     /**
-     * Takes the parse exception passed from TaskFactory and parses it into an appropriate error message
+     * Takes the parse exception passed from bern.task.TaskFactory and parses it into an appropriate error message
      *
      * @param e The received parse exception to parse
      * @return An error message reflecting the exception details

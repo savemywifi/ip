@@ -1,7 +1,9 @@
+package bern.parser;
+
 import java.text.ParseException;
 import java.util.NoSuchElementException;
 
-class ParseFactory {
+public class ParseFactory {
     protected static String[] parseData(String[] tokens, String[] keywords) throws ParseException {
         String[] parsedData = new String[keywords.length + 1];
         int next = 1;

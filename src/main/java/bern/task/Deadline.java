@@ -1,3 +1,7 @@
+package bern.task;
+
+import bern.datetime.DateTime;
+
 import java.util.ArrayList;
 
 class Deadline extends Task {
@@ -19,7 +23,7 @@ class Deadline extends Task {
     }
 
     @Override
-    protected ArrayList<String> toDataList() {
+    public ArrayList<String> toDataList() {
         ArrayList<String> out = super.toDataList();
         out.add(deadlineDateTime.toString());
         return out;
