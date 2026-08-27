@@ -61,6 +61,32 @@ public class TaskManager {
         return sb.toString();
     }
 
+    public String findTasks(String searchToken) {
+        if (tasks.isEmpty()) {
+            return "> You have no tasks.";
+        }
+
+        boolean tasksAdded = false;
+
+        StringBuilder sb = new StringBuilder("> Here are matching tasks in your list:\n");
+
+        for (int i = 0; i < tasks.size(); i++) {
+            for (String word : tasks.get(i).getName().split(" ")) {
+                if (word.equalsIgnoreCase(searchToken)) {
+                    tasksAdded = true;
+                    sb.append(String.format("\n%d. %s", i + 1, tasks.get(i)));
+                    break;
+                }
+            }
+        }
+
+        if (!tasksAdded) {
+            return "> No tasks match the given search token.";
+        }
+
+        return sb.toString();
+    }
+
     public String markTask(int i) {
         Task task = tasks.get(i - 1);
 

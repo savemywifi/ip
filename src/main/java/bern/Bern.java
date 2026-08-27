@@ -16,7 +16,8 @@ public class Bern {
         BYE(Bern::attemptExit),
         LIST(Bern::attemptListTasks),
         MARK(Bern::attemptMarkTask), UNMARK(Bern::attemptUnmarkTask),
-        TODO(Bern::attemptMakeTodo), DEADLINE(Bern::attemptMakeDeadline), EVENT(Bern::attemptMakeEvent), DELETE(Bern::attemptDeleteTask);
+        TODO(Bern::attemptMakeTodo), DEADLINE(Bern::attemptMakeDeadline), EVENT(Bern::attemptMakeEvent), DELETE(Bern::attemptDeleteTask),
+        FIND(Bern::attemptFindTasks);
 
         private final Consumer<String[]> action;
 
@@ -72,6 +73,16 @@ public class Bern {
         }
 
         Ui.getInstance().printMessage(TaskManager.getInstance().listTasks());
+        return true;
+    }
+
+    private static boolean attemptFindTasks(String[] inputTokens) {
+        if (inputTokens.length != 2) {
+            Ui.getInstance().printIncorrectKeywordUsageError(Keyword.FIND, Keyword.FIND.toString() + " [search token]");
+            return false;
+        }
+
+        Ui.getInstance().printMessage(TaskManager.getInstance().findTasks(inputTokens[1]));
         return true;
     }
 
