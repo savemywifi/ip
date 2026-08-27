@@ -1,6 +1,5 @@
 import java.text.ParseException;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.function.Consumer;
 
@@ -34,15 +33,12 @@ public class Bern {
         }
     }
 
-    /** task-related variables */
-    private static final ArrayList<Task> tasks = new ArrayList<>();
-
     /**
      * Prints a message to the standard output, appended with a message line
      *
      * @param msg The message to be printed
      */
-    private static void printMessage(String msg) {
+    public static void printMessage(String msg) {
         System.out.print(msg + "\n" + MESSAGE_LINE);
     }
 
@@ -92,34 +88,6 @@ public class Bern {
         printMessage("> " + msg);
     }
 
-    /**
-     * Adds a given task to the list of tasks
-     *
-     * @param task The task to add
-     */
-    private static void addTask(Task task) {
-        tasks.add(task);
-
-        printMessage("> added: " + task);
-    }
-
-    /**
-     * Lists the stored tasks in the standard output
-     */
-    private static void listTasks() {
-        if (tasks.isEmpty()) {
-            printMessage("> You have no tasks.");
-            return;
-        }
-
-        System.out.print("> Here are your current tasks: ");
-
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < tasks.size(); i++) {
-            sb.append(String.format("\n%d. %s", i + 1, tasks.get(i)));
-        }
-        printMessage(sb.toString());
-    }
 
     /**
      * Takes the parse exception passed from TaskFactory and parses it into an appropriate error message
@@ -147,9 +115,9 @@ public class Bern {
             printMessage(String.format("Incorrect usage of %s. Expected: %s", Keyword.BYE, Keyword.BYE));
             return false;
         }
-        if (!SaveDataController.saveTaskData(tasks)) {
+        if (!SaveDataController.saveTaskData(TaskManager.getInstance().getTaskList())) {
             printMessage(String.format("Unable to save task data."));
-        };
+        }
 
         return true;
     }
@@ -166,7 +134,7 @@ public class Bern {
             printMessage(String.format("Incorrect usage of %s. Expected: %s", Keyword.LIST, Keyword.LIST));
             return false;
         }
-        listTasks();
+        printMessage(TaskManager.getInstance().listTasks());
         return true;
     }
 
@@ -179,7 +147,7 @@ public class Bern {
      * @return An integer with the task number, or -1 if the number is invalid
      */
     private static int tryGetTaskNumber(String[] inputTokens) {
-        if (tasks.isEmpty()) {
+        if (TaskManager.getInstance().hasTasks()) {
             printMessage("There are no tasks.");
             return -1;
         }
@@ -194,12 +162,12 @@ public class Bern {
         try {
             taskIndex = Integer.parseInt(inputTokens[1]);
         } catch (NumberFormatException e) {
-            printMessage(String.format("Argument after %s must correspond to an existing task number from 1 to %d", inputTokens[0], tasks.size()));
+            printMessage(String.format("Argument after %s must correspond to an existing task number from 1 to %d", inputTokens[0], TaskManager.getInstance().size()));
             return -1;
         }
 
-        if (taskIndex < 1 || taskIndex > tasks.size()) {
-            printMessage(String.format("Given task number must be from %d to %d", 1, tasks.size()));
+        if (taskIndex < 1 || taskIndex > TaskManager.getInstance().size()) {
+            printMessage(String.format("Given task number must be from %d to %d", 1, TaskManager.getInstance().size()));
             return -1;
         }
 
@@ -211,23 +179,15 @@ public class Bern {
      *
      * @param inputTokens The tokens in the input
      *
-     * @return A boolean indicating the success of this operation
      */
-    private static boolean attemptMarkTask(String[] inputTokens) {
+    private static void attemptMarkTask(String[] inputTokens) {
         int taskNumber = tryGetTaskNumber(inputTokens);
+
         if (taskNumber == -1) {
-            return false;
+            return;
         }
 
-        Task target = tasks.get(taskNumber - 1);
-        if (target.isDone()) {
-            printMessage("The following task is already marked as done:\n" + target);
-            return false;
-        }
-
-        target.setDone(true);
-        printMessage("Nice! I've marked this task as done:\n" + target);
-        return true;
+        printMessage(TaskManager.getInstance().markTask(taskNumber));
     }
 
     /**
@@ -235,23 +195,14 @@ public class Bern {
      *
      * @param inputTokens The tokens in the input
      *
-     * @return A boolean indicating the success of this operation
      */
-    private static boolean attemptUnmarkTask(String[] inputTokens) {
+    private static void attemptUnmarkTask(String[] inputTokens) {
         int taskNumber = tryGetTaskNumber(inputTokens);
         if (taskNumber == -1) {
-            return false;
+            return;
         }
 
-        Task target = tasks.get(taskNumber - 1);
-        if (!target.isDone()) {
-            printMessage("The following task is already marked as undone:\n" + target);
-            return false;
-        }
-
-        target.setDone(false);
-        printMessage("OK, I've marked this task as not done yet:\n" + target);
-        return true;
+        printMessage(TaskManager.getInstance().unmarkTask(taskNumber));
     }
 
     /**
@@ -263,7 +214,7 @@ public class Bern {
      */
     private static boolean attemptMakeTodo(String[] inputTokens) {
         try {
-            addTask(TaskFactory.makeTodo(inputTokens));
+            printMessage(TaskManager.getInstance().addTask(TaskFactory.makeTodo(inputTokens)));
         } catch (ParseException e) {
             printMessage(getParseExceptionResponse(e) + "Command syntax: todo <task name>");
             return false;
@@ -280,7 +231,7 @@ public class Bern {
      */
     private static boolean attemptMakeDeadline(String[] inputTokens) {
         try {
-            addTask(TaskFactory.makeDeadline(inputTokens));
+            printMessage(TaskManager.getInstance().addTask(TaskFactory.makeDeadline(inputTokens)));
         } catch (ParseException e) {
             printMessage(getParseExceptionResponse(e)
                     + "Command syntax: deadline <task name> /by <due date>");
@@ -302,7 +253,7 @@ public class Bern {
      */
     private static boolean attemptMakeEvent(String[] inputTokens) {
         try {
-            addTask(TaskFactory.makeEvent(inputTokens));
+            printMessage(TaskManager.getInstance().addTask(TaskFactory.makeEvent(inputTokens)));
         } catch (ParseException e) {
             printMessage(getParseExceptionResponse(e)
                     + "Command syntax: event <task name> /from <start date time> /to <end date time>");
@@ -323,18 +274,13 @@ public class Bern {
      *
      * @param inputTokens The tokens in the input
      *
-     * @return A boolean indicating the success of this operation
      */
-    private static boolean attemptDeleteTask(String[] inputTokens) {
+    private static void attemptDeleteTask(String[] inputTokens) {
         int taskNumber = tryGetTaskNumber(inputTokens);
         if (taskNumber == -1) {
-            return false;
+            return;
         }
-
-        Task target = tasks.get(taskNumber - 1);
-        tasks.remove(taskNumber - 1);
-        printMessage("OK, I've removed this task:\n" + target);
-        return true;
+        TaskManager.getInstance().deleteTask(taskNumber);
     }
 
     public static void main(String[] args) {
@@ -344,12 +290,16 @@ public class Bern {
         boolean isReadingInput = true;
         Keyword keyword;
 
-        if (!SaveDataController.readTaskDataTo(tasks)) {
+        /*
+        if (!SaveDataController.readTaskData(tasks)) {
             printMessage("Couldn't access a previous save for some reason."
                     + "It could be corrupted or the file could not be written to.");
         }
+*/
+        TaskManager.getInstance().loadTaskList(SaveDataController.readTaskData());
 
-        if (!tasks.isEmpty()) {
+
+        if (TaskManager.getInstance().hasTasks()) {
             printMessage("You have saved tasks. Use list to view them.");
         }
 

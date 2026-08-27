@@ -34,14 +34,15 @@ class SaveDataController {
         return true;
     }
 
-    public static boolean readTaskDataTo(ArrayList<Task> tasks) {
-        List<String> savedTasks;
+    public static List<Task> readTaskData() {
+        List<String> savedData;
+        ArrayList<Task> savedTasks = new ArrayList<>();
         boolean success = true;
         try (FileReader fr = new FileReader(Paths.get(System.getProperty("user.dir"), saveDir, saveFile).toString())) {
-            savedTasks = fr.readAllLines();
-            for (String taskString : savedTasks) {
+            savedData = fr.readAllLines();
+            for (String taskString : savedData) {
                 try {
-                    tasks.add(dataStringToTask(taskString));
+                    savedTasks.add(dataStringToTask(taskString));
                 } catch (ParseException | IllegalArgumentException e) {
                     success = false;
                 }
@@ -49,7 +50,8 @@ class SaveDataController {
         } catch (IOException e) {
             success = false;
         }
-        return success;
+
+        return savedTasks;
     }
 
     private static String tasksToDataString(List<Task> tasks) {
