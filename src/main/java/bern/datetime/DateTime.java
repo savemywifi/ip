@@ -10,9 +10,14 @@ import java.time.temporal.ChronoUnit;
  * represented using Java's LocalDate and LocalTime classes e.g. 28 August 2026 @ 12.24pm
  */
 public class DateTime implements Comparable<DateTime> {
-    static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
-    static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh.mma");
-    static final String separator = " @ ";
+    /** Formats dates for display and storage. */
+    static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+
+    /** Formats times for display and storage. */
+    static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("hh.mma");
+
+    /** Separates the date and time parts in stored date-time values. */
+    static final String SEPARATOR = " @ ";
 
     private final LocalDate localDate;
     private final LocalTime localTime;
@@ -35,16 +40,17 @@ public class DateTime implements Comparable<DateTime> {
      */
     @Override
     public String toString() {
-        if (this.localTime == null) {
-            return this.localDate.format(dateFormatter);
+        if (localTime == null) {
+            return localDate.format(DATE_FORMATTER);
         }
 
-        return String.format("%s%s%s", localDate.format(dateFormatter), separator, localTime.format(timeFormatter));
+        return String.format("%s%s%s", localDate.format(DATE_FORMATTER), SEPARATOR,
+                localTime.format(TIME_FORMATTER));
     }
 
     /**
      * Compares two DateTimes. Returns a negative integer if the other date/time is after the current date/time, 0 if
-     * they are equal, or a positive integer if the other date/time. is before the current date/time. If one object has
+     * they are equal, or a positive integer if the other date/time is before the current date/time. If one object has
      * no specified time value (it is null), that time will be "before" the DateTime with a specified time field if
      * they contain the same date.
      *
@@ -53,19 +59,19 @@ public class DateTime implements Comparable<DateTime> {
      */
     @Override
     public int compareTo(DateTime other) {
-        int dayDifference = (int) ChronoUnit.DAYS.between(other.localDate, this.localDate);
+        int dayDifference = (int) ChronoUnit.DAYS.between(other.localDate, localDate);
         if (dayDifference != 0) {
             return dayDifference;
         }
 
-        if (this.localTime == null && other.localTime == null) {
+        if (localTime == null && other.localTime == null) {
             return 0;
-        } else if (this.localTime == null) {
+        } else if (localTime == null) {
             return -1;
         } else if (other.localTime == null) {
             return 1;
         }
 
-        return (int) ChronoUnit.MINUTES.between(other.localTime, this.localTime);
+        return (int) ChronoUnit.MINUTES.between(other.localTime, localTime);
     }
 }

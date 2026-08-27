@@ -1,18 +1,19 @@
 package bern.ui;
 
-import bern.task.TaskManager;
-
 import java.util.Scanner;
 
+import bern.task.TaskManager;
+
+/** Handles user-facing input prompts and output messages. */
 public class Ui {
     private static Ui instance;
 
-    /** Messages */
+    /** Message line printed after user-facing output. */
     private static final String MESSAGE_LINE = "____________________________________\n";
     private static final String MESSAGE_TASK_LOADED = "Loaded saved tasks. Use list to view them.";
     private static final String MESSAGE_GOODBYE = "> Bye. Hope to see you again soon!";
 
-    /** Constants for chatbot identity */
+    /** Banner used to identify the chatbot. */
     private static final String CHATBOT_BANNER = """
              ____                 \s
             |  _ \\                \s
@@ -21,14 +22,14 @@ public class Ui {
             | |_) |  __/ |  | | | |
             |____/ \\___|_|  |_| |_|""";
 
-    /** Chatbot name */
+    /** Name displayed for the chatbot. */
     private static final String CHATBOT_NAME = "bern.Bern Tokens";
 
-    /** Templates */
+    /** Template used for the greeting. */
     private static final String TEMPLATE_GREETING = "> Hello! I'm %s. \n"
             + "> What can I do for you?";
 
-    /** Errors */
+    /** Error message for an unknown command. */
     private static final String ERROR_KEYWORD_INVALID = "Command not recognised.\n"
             + "List of commands: todo, deadline, event, mark, unmark, delete, list, bye";
 
@@ -60,11 +61,11 @@ public class Ui {
     }
 
     /**
-     * Prompts the user for an input, then closes the input with a message line
+     * Prompts the user for input, then closes the input with a message line.
      *
-     * @param sc Scanner to receive input from
+     * @param sc Scanner to receive input from.
      *
-     * @return Received input, stripped of whitespace
+     * @return Received input, stripped of whitespace.
      */
     public String promptForInput(Scanner sc) {
         String input = "";
@@ -136,30 +137,35 @@ public class Ui {
         printMessage(String.format(ERROR_TEMPLATE_INVALID_DATE_TIME, invalidDateTime));
     }
 
+    /** Displays an error for a directory that cannot be created. */
     public void printDirectoryError() {
         printMessage(ERROR_DIRECTORY);
     }
 
+    /** Displays an error for task data that cannot be saved. */
     public void printSaveError() {
         printMessage(ERROR_SAVE);
     }
 
+    /** Displays an error for task data that cannot be loaded. */
     public void printLoadError() {
         printMessage(ERROR_LOAD);
     }
 
+    /** Displays an error for an individual task that cannot be loaded. */
     public void printLoadTaskError() {
         printMessage(ERROR_LOAD_TASK);
     }
 
+    /** Displays an error for an unknown command keyword. */
     public void printKeywordInvalidError() {
         printMessage(ERROR_KEYWORD_INVALID);
     }
 
     /**
-     * Prints a message to the standard output, appended with a message line
+     * Prints a message to standard output, appended with a message line.
      *
-     * @param msg The message to be printed
+     * @param msg The message to be printed.
      */
     public void printMessage(String msg) {
         System.out.print(msg + "\n" + MESSAGE_LINE);

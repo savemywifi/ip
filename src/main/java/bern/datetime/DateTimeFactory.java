@@ -12,20 +12,17 @@ import java.util.List;
  * A factory class for DateTime, used to parse textual inputs into DateTime objects
  */
 public class DateTimeFactory {
-    LocalDate date;
-    LocalTime time;
+    private static final String[] HOUR_FORMATS = {"h", "k"};
+    private static final String[] MINUTE_FORMATS = {"m"};
+    private static final String[] TIME_SEPARATORS = {":", "."};
 
-    private static final String[] hourFormats = {"h","k"};
-    private static final String[] minuteFormats = {"m"};
-    private static final String[] timeSeparators = {":", "."};
+    private static final String[] MONTH_FORMATS_SHORT = {"M", "MM"};
+    private static final String[] MONTH_FORMATS_LONG = {"MMM", "MMMM"};
+    private static final String[] YEAR_FORMATS = {"y"}; // TODO: accommodate for "yy"
+    private static final String[] DATE_SEPARATORS_SHORT = {"/", ".", "-"};
 
-    private static final String[] monthFormatsShort = {"M", "MM"};
-    private static final String[] monthFormatsLong = {"MMM", "MMMM"};
-    private static final String[] yearFormats = {"y"}; // TODO: accommodate for "yy"
-    private static final String[] dateSeparatorsShort = {"/", ".", "-"};
-
-    private static final List<String> dateFormats = DateTimeFactory.generateDateFormats();
-    private static final List<String> timeFormats = List.of(
+    private static final List<String> DATE_FORMATS = DateTimeFactory.generateDateFormats();
+    private static final List<String> TIME_FORMATS = List.of(
             "ha", // 5pm
             "h:ma", "h.ma", // 5:29pm, 5.29pm
             "km", "k:m", "k.m" // 1729, 17:29, 17.29
@@ -53,7 +50,7 @@ public class DateTimeFactory {
     }
 
     public static DateTime makeDateFromDataString(String dataString) {
-        String[] tokens = dataString.split(DateTime.separator);
+        String[] tokens = dataString.split(DateTime.SEPARATOR);
 
         if (tokens.length != 2) {
             throw new IllegalArgumentException("Data has insufficient arguments for date and time");
@@ -65,7 +62,7 @@ public class DateTimeFactory {
     private static LocalDate parseDate(String dateString) throws DateTimeParseException {
         LocalDate date = null;
         DateTimeParseException firstSeenException = null;
-        for (String format : dateFormats) {
+        for (String format : DATE_FORMATS) {
             try {
                 date = LocalDate.parse(dateString, DateTimeFormatter.ofPattern(format));
                 break;
@@ -84,7 +81,7 @@ public class DateTimeFactory {
     private static LocalTime parseTime(String timeString) throws DateTimeParseException {
         LocalTime time = null;
         DateTimeParseException firstSeenException = null;
-        for (String format : timeFormats) {
+        for (String format : TIME_FORMATS) {
             try {
                 time = LocalTime.parse(timeString, DateTimeFormatter.ofPattern(format));
                 break;
@@ -101,7 +98,7 @@ public class DateTimeFactory {
     }
 
     private static boolean isTime(String timeString) {
-        for (String format: timeFormats) {
+        for (String format : TIME_FORMATS) {
             try {
                 LocalTime.parse(timeString, DateTimeFormatter.ofPattern(format));
                 return true;
@@ -114,9 +111,9 @@ public class DateTimeFactory {
 
     private static ArrayList<String> generateDateFormats() {
         ArrayList<String> formats = new ArrayList<>();
-        for (String yearFormat : yearFormats) {
-            for (String monthFormat : monthFormatsShort) {
-                for (String dateSeparator : dateSeparatorsShort) {
+        for (String yearFormat : YEAR_FORMATS) {
+            for (String monthFormat : MONTH_FORMATS_SHORT) {
+                for (String dateSeparator : DATE_SEPARATORS_SHORT) {
                     // Little-Endian
                     formats.add(String.format("%s%s%s%s%s",
                             "d",
@@ -138,7 +135,7 @@ public class DateTimeFactory {
                 }
             }
 
-            for (String monthFormat : monthFormatsLong) {
+            for (String monthFormat : MONTH_FORMATS_LONG) {
                 // Little-Endian
                 formats.add(String.format("%s %s %s",
                         "d",

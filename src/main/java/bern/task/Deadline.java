@@ -1,8 +1,8 @@
 package bern.task;
 
-import bern.datetime.DateTime;
-
 import java.util.ArrayList;
+
+import bern.datetime.DateTime;
 
 /**
  * A task with a deadline. Contains a String description and a DateTime deadline.
@@ -38,7 +38,7 @@ class Deadline extends Task {
      */
     @Override
     public String toString() {
-        return String.format("%s (by: %s)", super.toString(), this.deadlineDateTime);
+        return String.format("%s (by: %s)", super.toString(), deadlineDateTime);
     }
 
     /**

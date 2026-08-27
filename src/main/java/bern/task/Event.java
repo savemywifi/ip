@@ -1,8 +1,8 @@
 package bern.task;
 
-import bern.datetime.DateTime;
-
 import java.util.ArrayList;
+
+import bern.datetime.DateTime;
 
 /**
  * A task that is an event. Contains a String description and two DateTimes signifying the start and end of the event.
@@ -41,7 +41,7 @@ class Event extends Task {
      */
     @Override
     public String toString() {
-        return String.format("%s (from: %s to: %s)", super.toString(), this.startDateTime, this.endDateTime);
+        return String.format("%s (from: %s to: %s)", super.toString(), startDateTime, endDateTime);
     }
 
     /**

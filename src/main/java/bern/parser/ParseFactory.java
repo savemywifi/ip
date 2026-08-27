@@ -23,7 +23,7 @@ public class ParseFactory {
 
             if (parsedData[i].isEmpty()) {
                 // parsed argument is empty
-                throw new ParseException(i == 0 ? tokens[0] : keywords[i-1], -1);
+                throw new ParseException(i == 0 ? tokens[0] : keywords[i - 1], -1);
             }
         }
         StringBuilder sb = new StringBuilder();
