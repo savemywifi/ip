@@ -10,8 +10,8 @@ import java.util.List;
 class SaveDataController {
     public static final String separator = "\0|";
     private static final String separatorRegex = "\0\\|";
-    private static String saveDir = "data";
-    private static String saveFile = "tasks.txt";
+    private static final String saveDir = "data";
+    private static final String saveFile = "tasks.txt";
 
     public static boolean saveTaskData(List<Task> tasks) {
         String dataString = tasksToDataString(tasks);
@@ -20,7 +20,7 @@ class SaveDataController {
             // note that this will do nothing if the directory exists, or create a new one if it does not exist
             Files.createDirectories(Paths.get(System.getProperty("user.dir"), saveDir));
         } catch (IOException e) {
-            System.out.println("Unable to create directory for save file");
+            Ui.getInstance().printDirectoryError();
             return false;
         }
 
@@ -34,22 +34,28 @@ class SaveDataController {
         return true;
     }
 
-    public static boolean readTaskDataTo(ArrayList<Task> tasks) {
-        List<String> savedTasks;
+    public static List<Task> readTaskData() {
+        List<String> savedData;
+        ArrayList<Task> savedTasks = new ArrayList<>();
         boolean success = true;
         try (FileReader fr = new FileReader(Paths.get(System.getProperty("user.dir"), saveDir, saveFile).toString())) {
-            savedTasks = fr.readAllLines();
-            for (String taskString : savedTasks) {
+            savedData = fr.readAllLines();
+            for (String taskString : savedData) {
                 try {
-                    tasks.add(dataStringToTask(taskString));
+                    savedTasks.add(dataStringToTask(taskString));
                 } catch (ParseException | IllegalArgumentException e) {
                     success = false;
                 }
             }
         } catch (IOException e) {
-            success = false;
+            Ui.getInstance().printLoadError();
         }
-        return success;
+
+        if (!success) {
+            Ui.getInstance().printLoadTaskError();
+        }
+
+        return savedTasks;
     }
 
     private static String tasksToDataString(List<Task> tasks) {
