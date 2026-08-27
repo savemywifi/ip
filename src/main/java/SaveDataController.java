@@ -10,8 +10,8 @@ import java.util.List;
 class SaveDataController {
     public static final String separator = "\0|";
     private static final String separatorRegex = "\0\\|";
-    private static String saveDir = "data";
-    private static String saveFile = "tasks.txt";
+    private static final String saveDir = "data";
+    private static final String saveFile = "tasks.txt";
 
     public static boolean saveTaskData(List<Task> tasks) {
         String dataString = tasksToDataString(tasks);
@@ -20,7 +20,7 @@ class SaveDataController {
             // note that this will do nothing if the directory exists, or create a new one if it does not exist
             Files.createDirectories(Paths.get(System.getProperty("user.dir"), saveDir));
         } catch (IOException e) {
-            System.out.println("Unable to create directory for save file");
+            Ui.getInstance().printDirectoryError();
             return false;
         }
 
@@ -48,7 +48,11 @@ class SaveDataController {
                 }
             }
         } catch (IOException e) {
-            success = false;
+            Ui.getInstance().printLoadError();
+        }
+
+        if (!success) {
+            Ui.getInstance().printLoadTaskError();
         }
 
         return savedTasks;

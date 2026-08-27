@@ -18,7 +18,7 @@ class TaskManager {
     }
 
     boolean hasTasks() {
-        return tasks.isEmpty();
+        return !tasks.isEmpty();
     }
 
     int size() {
@@ -30,7 +30,7 @@ class TaskManager {
     }
 
     void loadTaskList(List<Task> taskList) {
-        if (!hasTasks()) {
+        if (hasTasks()) {
             // Reject operation if task list already has tasks in it
             // TODO: have better error messages
             return;
@@ -83,10 +83,10 @@ class TaskManager {
         return "OK, I've marked this task as not done yet:\n" + task;
     }
 
-    void deleteTask(int i) {
+    String deleteTask(int i) {
         Task task = tasks.get(i - 1);
 
         tasks.remove(i - 1);
-        Bern.printMessage("OK, I've removed this task:\n" + task);
+        return "OK, I've removed this task:\n" + task;
     }
 }
