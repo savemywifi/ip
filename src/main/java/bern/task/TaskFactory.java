@@ -1,7 +1,13 @@
+package bern.task;
+
+import bern.datetime.DateTime;
+import bern.datetime.DateTimeFactory;
+import bern.parser.ParseFactory;
+
 import java.text.ParseException;
 import java.time.format.DateTimeParseException;
 
-class TaskFactory extends ParseFactory {
+public class TaskFactory extends ParseFactory {
     public static Task makeTaskFromData(String[] data) throws ParseException, IllegalArgumentException {
         Task task = null;
         if (data.length < 3) {

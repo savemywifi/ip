@@ -1,14 +1,15 @@
-import java.util.ArrayList;
-import java.util.List;
+package bern.task;
 
-abstract class Task {
+import java.util.ArrayList;
+
+public abstract class Task {
     protected abstract String getSymbol();
 
     private boolean done;
     private String name;
 
     /**
-     * Constructor for Task object
+     * Constructor for bern.task.Task object
      * @param name The name of the task
      */
     public Task(String name) {
@@ -58,7 +59,7 @@ abstract class Task {
      *
      * @return The string list representation of the task as described above.
      */
-    protected ArrayList<String> toDataList() {
+    public ArrayList<String> toDataList() {
         ArrayList<String> dataList = new ArrayList<>();
         dataList.add(getSymbol());
         dataList.add(isDone() ? "1" : "0");
