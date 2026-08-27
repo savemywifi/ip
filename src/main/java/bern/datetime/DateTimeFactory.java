@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * A factory class for DateTime, used to parse textual inputs into DateTime objects
+ */
 public class DateTimeFactory {
     LocalDate date;
     LocalTime time;

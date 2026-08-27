@@ -46,6 +46,11 @@ public class Ui {
     private Ui() {
     }
 
+    /**
+     * Creates the singleton instance of the Ui class if it doesn't already exist, then returns it.
+     *
+     * @return An instance of the Ui class
+     */
     public static Ui getInstance() {
         if (instance == null) {
             instance = new Ui();
@@ -72,34 +77,61 @@ public class Ui {
         return input;
     }
 
+    /**
+     * The message the user is presented with on startup of the chatbot
+     */
     public void greetUser() {
         System.out.println(MESSAGE_LINE);
         printMessage(CHATBOT_BANNER);
         printMessage(String.format(TEMPLATE_GREETING, CHATBOT_NAME));
     }
 
+    /**
+     * The message displayed to the user if tasks are loaded on startup
+     */
     public void printLoadedTasks() {
         printMessage(MESSAGE_TASK_LOADED);
     }
 
+    /**
+     * The message displayed when the bot closes
+     */
     public void sayGoodbye() {
         printMessage(MESSAGE_GOODBYE);
         System.out.print(MESSAGE_LINE);
     }
 
     //TODO: reframe to keyword
+
+    /**
+     * Displays a message showing correct use of a specified keyword
+     *
+     * @param keyword A keyword to be used by the user
+     * @param expected The expected usage of this keyword
+     */
     public void printIncorrectKeywordUsageError(Object keyword, Object expected) {
         printMessage(String.format(ERROR_TEMPLATE_INCORRECT_KEYWORD_USAGE, keyword, expected));
     }
 
+    /**
+     * Displays a message showing that there are no tasks
+     */
     public void printNoTasksError() {
         printMessage(ERROR_NO_TASKS);
     }
 
+    /**
+     * Displays a message showing the range of valid task numbers
+     */
     public void printInvalidTaskNumberError() {
         printMessage(String.format(ERROR_TEMPLATE_INVALID_TASK_NUMBER, TaskManager.getInstance().size()));
     }
 
+    /**
+     * Displays a message showing the user's invalid date-time input
+     *
+     * @param invalidDateTime The invalid date-time input given by the user
+     */
     public void printInvalidDateTimeError(String invalidDateTime) {
         printMessage(String.format(ERROR_TEMPLATE_INVALID_DATE_TIME, invalidDateTime));
     }

@@ -13,12 +13,21 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A controller to read, write and convert save data between their Task state and their text state.
+ */
 public class SaveDataController {
     public static final String separator = "\0|";
     private static final String separatorRegex = "\0\\|";
     private static final String saveDir = "data";
     private static final String saveFile = "tasks.txt";
 
+    /**
+     * Saves data from a list of Tasks into the save directory.
+     * @param tasks The list of Tasks to save
+     *
+     * @return The success of the operation.
+     */
     public static boolean saveTaskData(List<Task> tasks) {
         String dataString = tasksToDataString(tasks);
 
@@ -40,6 +49,11 @@ public class SaveDataController {
         return true;
     }
 
+    /**
+     * Reads data from the save directory and converts it into a list of Tasks
+     *
+     * @return A list of Tasks, as defined by the save data.
+     */
     public static List<Task> readTaskData() {
         List<String> savedData;
         ArrayList<Task> savedTasks = new ArrayList<>();
