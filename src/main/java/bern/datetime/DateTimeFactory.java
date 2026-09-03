@@ -28,6 +28,13 @@ public class DateTimeFactory {
             "km", "k:m", "k.m" // 1729, 17:29, 17.29
     );
 
+    /**
+     * Parses a date-time string into a DateTime
+     *
+     * @param dateTimeString The string to be parsed
+     * @return The DateTime matching the given string
+     * @throws DateTimeParseException
+     */
     public static DateTime parseDateTime(String dateTimeString) throws DateTimeParseException {
         String[] tokens = dateTimeString.split(" ");
         LocalTime lt = null;
@@ -49,6 +56,12 @@ public class DateTimeFactory {
         return new DateTime(ld, lt);
     }
 
+    /**
+     * Parses a date-time from a saved datastring
+     *
+     * @param dataString The datastring to parse a date-time from
+     * @return The parsed DateTime
+     */
     public static DateTime makeDateFromDataString(String dataString) {
         String[] tokens = dataString.split(DateTime.SEPARATOR);
 

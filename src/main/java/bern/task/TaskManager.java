@@ -69,6 +69,11 @@ public class TaskManager {
         return sb.toString();
     }
 
+    /**
+     * Returns a formatted list of tasks, filtered by a given search token
+     * @param searchToken The token that tasks will be matched to
+     * @return A list of tasks which contain the given token
+     */
     public String findTasks(String searchToken) {
         if (tasks.isEmpty()) {
             return "> You have no tasks.";
@@ -95,6 +100,12 @@ public class TaskManager {
         return sb.toString();
     }
 
+    /**
+     * Marks a task as complete
+     *
+     * @param i The task index
+     * @return The message marking the task as completed
+     */
     public String markTask(int i) {
         Task task = tasks.get(i - 1);
 
