@@ -5,13 +5,13 @@ import java.util.Scanner;
 import bern.task.TaskManager;
 
 /** Handles user-facing input prompts and output messages. */
-public class Ui {
-    private static Ui instance;
+public class Dialog {
+    private static Dialog instance;
 
     /** Message line printed after user-facing output. */
     private static final String MESSAGE_LINE = "____________________________________\n";
     private static final String MESSAGE_TASK_LOADED = "Loaded saved tasks. Use list to view them.";
-    private static final String MESSAGE_GOODBYE = "> Bye. Hope to see you again soon!";
+    private static final String MESSAGE_GOODBYE = "Bye. Hope to see you again soon!";
 
     /** Banner used to identify the chatbot. */
     private static final String CHATBOT_BANNER = """
@@ -23,11 +23,11 @@ public class Ui {
             |____/ \\___|_|  |_| |_|""";
 
     /** Name displayed for the chatbot. */
-    private static final String CHATBOT_NAME = "bern.Bern Tokens";
+    private static final String CHATBOT_NAME = "Bern Tokens";
 
     /** Template used for the greeting. */
-    private static final String TEMPLATE_GREETING = "> Hello! I'm %s. \n"
-            + "> What can I do for you?";
+    private static final String TEMPLATE_GREETING = "Hello! I'm %s. \n"
+            + "What can I do for you?";
 
     /** Error message for an unknown command. */
     private static final String ERROR_KEYWORD_INVALID = "Command not recognised.\n"
@@ -44,7 +44,7 @@ public class Ui {
 
     private static final String ERROR_TEMPLATE_INVALID_DATE_TIME = "%s is not a valid date or time";
 
-    private Ui() {
+    private Dialog() {
     }
 
     /**
@@ -52,9 +52,9 @@ public class Ui {
      *
      * @return An instance of the Ui class
      */
-    public static Ui getInstance() {
+    public static Dialog getInstance() {
         if (instance == null) {
-            instance = new Ui();
+            instance = new Dialog();
         }
 
         return instance;
@@ -81,51 +81,47 @@ public class Ui {
     /**
      * The message the user is presented with on startup of the chatbot
      */
-    public void greetUser() {
-        System.out.println(MESSAGE_LINE);
-        printMessage(CHATBOT_BANNER);
-        printMessage(String.format(TEMPLATE_GREETING, CHATBOT_NAME));
+    public String greetUser() {
+        return printMessage(String.format(TEMPLATE_GREETING, CHATBOT_NAME));
     }
 
     /**
      * The message displayed to the user if tasks are loaded on startup
      */
-    public void printLoadedTasks() {
-        printMessage(MESSAGE_TASK_LOADED);
+    public String printLoadedTasks() {
+        return printMessage(MESSAGE_TASK_LOADED);
     }
 
     /**
      * The message displayed when the bot closes
      */
-    public void sayGoodbye() {
-        printMessage(MESSAGE_GOODBYE);
-        System.out.print(MESSAGE_LINE);
+    public String sayGoodbye() {
+        return printMessage(MESSAGE_GOODBYE);
     }
 
     //TODO: reframe to keyword
-
     /**
      * Displays a message showing correct use of a specified keyword
      *
      * @param keyword A keyword to be used by the user
      * @param expected The expected usage of this keyword
      */
-    public void printIncorrectKeywordUsageError(Object keyword, Object expected) {
-        printMessage(String.format(ERROR_TEMPLATE_INCORRECT_KEYWORD_USAGE, keyword, expected));
+    public String printIncorrectKeywordUsageError(Object keyword, Object expected) {
+        return printMessage(String.format(ERROR_TEMPLATE_INCORRECT_KEYWORD_USAGE, keyword, expected));
     }
 
     /**
      * Displays a message showing that there are no tasks
      */
-    public void printNoTasksError() {
-        printMessage(ERROR_NO_TASKS);
+    public String printNoTasksError() {
+        return printMessage(ERROR_NO_TASKS);
     }
 
     /**
      * Displays a message showing the range of valid task numbers
      */
-    public void printInvalidTaskNumberError() {
-        printMessage(String.format(ERROR_TEMPLATE_INVALID_TASK_NUMBER, TaskManager.getInstance().size()));
+    public String printInvalidTaskNumberError() {
+        return printMessage(String.format(ERROR_TEMPLATE_INVALID_TASK_NUMBER, TaskManager.getInstance().size()));
     }
 
     /**
@@ -133,41 +129,44 @@ public class Ui {
      *
      * @param invalidDateTime The invalid date-time input given by the user
      */
-    public void printInvalidDateTimeError(String invalidDateTime) {
-        printMessage(String.format(ERROR_TEMPLATE_INVALID_DATE_TIME, invalidDateTime));
+    public String printInvalidDateTimeError(String invalidDateTime) {
+        return printMessage(String.format(ERROR_TEMPLATE_INVALID_DATE_TIME, invalidDateTime));
     }
 
     /** Displays an error for a directory that cannot be created. */
-    public void printDirectoryError() {
-        printMessage(ERROR_DIRECTORY);
+    public String printDirectoryError() {
+        return printMessage(ERROR_DIRECTORY);
     }
 
     /** Displays an error for task data that cannot be saved. */
-    public void printSaveError() {
-        printMessage(ERROR_SAVE);
+    public String printSaveError() {
+        return printMessage(ERROR_SAVE);
     }
 
     /** Displays an error for task data that cannot be loaded. */
-    public void printLoadError() {
-        printMessage(ERROR_LOAD);
+    public String printLoadError() {
+        return printMessage(ERROR_LOAD);
     }
 
     /** Displays an error for an individual task that cannot be loaded. */
-    public void printLoadTaskError() {
-        printMessage(ERROR_LOAD_TASK);
+    public String printLoadTaskError() {
+        return printMessage(ERROR_LOAD_TASK);
     }
 
     /** Displays an error for an unknown command keyword. */
-    public void printKeywordInvalidError() {
-        printMessage(ERROR_KEYWORD_INVALID);
+    public String printKeywordInvalidError() {
+        return printMessage(ERROR_KEYWORD_INVALID);
     }
 
     /**
      * Prints a message to standard output, appended with a message line.
      *
      * @param msg The message to be printed.
+     *
+     * @return The message printed
      */
-    public void printMessage(String msg) {
+    public String printMessage(String msg) {
         System.out.print(msg + "\n" + MESSAGE_LINE);
+        return msg;
     }
 }

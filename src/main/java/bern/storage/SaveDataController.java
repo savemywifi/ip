@@ -11,7 +11,7 @@ import java.util.List;
 
 import bern.task.Task;
 import bern.task.TaskFactory;
-import bern.ui.Ui;
+import bern.ui.Dialog;
 
 /**
  * A controller to read, write and convert save data between their Task state and their text state.
@@ -37,7 +37,7 @@ public class SaveDataController {
             // This does nothing if the directory exists, or creates it otherwise.
             Files.createDirectories(Paths.get(System.getProperty("user.dir"), SAVE_DIRECTORY));
         } catch (IOException e) {
-            Ui.getInstance().printDirectoryError();
+            Dialog.getInstance().printDirectoryError();
             return false;
         }
 
@@ -72,11 +72,11 @@ public class SaveDataController {
                 }
             }
         } catch (IOException e) {
-            Ui.getInstance().printLoadError();
+            Dialog.getInstance().printLoadError();
         }
 
         if (!success) {
-            Ui.getInstance().printLoadTaskError();
+            Dialog.getInstance().printLoadTaskError();
         }
 
         return savedTasks;
