@@ -11,7 +11,7 @@ public class Dialog {
     /** Message line printed after user-facing output. */
     private static final String MESSAGE_LINE = "____________________________________\n";
     private static final String MESSAGE_TASK_LOADED = "Loaded saved tasks. Use list to view them.";
-    private static final String MESSAGE_GOODBYE = "> Bye. Hope to see you again soon!";
+    private static final String MESSAGE_GOODBYE = "Bye. Hope to see you again soon!";
 
     /** Banner used to identify the chatbot. */
     private static final String CHATBOT_BANNER = """
@@ -26,8 +26,8 @@ public class Dialog {
     private static final String CHATBOT_NAME = "Bern Tokens";
 
     /** Template used for the greeting. */
-    private static final String TEMPLATE_GREETING = "> Hello! I'm %s. \n"
-            + "> What can I do for you?";
+    private static final String TEMPLATE_GREETING = "Hello! I'm %s. \n"
+            + "What can I do for you?";
 
     /** Error message for an unknown command. */
     private static final String ERROR_KEYWORD_INVALID = "Command not recognised.\n"
@@ -82,9 +82,6 @@ public class Dialog {
      * The message the user is presented with on startup of the chatbot
      */
     public String greetUser() {
-        /*System.out.println(MESSAGE_LINE);
-        printMessage(CHATBOT_BANNER);
-        printMessage(String.format(TEMPLATE_GREETING, CHATBOT_NAME));*/
         return printMessage(String.format(TEMPLATE_GREETING, CHATBOT_NAME));
     }
 

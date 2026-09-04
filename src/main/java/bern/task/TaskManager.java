@@ -51,16 +51,16 @@ public class TaskManager {
     public String addTask(Task task) {
         tasks.add(task);
 
-        return "> added: " + task;
+        return "added: " + task;
     }
 
     /** Returns a formatted list of the current tasks. */
     public String listTasks() {
         if (tasks.isEmpty()) {
-            return "> You have no tasks.";
+            return "You have no tasks.";
         }
 
-        StringBuilder sb = new StringBuilder("> Here are your current tasks:\n");
+        StringBuilder sb = new StringBuilder("Here are your current tasks:\n");
 
         for (int i = 0; i < tasks.size(); i++) {
             sb.append(String.format("\n%d. %s", i + 1, tasks.get(i)));
@@ -76,12 +76,12 @@ public class TaskManager {
      */
     public String findTasks(String searchToken) {
         if (tasks.isEmpty()) {
-            return "> You have no tasks.";
+            return "You have no tasks.";
         }
 
         boolean tasksAdded = false;
 
-        StringBuilder sb = new StringBuilder("> Here are matching tasks in your list:\n");
+        StringBuilder sb = new StringBuilder("Here are matching tasks in your list:\n");
 
         for (int i = 0; i < tasks.size(); i++) {
             for (String word : tasks.get(i).getName().split(" ")) {
@@ -94,7 +94,7 @@ public class TaskManager {
         }
 
         if (!tasksAdded) {
-            return "> No tasks match the given search token.";
+            return "No tasks match the given search token.";
         }
 
         return sb.toString();
