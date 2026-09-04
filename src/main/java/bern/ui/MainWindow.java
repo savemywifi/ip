@@ -51,18 +51,21 @@ public class MainWindow extends AnchorPane {
         }
     }
 
-    /** Injects the Duke instance */
+    /** Injects the Controller instance */
     public void setController(Controller c) {
         control = c;
     }
 
     /**
-     * Creates two dialog boxes, one echoing user input and the other containing Duke's reply and then appends them to
+     * Creates two dialog boxes, one echoing user input and the other containing Bern's reply and then appends them to
      * the dialog container. Clears the user input after processing.
      */
     @FXML
     private void handleUserInput() {
         String input = userInput.getText();
+        if (input.isBlank()) {
+            return;
+        }
         String response = control.getResponse(input);
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
