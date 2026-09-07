@@ -22,9 +22,11 @@ public class DialogBox extends HBox {
     @FXML
     private Label dialog;
     @FXML
-    private ImageView displayPicture;
+    private ImageView bernDisplayPicture;
+    @FXML
+    private ImageView userDisplayPicture;
 
-    private DialogBox(String text, Image img) {
+    private DialogBox(String text, Image img, boolean isUser) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(MainWindow.class.getResource("/view/DialogBox.fxml"));
             fxmlLoader.setController(this);
@@ -34,8 +36,13 @@ public class DialogBox extends HBox {
             e.printStackTrace();
         }
 
+
+        ImageView displayPicture = isUser ? userDisplayPicture : bernDisplayPicture;
+        ImageView nonDisplayPicture = isUser ? bernDisplayPicture : userDisplayPicture;
+
         dialog.setText(text);
         displayPicture.setImage(img);
+        nonDisplayPicture.setOpacity(0d);
     }
 
     /**
@@ -49,12 +56,10 @@ public class DialogBox extends HBox {
     }
 
     public static DialogBox getUserDialog(String text, Image img) {
-        return new DialogBox(text, img);
+        return new DialogBox(text, img, true);
     }
 
     public static DialogBox getBernDialog(String text, Image img) {
-        var db = new DialogBox(text, img);
-        db.flip();
-        return db;
+        return new DialogBox(text, img, false);
     }
 }

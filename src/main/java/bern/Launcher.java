@@ -1,7 +1,5 @@
 package bern;
 
-import bern.storage.SaveDataController;
-import bern.task.TaskManager;
 import javafx.application.Application;
 
 /**
