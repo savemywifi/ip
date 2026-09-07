@@ -12,10 +12,6 @@ import java.util.List;
  * A factory class for DateTime, used to parse textual inputs into DateTime objects
  */
 public class DateTimeFactory {
-    private static final String[] HOUR_FORMATS = {"h", "k"};
-    private static final String[] MINUTE_FORMATS = {"m"};
-    private static final String[] TIME_SEPARATORS = {":", "."};
-
     private static final String[] MONTH_FORMATS_SHORT = {"M", "MM"};
     private static final String[] MONTH_FORMATS_LONG = {"MMM", "MMMM"};
     private static final String[] YEAR_FORMATS = {"y"}; // TODO: accommodate for "yy"
@@ -85,9 +81,9 @@ public class DateTimeFactory {
         }
 
         if (date == null) {
+            assert firstSeenException != null;
             throw firstSeenException;
         }
-
         return date;
     }
 
