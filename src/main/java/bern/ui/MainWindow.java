@@ -1,8 +1,6 @@
 package bern.ui;
 
 import bern.Controller;
-import bern.storage.SaveDataController;
-import bern.task.TaskManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -30,7 +28,7 @@ public class MainWindow extends AnchorPane {
     private Image bernImage = new Image(this.getClass().getResourceAsStream("/images/DaBern.png"));
 
     /**
-     * Initialises the relevant properties on startup
+     * Initializes the main view, displays the greeting, and loads saved tasks.
      */
     @FXML
     public void initialize() {
@@ -42,16 +40,19 @@ public class MainWindow extends AnchorPane {
         );
 
         /* Load Save Data */
-        TaskManager.getInstance().loadTaskList(SaveDataController.readTaskData());
         // TODO: figure out how to send the error messages
-        if (TaskManager.getInstance().hasTasks()) {
+        if (control.loadTasks()) {
             dialogContainer.getChildren().add(
                     DialogBox.getBernDialog(Dialog.getInstance().printLoadedTasks(), bernImage)
             );
         }
     }
 
-    /** Injects the Controller instance */
+    /**
+     * Injects the Controller instance.
+     *
+     * @param c The controller used to process user commands.
+     */
     public void setController(Controller c) {
         control = c;
     }

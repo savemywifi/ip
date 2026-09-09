@@ -14,7 +14,7 @@ import bern.task.TaskFactory;
 import bern.ui.Dialog;
 
 /**
- * A controller to read, write and convert save data between their Task state and their text state.
+ * Provides methods for serializing tasks to the save file and reconstructing tasks from saved records
  */
 public class SaveDataController {
     /** Separates fields in a saved task record. */
@@ -53,7 +53,8 @@ public class SaveDataController {
     }
 
     /**
-     * Reads data from the save directory and converts it into a list of Tasks
+     * Reads data from the save file and converts it into a list of Tasks. Skips and reports records with incorrect
+     * format.
      *
      * @return A list of Tasks, as defined by the save data.
      */
@@ -91,7 +92,14 @@ public class SaveDataController {
         return dataString.toString();
     }
 
-    /** Returns a task reconstructed from one save-file record. */
+    /**
+     * Returns a task reconstructed from one save-file record.
+     *
+     * @param dataString One saved task record.
+     * @return The task reconstructed from the saved record.
+     * @throws ParseException If the record contains an invalid task type.
+     * @throws IllegalArgumentException If the record is malformed.
+     */
     private static Task dataStringToTask(String dataString)
             throws ParseException, IllegalArgumentException {
         String[] data = dataString.split(SEPARATOR_REGEX);

@@ -9,7 +9,14 @@ import bern.parser.ParseFactory;
 
 /** Creates task objects from command input or saved task data. */
 public class TaskFactory extends ParseFactory {
-    /** Returns a task reconstructed from a saved task record. */
+    /**
+     * Returns a task reconstructed from a saved task record.
+     *
+     * @param data The fields parsed from a saved task record.
+     * @return The reconstructed task.
+     * @throws ParseException If the task type is invalid.
+     * @throws IllegalArgumentException If the record has invalid fields or structure.
+     */
     public static Task makeTaskFromData(String[] data) throws ParseException, IllegalArgumentException {
         Task task = null;
         if (data.length < 3) {
@@ -50,19 +57,40 @@ public class TaskFactory extends ParseFactory {
         return task;
     }
 
-    /** Returns a todo task created from command input. */
+    /**
+     * Returns a todo task created from command input.
+     *
+     * @param inputTokens The tokens from the todo command.
+     * @return The constructed todo task.
+     * @throws ParseException If the task description is missing.
+     */
     public static Todo makeTodo(String[] inputTokens) throws ParseException {
         String[] data = parseData(inputTokens, new String[]{});
         return new Todo(data[0]);
     }
 
-    /** Returns a deadline task created from command input. */
+    /**
+     * Returns a deadline task created from command input.
+     *
+     * @param inputTokens The tokens from the deadline command.
+     * @return The constructed deadline task.
+     * @throws ParseException If the deadline keyword or description is missing.
+     * @throws DateTimeParseException If the deadline date or time is invalid.
+     */
     public static Deadline makeDeadline(String[] inputTokens) throws ParseException, DateTimeParseException {
         String[] data = parseData(inputTokens, new String[]{"/by"});
         return new Deadline(data[0], DateTimeFactory.parseDateTime(data[1]));
     }
 
-    /** Returns an event task created from command input. */
+    /**
+     * Returns an event task created from command input.
+     *
+     * @param inputTokens The tokens from the event command.
+     * @return The constructed event task.
+     * @throws ParseException If a required keyword or argument is missing.
+     * @throws DateTimeParseException If either event date or time is invalid.
+     * @throws IllegalArgumentException If the event start is not before its end.
+     */
     public static Event makeEvent(String[] inputTokens)
             throws ParseException, DateTimeParseException, IllegalArgumentException {
         String[] data = parseData(inputTokens, new String[]{"/from", "/to"});

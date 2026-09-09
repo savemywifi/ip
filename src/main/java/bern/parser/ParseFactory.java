@@ -4,31 +4,31 @@ import java.text.ParseException;
 import java.util.NoSuchElementException;
 
 /**
- * A factory class for parsing text, with its subclasses defining what objects the text will be parsed into.
+ * Provides utilities for extracting command arguments separated by specified keywords
  */
 public class ParseFactory {
     protected static String[] parseData(String[] tokens, String[] keywords) throws ParseException {
         String[] parsedData = new String[keywords.length + 1];
         int next = 1;
         for (int i = 0; i < keywords.length; i++) {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder stringBuilder = new StringBuilder();
 
             try {
-                next = joinTokensFromIndexUntil(tokens, next, sb, keywords[i]);
+                next = joinTokensFromIndexUntil(tokens, next, stringBuilder, keywords[i]);
             } catch (NoSuchElementException e) {
                 // current keyword not found in order
                 throw new ParseException(keywords[i], i);
             }
-            parsedData[i] = sb.toString().strip();
+            parsedData[i] = stringBuilder.toString().strip();
 
             if (parsedData[i].isEmpty()) {
                 // parsed argument is empty
                 throw new ParseException(i == 0 ? tokens[0] : keywords[i - 1], -1);
             }
         }
-        StringBuilder sb = new StringBuilder();
-        joinTokensFromIndex(tokens, next, sb);
-        parsedData[keywords.length] = sb.toString().strip();
+        StringBuilder stringBuilder = new StringBuilder();
+        joinTokensFromIndex(tokens, next, stringBuilder);
+        parsedData[keywords.length] = stringBuilder.toString().strip();
 
         if (parsedData[keywords.length].isEmpty()) {
             // parsed argument is empty
@@ -38,23 +38,23 @@ public class ParseFactory {
         return parsedData;
     }
 
-    private static void joinTokensFromIndex(String[] tokens, int index, StringBuilder sb) {
+    private static void joinTokensFromIndex(String[] tokens, int index, StringBuilder stringBuilder) {
         while (index < tokens.length) {
-            sb.append(tokens[index]);
-            sb.append(" ");
+            stringBuilder.append(tokens[index]);
+            stringBuilder.append(" ");
             index++;
         }
     }
 
     private static int joinTokensFromIndexUntil(
-            String[] tokens, int index, StringBuilder sb, String keyword) throws NoSuchElementException {
+            String[] tokens, int index, StringBuilder stringBuilder, String keyword) throws NoSuchElementException {
         if (index == tokens.length) {
             throw new NoSuchElementException();
         }
 
         while (!tokens[index].equalsIgnoreCase(keyword)) {
-            sb.append(tokens[index]);
-            sb.append(" ");
+            stringBuilder.append(tokens[index]);
+            stringBuilder.append(" ");
             index++;
 
             if (index == tokens.length) {

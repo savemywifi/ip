@@ -2,8 +2,6 @@ package bern.ui;
 
 import java.util.Scanner;
 
-import bern.task.TaskManager;
-
 /** Handles user-facing input prompts and output messages. */
 public class Dialog {
     private static Dialog instance;
@@ -13,7 +11,7 @@ public class Dialog {
     private static final String MESSAGE_TASK_LOADED = "Loaded saved tasks. Use list to view them.";
     private static final String MESSAGE_GOODBYE = "Bye. Hope to see you again soon!";
 
-    /** Banner used to identify the chatbot. */
+    /** ASCII-art banner intended for chatbot identification. */
     private static final String CHATBOT_BANNER = """
              ____                 \s
             |  _ \\                \s
@@ -48,9 +46,9 @@ public class Dialog {
     }
 
     /**
-     * Creates the singleton instance of the Ui class if it doesn't already exist, then returns it.
+     * Creates the singleton instance of the Dialog class if it doesn't already exist, then returns it.
      *
-     * @return An instance of the Ui class
+     * @return An instance of the Dialog class.
      */
     public static Dialog getInstance() {
         if (instance == null) {
@@ -61,7 +59,7 @@ public class Dialog {
     }
 
     /**
-     * Prompts the user for input, then closes the input with a message line.
+     * Reads the next non-blank input line, strips leading and trailing whitespace, and prints a separator afterward.
      *
      * @param sc Scanner to receive input from.
      *
@@ -80,6 +78,8 @@ public class Dialog {
 
     /**
      * The message the user is presented with on startup of the chatbot
+     *
+     * @return The greeting message displayed to the user.
      */
     public String greetUser() {
         return printMessage(String.format(TEMPLATE_GREETING, CHATBOT_NAME));
@@ -87,6 +87,8 @@ public class Dialog {
 
     /**
      * The message displayed to the user if tasks are loaded on startup
+     *
+     * @return The loaded-task message displayed to the user.
      */
     public String printLoadedTasks() {
         return printMessage(MESSAGE_TASK_LOADED);
@@ -94,6 +96,8 @@ public class Dialog {
 
     /**
      * The message displayed when the bot closes
+     *
+     * @return The farewell message displayed to the user.
      */
     public String sayGoodbye() {
         return printMessage(MESSAGE_GOODBYE);
@@ -105,6 +109,7 @@ public class Dialog {
      *
      * @param keyword A keyword to be used by the user
      * @param expected The expected usage of this keyword
+     * @return The usage error message displayed to the user.
      */
     public String printIncorrectKeywordUsageError(Object keyword, Object expected) {
         return printMessage(String.format(ERROR_TEMPLATE_INCORRECT_KEYWORD_USAGE, keyword, expected));
@@ -112,6 +117,8 @@ public class Dialog {
 
     /**
      * Displays a message showing that there are no tasks
+     *
+     * @return The no-tasks error message displayed to the user.
      */
     public String printNoTasksError() {
         return printMessage(ERROR_NO_TASKS);
@@ -119,41 +126,65 @@ public class Dialog {
 
     /**
      * Displays a message showing the range of valid task numbers
+     *
+     * @param taskCount The number of valid tasks.
+     * @return The invalid-task-number error message displayed to the user.
      */
-    public String printInvalidTaskNumberError() {
-        return printMessage(String.format(ERROR_TEMPLATE_INVALID_TASK_NUMBER, TaskManager.getInstance().size()));
+    public String printInvalidTaskNumberError(int taskCount) {
+        return printMessage(String.format(ERROR_TEMPLATE_INVALID_TASK_NUMBER, taskCount));
     }
 
     /**
      * Displays a message showing the user's invalid date-time input
      *
      * @param invalidDateTime The invalid date-time input given by the user
+     * @return The invalid-date-time error message displayed to the user.
      */
     public String printInvalidDateTimeError(String invalidDateTime) {
         return printMessage(String.format(ERROR_TEMPLATE_INVALID_DATE_TIME, invalidDateTime));
     }
 
-    /** Displays an error for a directory that cannot be created. */
+    /**
+     * Displays an error for a directory that cannot be created.
+     *
+     * @return The directory-error message displayed to the user.
+     */
     public String printDirectoryError() {
         return printMessage(ERROR_DIRECTORY);
     }
 
-    /** Displays an error for task data that cannot be saved. */
+    /**
+     * Displays an error for task data that cannot be saved.
+     *
+     * @return The save-error message displayed to the user.
+     */
     public String printSaveError() {
         return printMessage(ERROR_SAVE);
     }
 
-    /** Displays an error for task data that cannot be loaded. */
+    /**
+     * Displays an error for task data that cannot be loaded.
+     *
+     * @return The load-error message displayed to the user.
+     */
     public String printLoadError() {
         return printMessage(ERROR_LOAD);
     }
 
-    /** Displays an error for an individual task that cannot be loaded. */
+    /**
+     * Displays an error for an individual task that cannot be loaded.
+     *
+     * @return The task-load-error message displayed to the user.
+     */
     public String printLoadTaskError() {
         return printMessage(ERROR_LOAD_TASK);
     }
 
-    /** Displays an error for an unknown command keyword. */
+    /**
+     * Displays an error for an unknown command keyword.
+     *
+     * @return The invalid-keyword error message displayed to the user.
+     */
     public String printKeywordInvalidError() {
         return printMessage(ERROR_KEYWORD_INVALID);
     }

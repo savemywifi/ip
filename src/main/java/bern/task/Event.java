@@ -37,7 +37,7 @@ class Event extends Task {
     /**
      * A string representation of an Event, in the form [task name] (from: [start] to: [end])
      *
-     * @return A string representation of a Deadline.
+     * @return A string representation of an Event.
      */
     @Override
     public String toString() {
