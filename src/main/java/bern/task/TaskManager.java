@@ -141,8 +141,8 @@ public class TaskManager {
      * @return The message marking the task as completed
      */
     public String markTask(int i) {
+        assert 1 <= i && i <= tasks.size();
         Task task = tasks.get(i - 1);
-
         if (task.isDone()) {
             return "The following task is already marked as done:\n" + task;
         }
@@ -159,6 +159,7 @@ public class TaskManager {
      * @return The confirmation message for the updated task.
      */
     public String unmarkTask(int i) {
+        assert 1 <= i && i <= tasks.size();
         Task task = tasks.get(i - 1);
 
         if (!task.isDone()) {
@@ -177,6 +178,7 @@ public class TaskManager {
      * @return The confirmation message for the deleted task.
      */
     public String deleteTask(int i) {
+        assert 1 <= i && i <= tasks.size();
         Task task = tasks.get(i - 1);
 
         tasks.remove(i - 1);
