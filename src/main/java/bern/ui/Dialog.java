@@ -2,6 +2,8 @@ package bern.ui;
 
 import java.util.Scanner;
 
+import bern.logic.TextResponse;
+
 /** Handles user-facing input prompts and output messages. */
 public class Dialog {
     private static Dialog instance;
@@ -81,7 +83,7 @@ public class Dialog {
      *
      * @return The greeting message displayed to the user.
      */
-    public String greetUser() {
+    public TextResponse greetUser() {
         return printMessage(String.format(TEMPLATE_GREETING, CHATBOT_NAME));
     }
 
@@ -90,7 +92,7 @@ public class Dialog {
      *
      * @return The loaded-task message displayed to the user.
      */
-    public String printLoadedTasks() {
+    public TextResponse printTasksLoaded() {
         return printMessage(MESSAGE_TASK_LOADED);
     }
 
@@ -99,7 +101,7 @@ public class Dialog {
      *
      * @return The farewell message displayed to the user.
      */
-    public String sayGoodbye() {
+    public TextResponse sayGoodbye() {
         return printMessage(MESSAGE_GOODBYE);
     }
 
@@ -111,7 +113,7 @@ public class Dialog {
      * @param expected The expected usage of this keyword
      * @return The usage error message displayed to the user.
      */
-    public String printIncorrectKeywordUsageError(Object keyword, Object expected) {
+    public TextResponse printIncorrectKeywordUsageError(Object keyword, Object expected) {
         return printMessage(String.format(ERROR_TEMPLATE_INCORRECT_KEYWORD_USAGE, keyword, expected));
     }
 
@@ -120,7 +122,7 @@ public class Dialog {
      *
      * @return The no-tasks error message displayed to the user.
      */
-    public String printNoTasksError() {
+    public TextResponse printNoTasksError() {
         return printMessage(ERROR_NO_TASKS);
     }
 
@@ -130,7 +132,7 @@ public class Dialog {
      * @param taskCount The number of valid tasks.
      * @return The invalid-task-number error message displayed to the user.
      */
-    public String printInvalidTaskNumberError(int taskCount) {
+    public TextResponse printInvalidTaskNumberError(int taskCount) {
         return printMessage(String.format(ERROR_TEMPLATE_INVALID_TASK_NUMBER, taskCount));
     }
 
@@ -140,7 +142,7 @@ public class Dialog {
      * @param invalidDateTime The invalid date-time input given by the user
      * @return The invalid-date-time error message displayed to the user.
      */
-    public String printInvalidDateTimeError(String invalidDateTime) {
+    public TextResponse printInvalidDateTimeError(String invalidDateTime) {
         return printMessage(String.format(ERROR_TEMPLATE_INVALID_DATE_TIME, invalidDateTime));
     }
 
@@ -149,7 +151,7 @@ public class Dialog {
      *
      * @return The directory-error message displayed to the user.
      */
-    public String printDirectoryError() {
+    public TextResponse printDirectoryError() {
         return printMessage(ERROR_DIRECTORY);
     }
 
@@ -158,7 +160,7 @@ public class Dialog {
      *
      * @return The save-error message displayed to the user.
      */
-    public String printSaveError() {
+    public TextResponse printSaveError() {
         return printMessage(ERROR_SAVE);
     }
 
@@ -167,7 +169,7 @@ public class Dialog {
      *
      * @return The load-error message displayed to the user.
      */
-    public String printLoadError() {
+    public TextResponse printLoadError() {
         return printMessage(ERROR_LOAD);
     }
 
@@ -176,7 +178,7 @@ public class Dialog {
      *
      * @return The task-load-error message displayed to the user.
      */
-    public String printLoadTaskError() {
+    public TextResponse printLoadTaskError() {
         return printMessage(ERROR_LOAD_TASK);
     }
 
@@ -185,7 +187,7 @@ public class Dialog {
      *
      * @return The invalid-keyword error message displayed to the user.
      */
-    public String printKeywordInvalidError() {
+    public TextResponse printKeywordInvalidError() {
         return printMessage(ERROR_KEYWORD_INVALID);
     }
 
@@ -196,8 +198,8 @@ public class Dialog {
      *
      * @return The message printed
      */
-    public String printMessage(String msg) {
+    public TextResponse printMessage(String msg) {
         System.out.print(msg + "\n" + MESSAGE_LINE);
-        return msg;
+        return new TextResponse(msg);
     }
 }

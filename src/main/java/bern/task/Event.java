@@ -7,7 +7,7 @@ import bern.datetime.DateTime;
 /**
  * A task that is an event. Contains a String description and two DateTimes signifying the start and end of the event.
  */
-class Event extends Task {
+public class Event extends Task {
     private final DateTime startDateTime;
     private final DateTime endDateTime;
 
@@ -32,6 +32,14 @@ class Event extends Task {
     @Override
     protected String getSymbol() {
         return "E";
+    }
+
+    public String getStartTimeString() {
+        return startDateTime.toTimeString();
+    }
+
+    public String getEndTimeString() {
+        return endDateTime.toTimeString();
     }
 
     /**

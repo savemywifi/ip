@@ -1,4 +1,4 @@
-package bern;
+package bern.logic;
 
 import java.text.ParseException;
 import java.time.format.DateTimeParseException;
@@ -28,9 +28,9 @@ public class Controller {
         DELETE(Controller::attemptDeleteTask),
         FIND(Controller::attemptFindTasks);
 
-        private final Function<String[], String> action;
+        private final Function<String[], Response> action;
 
-        Keyword(Function<String[], String> action) {
+        Keyword(Function<String[], Response> action) {
             this.action = action;
         }
     }
@@ -54,9 +54,9 @@ public class Controller {
      *
      * @param inputTokens The tokens in the input
      *
-     * @return The goodbye or error message displayed to the user.
+     * @return A response containing the goodbye or error message displayed to the user.
      */
-    private static String attemptExit(String[] inputTokens) {
+    private static Response attemptExit(String[] inputTokens) {
         if (inputTokens.length != 1) {
             return dialog.printIncorrectKeywordUsageError(Keyword.BYE, Keyword.BYE);
         }
@@ -74,15 +74,15 @@ public class Controller {
      *
      * @return The formatted task list or an error message displayed to the user.
      */
-    private static String attemptListTasks(String[] inputTokens) {
+    private static Response attemptListTasks(String[] inputTokens) {
         if (inputTokens.length != 1) {
             return dialog.printIncorrectKeywordUsageError(Keyword.LIST, Keyword.LIST);
         }
 
-        return dialog.printMessage(taskManager.listTasks());
+        return taskManager.listTasks();
     }
 
-    private static String attemptFindTasks(String[] inputTokens) {
+    private static Response attemptFindTasks(String[] inputTokens) {
         if (inputTokens.length != 2) {
             return dialog.printIncorrectKeywordUsageError(
                     Keyword.FIND, Keyword.FIND + " [search token]");
@@ -103,12 +103,12 @@ public class Controller {
      */
     private static int tryGetTaskNumber(String[] inputTokens) throws IllegalArgumentException {
         if (!taskManager.hasTasks()) {
-            throw new IllegalArgumentException(dialog.printNoTasksError());
+            throw new IllegalArgumentException(dialog.printNoTasksError().toString());
         }
 
         if (inputTokens.length != 2) {
             throw new IllegalArgumentException(
-                    dialog.printIncorrectKeywordUsageError(inputTokens[0], inputTokens[0]));
+                    dialog.printIncorrectKeywordUsageError(inputTokens[0], inputTokens[0]).toString());
         }
 
         int taskIndex;
@@ -116,11 +116,11 @@ public class Controller {
         try {
             taskIndex = Integer.parseInt(inputTokens[1]);
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException(dialog.printInvalidTaskNumberError(taskManager.size()));
+            throw new IllegalArgumentException(dialog.printInvalidTaskNumberError(taskManager.size()).toString());
         }
 
         if (taskIndex < 1 || taskIndex > taskManager.size()) {
-            throw new IllegalArgumentException(dialog.printInvalidTaskNumberError(taskManager.size()));
+            throw new IllegalArgumentException(dialog.printInvalidTaskNumberError(taskManager.size()).toString());
         }
 
         return taskIndex;
@@ -132,12 +132,12 @@ public class Controller {
      * @param inputTokens The tokens in the input
      * @return The confirmation or error message displayed to the user.
      */
-    private static String attemptMarkTask(String[] inputTokens) {
+    private static Response attemptMarkTask(String[] inputTokens) {
         try {
             int taskNumber = tryGetTaskNumber(inputTokens);
             return dialog.printMessage(taskManager.markTask(taskNumber));
         } catch (IllegalArgumentException e) {
-            return e.getMessage();
+            return dialog.printMessage(e.getMessage());
         }
     }
 
@@ -148,12 +148,12 @@ public class Controller {
      *
      * @return The confirmation or error message displayed to the user.
      */
-    private static String attemptUnmarkTask(String[] inputTokens) {
+    private static Response attemptUnmarkTask(String[] inputTokens) {
         try {
             int taskNumber = tryGetTaskNumber(inputTokens);
             return dialog.printMessage(taskManager.unmarkTask(taskNumber));
         } catch (IllegalArgumentException e) {
-            return e.getMessage();
+            return dialog.printMessage(e.getMessage());
         }
     }
 
@@ -164,7 +164,7 @@ public class Controller {
      *
      * @return The confirmation or error message displayed to the user.
      */
-    private static String attemptMakeTodo(String[] inputTokens) {
+    private static Response attemptMakeTodo(String[] inputTokens) {
         try {
             return dialog.printMessage(
                     taskManager.addTask(TaskFactory.makeTodo(inputTokens)));
@@ -180,7 +180,7 @@ public class Controller {
      *
      * @return The confirmation or error message displayed to the user.
      */
-    private static String attemptMakeDeadline(String[] inputTokens) {
+    private static Response attemptMakeDeadline(String[] inputTokens) {
         try {
             return dialog.printMessage(
                     taskManager.addTask(TaskFactory.makeDeadline(inputTokens)));
@@ -199,7 +199,7 @@ public class Controller {
      *
      * @return The confirmation or error message displayed to the user.
      */
-    private static String attemptMakeEvent(String[] inputTokens) {
+    private static Response attemptMakeEvent(String[] inputTokens) {
         try {
             return dialog.printMessage(
                     taskManager.addTask(TaskFactory.makeEvent(inputTokens)));
@@ -220,16 +220,16 @@ public class Controller {
      *
      * @return The confirmation or error message displayed to the user.
      */
-    private static String attemptDeleteTask(String[] inputTokens) {
+    private static Response attemptDeleteTask(String[] inputTokens) {
         try {
             int taskNumber = tryGetTaskNumber(inputTokens);
             return dialog.printMessage(taskManager.deleteTask(taskNumber));
         } catch (IllegalArgumentException e) {
-            return e.getMessage();
+            return dialog.printMessage(e.getMessage());
         }
     }
 
-    public String getResponse(String input) {
+    public Response getResponse(String input) {
         String[] inputTokens = input.split(" ");
         try {
             Keyword keyword = Keyword.valueOf(inputTokens[0].toUpperCase());
@@ -254,7 +254,7 @@ public class Controller {
         taskManager.loadTaskList(SaveDataController.readTaskData());
 
         if (taskManager.hasTasks()) {
-            dialog.printLoadedTasks();
+            dialog.printTasksLoaded();
         }
 
         while (isReadingInput) {

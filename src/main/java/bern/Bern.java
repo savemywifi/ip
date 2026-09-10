@@ -2,6 +2,7 @@ package bern;
 
 import java.io.IOException;
 
+import bern.logic.Controller;
 import bern.ui.MainWindow;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -31,6 +32,8 @@ public class Bern extends Application {
 
             assert fxmlLoader.getController() != null;
             fxmlLoader.<MainWindow>getController().setController(control); // Inject the Controller instance
+            fxmlLoader.<MainWindow>getController().displayStartupMessages();
+
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();

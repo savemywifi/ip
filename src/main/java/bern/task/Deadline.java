@@ -7,7 +7,7 @@ import bern.datetime.DateTime;
 /**
  * A task with a deadline. Contains a String description and a DateTime deadline.
  */
-class Deadline extends Task {
+public class Deadline extends Task {
     private final DateTime deadlineDateTime;
 
     /**
@@ -29,6 +29,10 @@ class Deadline extends Task {
     @Override
     protected String getSymbol() {
         return "D";
+    }
+
+    public String getTimeString() {
+        return deadlineDateTime.toTimeString();
     }
 
     /**

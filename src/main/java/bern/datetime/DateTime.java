@@ -49,6 +49,20 @@ public class DateTime implements Comparable<DateTime> {
     }
 
     /**
+     * A string representation of the time in the DateTime
+     *
+     * @return The formatted time
+     * @throws UnsupportedOperationException If no time is specified
+     */
+    public String toTimeString() throws UnsupportedOperationException {
+        if (localTime == null) {
+            throw new UnsupportedOperationException("DateTime has no time attribute");
+        }
+
+        return localTime.format(TIME_FORMATTER);
+    }
+
+    /**
      * Compares two DateTimes. Returns a negative integer if the other date/time is after the current date/time, 0 if
      * they are equal, or a positive integer if the other date/time is before the current date/time. If one object has
      * no specified time value (it is null), that time will be "before" the DateTime with a specified time field if

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<fx:root maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="272.0" spacing="5.0" style="-fx-background-color: azure;" type="javafx.scene.layout.HBox" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
+    <padding>
+        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+    </padding>
+   <children>
+      <Label fx:id="time" alignment="CENTER" minHeight="40.0" minWidth="60.0" style="-fx-background-color: #4C7A97;" text="time" textFill="WHITE" textOverrun="CLIP">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+      <Label fx:id="description" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="30.0" prefWidth="200.0" text="description" textOverrun="CLIP" wrapText="true" HBox.hgrow="ALWAYS">
+         <padding>
+            <Insets left="5.0" />
+         </padding>
+      </Label>
+   </children>
+</fx:root>

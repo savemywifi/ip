@@ -3,9 +3,14 @@ package bern.task;
 import java.util.ArrayList;
 import java.util.List;
 
+import bern.logic.Response;
+import bern.logic.ScheduleResponse;
+import bern.ui.Dialog;
+
 /** Stores and manages the application's tasks. */
 public class TaskManager {
     private static TaskManager instance;
+    private static Dialog dialog = Dialog.getInstance();
 
     private final ArrayList<Task> tasks = new ArrayList<>();
 
@@ -88,18 +93,12 @@ public class TaskManager {
      *
      * @return A formatted message containing the current tasks.
      */
-    public String listTasks() {
+    public Response listTasks() {
         if (tasks.isEmpty()) {
-            return "You have no tasks.";
+            return dialog.printMessage("You have no tasks.");
         }
 
-        StringBuilder stringBuilder = new StringBuilder("Here are your current tasks:\n");
-
-        for (int i = 0; i < tasks.size(); i++) {
-            stringBuilder.append(String.format("\n%d. %s", i + 1, tasks.get(i)));
-        }
-
-        return stringBuilder.toString();
+        return ScheduleResponse.getScheduleResponse(tasks);
     }
 
     /**
