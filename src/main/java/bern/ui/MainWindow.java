@@ -66,6 +66,7 @@ public class MainWindow extends AnchorPane {
         if (input.isBlank()) {
             return;
         }
+        assert control != null;
         String response = control.getResponse(input);
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),

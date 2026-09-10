@@ -28,6 +28,8 @@ public class Bern extends Application {
             stage.setTitle("Bern Tokens Task Manager");
             stage.setMinHeight(220);
             stage.setMinWidth(417);
+
+            assert fxmlLoader.getController() != null;
             fxmlLoader.<MainWindow>getController().setController(control); // Inject the Controller instance
             stage.show();
         } catch (IOException e) {

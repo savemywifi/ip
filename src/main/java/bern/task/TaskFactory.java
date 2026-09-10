@@ -41,6 +41,7 @@ public class TaskFactory extends ParseFactory {
             default:
                 throw new ParseException("Invalid task type", -1);
         }
+        assert task != null;
         if (data[1].equals("1")) {
             task.setDone(true);
         } else if (!data[1].equals("0")) {
