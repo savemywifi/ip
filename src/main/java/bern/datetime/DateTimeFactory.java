@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * A factory class for DateTime, used to parse textual inputs into DateTime objects
+ * Provides methods for parsing textual and saved representations into DateTime objects
  */
 public class DateTimeFactory {
     private static final String[] MONTH_FORMATS_SHORT = {"M", "MM"};
@@ -29,34 +29,36 @@ public class DateTimeFactory {
      *
      * @param dateTimeString The string to be parsed
      * @return The DateTime matching the given string
-     * @throws DateTimeParseException
+     * @throws DateTimeParseException If the input does not match a supported date or time format.
      */
     public static DateTime parseDateTime(String dateTimeString) throws DateTimeParseException {
         String[] tokens = dateTimeString.split(" ");
-        LocalTime lt = null;
-        LocalDate ld = null;
+        LocalTime localTime = null;
+        LocalDate localDate = null;
 
         if (isTime(dateTimeString)) {
-            lt = parseTime(dateTimeString);
-            ld = LocalDate.now();
+            localTime = parseTime(dateTimeString);
+            localDate = LocalDate.now();
         } else if (isTime(tokens[0])) {
-            lt = parseTime(tokens[0]);
-            ld = parseDate(String.join(" ", Arrays.stream(tokens, 1, tokens.length).toList()));
+            localTime = parseTime(tokens[0]);
+            localDate = parseDate(String.join(" ", Arrays.stream(tokens, 1, tokens.length).toList()));
         } else if (isTime(tokens[tokens.length - 1])) {
-            lt = parseTime(tokens[tokens.length - 1]);
-            ld = parseDate(String.join(" ", Arrays.stream(tokens, 0, tokens.length - 1).toList()));
+            localTime = parseTime(tokens[tokens.length - 1]);
+            localDate = parseDate(String.join(" ", Arrays.stream(tokens, 0, tokens.length - 1).toList()));
         } else {
-            ld = parseDate(dateTimeString);
+            localDate = parseDate(dateTimeString);
         }
 
-        return new DateTime(ld, lt);
+        return new DateTime(localDate, localTime);
     }
 
     /**
-     * Parses a date-time from a saved datastring
+     * Parses a date-time from a saved date-time string containing a date and time separated by DateTime.SEPARATOR
      *
      * @param dataString The datastring to parse a date-time from
      * @return The parsed DateTime
+     * @throws IllegalArgumentException If the saved string does not contain exactly two parts.
+     * @throws DateTimeParseException If the date or time cannot be parsed.
      */
     public static DateTime makeDateFromDataString(String dataString) {
         String[] tokens = dataString.split(DateTime.SEPARATOR);

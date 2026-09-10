@@ -55,9 +55,9 @@ public abstract class Task {
     }
 
     /**
-     * The string list representation of the task in the save file.
+     * Returns the task fields in save-file order: task symbol, completion flag (1 or 0) and task name
      *
-     * @return The string list representation of the task as described above.
+     * @return The task fields in save-file order.
      */
     public ArrayList<String> toDataList() {
         ArrayList<String> dataList = new ArrayList<>();

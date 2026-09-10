@@ -11,7 +11,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 /**
- * A GUI for Duke using FXML.
+ * JavaFX application entry point for Bern, loading the main window from FXML.
  */
 public class Bern extends Application {
     private final Controller control = new Controller();

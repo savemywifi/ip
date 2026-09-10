@@ -1,9 +1,7 @@
 package bern.task;
 
-import java.util.ArrayList;
-
 /**
- * A task with no deadline. Contains only a String description.
+ * A task with no deadline
  */
 class Todo extends Task {
     /**
@@ -23,15 +21,5 @@ class Todo extends Task {
     @Override
     protected String getSymbol() {
         return "T";
-    }
-
-    /**
-     * Returns a list of String data used for saving the task
-     *
-     * @return A list of String data representing the Todo
-     */
-    @Override
-    public ArrayList<String> toDataList() {
-        return super.toDataList();
     }
 }

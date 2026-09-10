@@ -36,7 +36,7 @@ public class DateTime implements Comparable<DateTime> {
     /**
      * A string representation of the DateTime
      *
-     * @return A string in the form dd MMMM yyyy @ hh.mm am/pm
+     * @return The formatted date, optionally followed by the formatted time when one is present
      */
     @Override
     public String toString() {
