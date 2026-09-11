@@ -2,6 +2,7 @@ package bern.task;
 
 import java.util.ArrayList;
 
+import bern.datetime.DateTime;
 /**
  * A task that is to be completed. Contains a String description and can be marked as done or not done.
  */
@@ -69,4 +70,7 @@ public abstract class Task {
 
     /** Returns the one-letter symbol used when displaying this task. */
     protected abstract String getSymbol();
+
+    /** Returns true if the task is associated with a specific day */
+    protected abstract boolean isOnDay(DateTime dateTime);
 }

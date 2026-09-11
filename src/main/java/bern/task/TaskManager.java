@@ -3,9 +3,15 @@ package bern.task;
 import java.util.ArrayList;
 import java.util.List;
 
+import bern.datetime.DateTime;
+import bern.logic.Response;
+import bern.logic.ScheduleResponse;
+import bern.ui.Dialog;
+
 /** Stores and manages the application's tasks. */
 public class TaskManager {
     private static TaskManager instance;
+    private static Dialog dialog = Dialog.getInstance();
 
     private final ArrayList<Task> tasks = new ArrayList<>();
 
@@ -88,18 +94,12 @@ public class TaskManager {
      *
      * @return A formatted message containing the current tasks.
      */
-    public String listTasks() {
+    public Response listTasks() {
         if (tasks.isEmpty()) {
-            return "You have no tasks.";
+            return dialog.printNoTasksError();
         }
 
-        StringBuilder stringBuilder = new StringBuilder("Here are your current tasks:\n");
-
-        for (int i = 0; i < tasks.size(); i++) {
-            stringBuilder.append(String.format("\n%d. %s", i + 1, tasks.get(i)));
-        }
-
-        return stringBuilder.toString();
+        return ScheduleResponse.getScheduleResponse("Here are your tasks: ", tasks);
     }
 
     /**
@@ -108,30 +108,57 @@ public class TaskManager {
      * @param searchToken The token that tasks will be matched to
      * @return A formatted message containing matching tasks, or a message indicating that no tasks match.
      */
-    public String findTasks(String searchToken) {
+    public Response findTasks(String searchToken) {
         if (tasks.isEmpty()) {
-            return "You have no tasks.";
+            return dialog.printNoTasksError();
         }
 
-        boolean tasksAdded = false;
-
-        StringBuilder stringBuilder = new StringBuilder("Here are matching tasks in your list:\n");
+        ArrayList<Task> filteredTasks = new ArrayList<>();
 
         for (int i = 0; i < tasks.size(); i++) {
             for (String word : tasks.get(i).getName().split(" ")) {
                 if (word.equalsIgnoreCase(searchToken)) {
-                    tasksAdded = true;
-                    stringBuilder.append(String.format("\n%d. %s", i + 1, tasks.get(i)));
+                    filteredTasks.add(tasks.get(i));
                     break;
                 }
             }
         }
 
-        if (!tasksAdded) {
-            return "No tasks match the given search token.";
+        if (filteredTasks.isEmpty()) {
+            return dialog.printMessage("No tasks match the given search token.");
         }
 
-        return stringBuilder.toString();
+        return ScheduleResponse.getScheduleResponse("Here are matching tasks in your list:", filteredTasks);
+    }
+
+    /**
+     * Displays schedule for a specific day
+     *
+     * @param dateTime The given date time
+     * @return The schedule for that specific date
+     */
+    public Response showSchedule(DateTime dateTime) {
+        ArrayList<Task> schedule = new ArrayList<>();
+
+        for (Task task : tasks) {
+            if (!task.isOnDay(dateTime)) {
+                continue;
+            }
+
+            assert task instanceof IDateTimeComparable;
+
+            schedule.add(task);
+        }
+
+        if (schedule.isEmpty()) {
+            return dialog.printNoTasksError();
+        }
+
+        schedule.sort((task1, task2) -> (
+                (IDateTimeComparable) task1).compareDateTime((IDateTimeComparable) task2));
+
+        return ScheduleResponse.getScheduleResponse(
+                "Here are the tasks for " + dateTime.toString(), schedule);
     }
 
     /**

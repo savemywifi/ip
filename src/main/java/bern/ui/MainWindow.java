@@ -1,11 +1,13 @@
 package bern.ui;
 
-import bern.Controller;
+import bern.logic.Controller;
+import bern.logic.Response;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
@@ -24,9 +26,6 @@ public class MainWindow extends AnchorPane {
 
     private Controller control;
 
-    private Image userImage = new Image(this.getClass().getResourceAsStream("/images/DaLog.png"));
-    private Image bernImage = new Image(this.getClass().getResourceAsStream("/images/DaBern.png"));
-
     /**
      * Initializes the main view, displays the greeting, and loads saved tasks.
      */
@@ -36,16 +35,8 @@ public class MainWindow extends AnchorPane {
 
         /* Greet User */
         dialogContainer.getChildren().addAll(
-                DialogBox.getBernDialog(Dialog.getInstance().greetUser(), bernImage)
+                DialogBox.getBernDialog(Dialog.getInstance().greetUser().toString())
         );
-
-        /* Load Save Data */
-        // TODO: figure out how to send the error messages
-        if (control.loadTasks()) {
-            dialogContainer.getChildren().add(
-                    DialogBox.getBernDialog(Dialog.getInstance().printLoadedTasks(), bernImage)
-            );
-        }
     }
 
     /**
@@ -55,6 +46,19 @@ public class MainWindow extends AnchorPane {
      */
     public void setController(Controller c) {
         control = c;
+    }
+
+    /**
+     * Displays startup messages.
+     */
+    public void displayStartupMessages() {
+        /* Load Save Data */
+        // TODO: figure out how to send the error messages
+        if (control.loadTasks()) {
+            dialogContainer.getChildren().add(
+                    DialogBox.getBernDialog(Dialog.getInstance().printTasksLoaded().toString())
+            );
+        }
     }
 
     /**
@@ -68,11 +72,11 @@ public class MainWindow extends AnchorPane {
             return;
         }
         assert control != null;
-        String response = control.getResponse(input);
-        dialogContainer.getChildren().addAll(
-                DialogBox.getUserDialog(input, userImage),
-                DialogBox.getBernDialog(response, bernImage)
-        );
+        Response response = control.getResponse(input);
+        ObservableList<Node> children = dialogContainer.getChildren();
+
+        children.add(DialogBox.getUserDialog(input));
+        children.addAll(response.getResponseNodes());
         userInput.clear();
     }
 }

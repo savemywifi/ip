@@ -7,7 +7,7 @@ import bern.datetime.DateTime;
 /**
  * A task that is an event. Contains a String description and two DateTimes signifying the start and end of the event.
  */
-class Event extends Task {
+public class Event extends Task implements IDateTimeComparable {
     private final DateTime startDateTime;
     private final DateTime endDateTime;
 
@@ -34,6 +34,14 @@ class Event extends Task {
         return "E";
     }
 
+    public String getStartDateTimeString() {
+        return startDateTime.toString();
+    }
+
+    public String getEndDateTimeString() {
+        return endDateTime.toString();
+    }
+
     /**
      * A string representation of an Event, in the form [task name] (from: [start] to: [end])
      *
@@ -55,5 +63,20 @@ class Event extends Task {
         out.add(startDateTime.toString());
         out.add(endDateTime.toString());
         return out;
+    }
+
+    @Override
+    protected boolean isOnDay(DateTime dateTime) {
+        return startDateTime.compareDate(dateTime) <= 0 && endDateTime.compareDate(dateTime) >= 0;
+    }
+
+    @Override
+    public DateTime getReferenceDateTime() {
+        return startDateTime;
+    }
+
+    @Override
+    public int compareDateTime(IDateTimeComparable timeComparable) {
+        return getReferenceDateTime().compareTo(timeComparable.getReferenceDateTime());
     }
 }

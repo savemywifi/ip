@@ -34,6 +34,15 @@ public class DateTime implements Comparable<DateTime> {
     }
 
     /**
+     * Returns a DateTime of the current date and time.
+     *
+     * @return A DateTime containing the current date and time.
+     */
+    public static DateTime now() {
+        return new DateTime(LocalDate.now(), LocalTime.now());
+    }
+
+    /**
      * A string representation of the DateTime
      *
      * @return The formatted date, optionally followed by the formatted time when one is present
@@ -46,6 +55,20 @@ public class DateTime implements Comparable<DateTime> {
 
         return String.format("%s%s%s", localDate.format(DATE_FORMATTER), SEPARATOR,
                 localTime.format(TIME_FORMATTER));
+    }
+
+    /**
+     * A string representation of the time in the DateTime
+     *
+     * @return The formatted time
+     * @throws UnsupportedOperationException If no time is specified
+     */
+    public String toTimeString() throws UnsupportedOperationException {
+        if (localTime == null) {
+            return "Full day";
+        }
+
+        return localTime.format(TIME_FORMATTER);
     }
 
     /**
@@ -73,5 +96,10 @@ public class DateTime implements Comparable<DateTime> {
         }
 
         return (int) ChronoUnit.MINUTES.between(other.localTime, localTime);
+    }
+
+
+    public int compareDate(DateTime other) {
+        return (int) ChronoUnit.DAYS.between(other.localDate, localDate);
     }
 }

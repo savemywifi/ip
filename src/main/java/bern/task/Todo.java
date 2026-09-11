@@ -1,9 +1,11 @@
 package bern.task;
 
+import bern.datetime.DateTime;
+
 /**
  * A task with no deadline
  */
-class Todo extends Task {
+public class Todo extends Task {
     /**
      * Constructor for a Todo
      *
@@ -21,5 +23,10 @@ class Todo extends Task {
     @Override
     protected String getSymbol() {
         return "T";
+    }
+
+    @Override
+    protected boolean isOnDay(DateTime dateTime) {
+        return false;
     }
 }

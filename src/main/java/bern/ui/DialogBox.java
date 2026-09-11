@@ -1,14 +1,9 @@
 package bern.ui;
 
 import java.io.IOException;
-import java.util.Collections;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -19,6 +14,9 @@ import javafx.scene.layout.HBox;
  * and a label containing text from the speaker.
  */
 public class DialogBox extends HBox {
+    private static final Image userImage = new Image(DialogBox.class.getResourceAsStream("/images/DaLog.png"));
+    private static final Image bernImage = new Image(DialogBox.class.getResourceAsStream("/images/DaBern.png"));
+
     @FXML
     private Label dialog;
     @FXML
@@ -27,6 +25,9 @@ public class DialogBox extends HBox {
     private ImageView userDisplayPicture;
 
     private DialogBox(String text, Image img, boolean isUser) {
+        assert userImage != null;
+        assert bernImage != null;
+
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(MainWindow.class.getResource("/view/DialogBox.fxml"));
             fxmlLoader.setController(this);
@@ -45,21 +46,11 @@ public class DialogBox extends HBox {
         nonDisplayPicture.setOpacity(0d);
     }
 
-    /**
-     * Flips the dialog box such that the ImageView is on the left and text on the right.
-     */
-    private void flip() {
-        ObservableList<Node> tmp = FXCollections.observableArrayList(this.getChildren());
-        Collections.reverse(tmp);
-        getChildren().setAll(tmp);
-        setAlignment(Pos.TOP_LEFT);
+    public static DialogBox getUserDialog(String text) {
+        return new DialogBox(text, userImage, true);
     }
 
-    public static DialogBox getUserDialog(String text, Image img) {
-        return new DialogBox(text, img, true);
-    }
-
-    public static DialogBox getBernDialog(String text, Image img) {
-        return new DialogBox(text, img, false);
+    public static DialogBox getBernDialog(String text) {
+        return new DialogBox(text, bernImage, false);
     }
 }
