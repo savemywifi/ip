@@ -33,8 +33,9 @@ public class EventBox extends TaskBox {
             e.printStackTrace();
         }
 
-        startTime.setText(event.getStartTimeString());
-        endTime.setText(event.getEndTimeString());
+        setMark(event.isDone());
+        startTime.setText(event.getStartDateTimeString());
+        endTime.setText(event.getEndDateTimeString());
         description.setText(event.getName());
     }
 }

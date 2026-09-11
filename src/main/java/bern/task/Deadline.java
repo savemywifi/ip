@@ -7,7 +7,7 @@ import bern.datetime.DateTime;
 /**
  * A task with a deadline. Contains a String description and a DateTime deadline.
  */
-public class Deadline extends Task {
+public class Deadline extends Task implements IDateTimeComparable {
     private final DateTime deadlineDateTime;
 
     /**
@@ -31,8 +31,8 @@ public class Deadline extends Task {
         return "D";
     }
 
-    public String getTimeString() {
-        return deadlineDateTime.toTimeString();
+    public String getDateTimeString() {
+        return deadlineDateTime.toString();
     }
 
     /**
@@ -55,5 +55,20 @@ public class Deadline extends Task {
         ArrayList<String> out = super.toDataList();
         out.add(deadlineDateTime.toString());
         return out;
+    }
+
+    @Override
+    protected boolean isOnDay(DateTime dateTime) {
+        return deadlineDateTime.compareDate(dateTime) == 0;
+    }
+
+    @Override
+    public DateTime getReferenceDateTime() {
+        return deadlineDateTime;
+    }
+
+    @Override
+    public int compareDateTime(IDateTimeComparable timeComparable) {
+        return getReferenceDateTime().compareTo(timeComparable.getReferenceDateTime());
     }
 }

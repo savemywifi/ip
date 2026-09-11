@@ -35,7 +35,7 @@ public class ScheduleFrame extends AnchorPane {
 
         ObservableList<Node> scheduleItems = taskContainer.getChildren();
         for (Response r : responses) {
-            scheduleItems.add(r.getResponseNode());
+            scheduleItems.addAll(r.getResponseNodes());
         }
     }
 }

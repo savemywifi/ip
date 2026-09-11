@@ -2,9 +2,12 @@ package bern.logic;
 
 import java.text.ParseException;
 import java.time.format.DateTimeParseException;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.function.Function;
 
+import bern.datetime.DateTime;
+import bern.datetime.DateTimeFactory;
 import bern.storage.SaveDataController;
 import bern.task.TaskFactory;
 import bern.task.TaskManager;
@@ -26,7 +29,8 @@ public class Controller {
         DEADLINE(Controller::attemptMakeDeadline),
         EVENT(Controller::attemptMakeEvent),
         DELETE(Controller::attemptDeleteTask),
-        FIND(Controller::attemptFindTasks);
+        FIND(Controller::attemptFindTasks),
+        SCHEDULE(Controller::attemptShowSchedule);
 
         private final Function<String[], Response> action;
 
@@ -88,8 +92,21 @@ public class Controller {
                     Keyword.FIND, Keyword.FIND + " [search token]");
         }
 
-        return dialog.printMessage(
-                taskManager.findTasks(inputTokens[1]));
+        return taskManager.findTasks(inputTokens[1]);
+    }
+
+    private static Response attemptShowSchedule(String[] inputTokens) {
+        DateTime scheduleDate;
+        try {
+            scheduleDate = inputTokens.length == 1
+                    ? DateTime.now()
+                    : DateTimeFactory.parseDateTime(String.join(" ", inputTokens).split(" ", 2)[1]);
+            return taskManager.showSchedule(scheduleDate);
+        } catch (DateTimeParseException e) {
+            return dialog.printInvalidDateTimeError(e.getParsedString());
+        } catch (NoSuchElementException e) {
+            return dialog.printNoTasksError();
+        }
     }
 
     /**
@@ -166,8 +183,7 @@ public class Controller {
      */
     private static Response attemptMakeTodo(String[] inputTokens) {
         try {
-            return dialog.printMessage(
-                    taskManager.addTask(TaskFactory.makeTodo(inputTokens)));
+            return dialog.printMessage(taskManager.addTask(TaskFactory.makeTodo(inputTokens)));
         } catch (ParseException e) {
             return dialog.printMessage(getParseExceptionResponse(e) + "Command syntax: todo <task name>");
         }
@@ -182,8 +198,7 @@ public class Controller {
      */
     private static Response attemptMakeDeadline(String[] inputTokens) {
         try {
-            return dialog.printMessage(
-                    taskManager.addTask(TaskFactory.makeDeadline(inputTokens)));
+            return dialog.printMessage(taskManager.addTask(TaskFactory.makeDeadline(inputTokens)));
         } catch (ParseException e) {
             return dialog.printMessage(getParseExceptionResponse(e)
                     + "Command syntax: deadline <task name> /by <due date>");

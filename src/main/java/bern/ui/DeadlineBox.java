@@ -31,7 +31,8 @@ public class DeadlineBox extends TaskBox {
             e.printStackTrace();
         }
 
-        time.setText(deadline.getTimeString());
+        setMark(deadline.isDone());
+        time.setText(deadline.getDateTimeString());
         description.setText(deadline.getName());
     }
 }

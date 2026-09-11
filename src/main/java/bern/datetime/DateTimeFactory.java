@@ -63,6 +63,9 @@ public class DateTimeFactory {
     public static DateTime makeDateFromDataString(String dataString) {
         String[] tokens = dataString.split(DateTime.SEPARATOR);
 
+        if (tokens.length == 1) {
+            return new DateTime(parseDate(tokens[0]), null);
+        }
         if (tokens.length != 2) {
             throw new IllegalArgumentException("Data has insufficient arguments for date and time");
         }

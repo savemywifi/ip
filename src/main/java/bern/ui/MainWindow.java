@@ -2,7 +2,9 @@ package bern.ui;
 
 import bern.logic.Controller;
 import bern.logic.Response;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -71,10 +73,10 @@ public class MainWindow extends AnchorPane {
         }
         assert control != null;
         Response response = control.getResponse(input);
-        dialogContainer.getChildren().addAll(
-                DialogBox.getUserDialog(input),
-                response.getResponseNode()
-        );
+        ObservableList<Node> children = dialogContainer.getChildren();
+
+        children.add(DialogBox.getUserDialog(input));
+        children.addAll(response.getResponseNodes());
         userInput.clear();
     }
 }

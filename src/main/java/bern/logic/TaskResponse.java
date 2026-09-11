@@ -1,10 +1,14 @@
 package bern.logic;
 
+import java.util.List;
+
 import bern.task.Deadline;
 import bern.task.Event;
 import bern.task.Task;
+import bern.task.Todo;
 import bern.ui.DeadlineBox;
 import bern.ui.EventBox;
+import bern.ui.TodoBox;
 import javafx.scene.Node;
 
 /**
@@ -18,11 +22,13 @@ class TaskResponse extends Response {
     }
 
     @Override
-    public Node getResponseNode() {
-        if (task instanceof Deadline) {
-            return new DeadlineBox((Deadline) task);
+    public List<Node> getResponseNodes() {
+        if (task instanceof Todo) {
+            return List.of(new TodoBox((Todo) task));
+        } else if (task instanceof Deadline) {
+            return List.of(new DeadlineBox((Deadline) task));
         } else if (task instanceof Event) {
-            return new EventBox((Event) task);
+            return List.of(new EventBox((Event) task));
         } else {
             throw new UnsupportedOperationException("Not yet implemented for this task type");
         }
