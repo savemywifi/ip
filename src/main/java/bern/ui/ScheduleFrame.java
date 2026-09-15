@@ -1,41 +1,54 @@
 package bern.ui;
 
-import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
-import bern.logic.Response;
-import javafx.collections.ObservableList;
+import bern.logic.DaySchedule;
+import bern.task.Task;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
 /**
- * Controller for the main GUI.
+ * Assembles daily and undated schedule sections inside a scrollable FXML layout.
  */
-public class ScheduleFrame extends AnchorPane {
+public class ScheduleFrame extends VBox {
     @FXML
-    private VBox taskContainer;
+    private VBox dayContainer;
+    @FXML
+    private Label emptyMessage;
 
     /**
-     * A constructor for ScheduleFrame
+     * Creates a scrollable timetable containing the supplied days and undated tasks.
      *
-     * @param responses The list of responses to include in the schedule
+     * @param schedules The daily layouts in display order.
+     * @param undatedTasks The tasks without an associated date.
      */
-    public ScheduleFrame(List<? extends Response> responses) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(MainWindow.class.getResource("/view/ScheduleFrame.fxml"));
-            fxmlLoader.setController(this);
-            fxmlLoader.setRoot(this);
-            fxmlLoader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
+    public ScheduleFrame(List<DaySchedule> schedules, List<Task> undatedTasks) {
+        this(schedules, undatedTasks, Map.of());
+    }
+
+    /**
+     * Creates a timetable whose cards retain the task numbers used by task commands.
+     *
+     * @param schedules The daily layouts in display order.
+     * @param undatedTasks The tasks without an associated date.
+     * @param taskNumbers The original one-based task numbers.
+     */
+    public ScheduleFrame(List<DaySchedule> schedules, List<Task> undatedTasks, Map<Task, Integer> taskNumbers) {
+        Map<Task, Integer> displayedTaskNumbers = Map.copyOf(taskNumbers);
+        ScheduleViewLoader.load(this, "/view/ScheduleContainer.fxml");
+
+        if (!undatedTasks.isEmpty()) {
+            dayContainer.getChildren().add(new ScheduleUndatedSection(undatedTasks, displayedTaskNumbers));
         }
 
-        ObservableList<Node> scheduleItems = taskContainer.getChildren();
-        for (Response r : responses) {
-            scheduleItems.addAll(r.getResponseNodes());
+        for (DaySchedule schedule : schedules) {
+            dayContainer.getChildren().add(new ScheduleDay(schedule, displayedTaskNumbers));
+        }
+
+        if (schedules.isEmpty() && undatedTasks.isEmpty()) {
+            dayContainer.getChildren().add(emptyMessage);
         }
     }
 }

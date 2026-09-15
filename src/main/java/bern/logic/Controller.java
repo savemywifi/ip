@@ -2,7 +2,7 @@ package bern.logic;
 
 import java.text.ParseException;
 import java.time.format.DateTimeParseException;
-import java.util.NoSuchElementException;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.function.Function;
 
@@ -16,8 +16,8 @@ import javafx.application.Platform;
 
 /** Processes user commands and coordinates task-management operations */
 public class Controller {
-    private static final TaskManager taskManager = TaskManager.getInstance();
-    private static final Dialog dialog = Dialog.getInstance();
+    private static final TaskManager TASK_MANAGER = TaskManager.getInstance();
+    private static final Dialog DIALOG = Dialog.getInstance();
 
     /** Stores the commands supported by the application and their handlers. */
     private enum Keyword {
@@ -62,13 +62,13 @@ public class Controller {
      */
     private static Response attemptExit(String[] inputTokens) {
         if (inputTokens.length != 1) {
-            return dialog.printIncorrectKeywordUsageError(Keyword.BYE, Keyword.BYE);
+            return DIALOG.printIncorrectKeywordUsageError(Keyword.BYE, Keyword.BYE);
         }
-        if (!SaveDataController.saveTaskData(taskManager.getTaskList())) {
-            return dialog.printSaveError();
+        if (!SaveDataController.saveTaskData(TASK_MANAGER.getTaskList())) {
+            return DIALOG.printSaveError();
         }
         Platform.exit();
-        return dialog.sayGoodbye();
+        return DIALOG.sayGoodbye();
     }
 
     /**
@@ -80,32 +80,32 @@ public class Controller {
      */
     private static Response attemptListTasks(String[] inputTokens) {
         if (inputTokens.length != 1) {
-            return dialog.printIncorrectKeywordUsageError(Keyword.LIST, Keyword.LIST);
+            return DIALOG.printIncorrectKeywordUsageError(Keyword.LIST, Keyword.LIST);
         }
 
-        return taskManager.listTasks();
+        return TASK_MANAGER.listTasks();
     }
 
+    /** Returns matching tasks, or a usage error if the command does not contain exactly one search token. */
     private static Response attemptFindTasks(String[] inputTokens) {
         if (inputTokens.length != 2) {
-            return dialog.printIncorrectKeywordUsageError(
+            return DIALOG.printIncorrectKeywordUsageError(
                     Keyword.FIND, Keyword.FIND + " [search token]");
         }
 
-        return taskManager.findTasks(inputTokens[1]);
+        return TASK_MANAGER.findTasks(inputTokens[1]);
     }
 
+    /** Returns the requested day's schedule, defaulting to today when the command has no arguments. */
     private static Response attemptShowSchedule(String[] inputTokens) {
-        DateTime scheduleDate;
         try {
-            scheduleDate = inputTokens.length == 1
+            String dateArgument = String.join(" ", Arrays.copyOfRange(inputTokens, 1, inputTokens.length));
+            DateTime scheduleDate = inputTokens.length == 1
                     ? DateTime.now()
-                    : DateTimeFactory.parseDateTime(String.join(" ", inputTokens).split(" ", 2)[1]);
-            return taskManager.showSchedule(scheduleDate);
+                    : DateTimeFactory.parseDateTime(dateArgument);
+            return TASK_MANAGER.showSchedule(scheduleDate);
         } catch (DateTimeParseException e) {
-            return dialog.printInvalidDateTimeError(e.getParsedString());
-        } catch (NoSuchElementException e) {
-            return dialog.printNoTasksError();
+            return DIALOG.printInvalidDateTimeError(e.getParsedString());
         }
     }
 
@@ -119,28 +119,28 @@ public class Controller {
      * @throws IllegalArgumentException If the input is invalid or no tasks exist.
      */
     private static int tryGetTaskNumber(String[] inputTokens) throws IllegalArgumentException {
-        if (!taskManager.hasTasks()) {
-            throw new IllegalArgumentException(dialog.printNoTasksError().toString());
+        if (!TASK_MANAGER.hasTasks()) {
+            throw new IllegalArgumentException(DIALOG.printNoTasksError().toString());
         }
 
         if (inputTokens.length != 2) {
             throw new IllegalArgumentException(
-                    dialog.printIncorrectKeywordUsageError(inputTokens[0], inputTokens[0]).toString());
+                    DIALOG.printIncorrectKeywordUsageError(inputTokens[0], inputTokens[0]).toString());
         }
 
-        int taskIndex;
+        int taskNumber;
 
         try {
-            taskIndex = Integer.parseInt(inputTokens[1]);
+            taskNumber = Integer.parseInt(inputTokens[1]);
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException(dialog.printInvalidTaskNumberError(taskManager.size()).toString());
+            throw new IllegalArgumentException(DIALOG.printInvalidTaskNumberError(TASK_MANAGER.size()).toString());
         }
 
-        if (taskIndex < 1 || taskIndex > taskManager.size()) {
-            throw new IllegalArgumentException(dialog.printInvalidTaskNumberError(taskManager.size()).toString());
+        if (taskNumber < 1 || taskNumber > TASK_MANAGER.size()) {
+            throw new IllegalArgumentException(DIALOG.printInvalidTaskNumberError(TASK_MANAGER.size()).toString());
         }
 
-        return taskIndex;
+        return taskNumber;
     }
 
     /**
@@ -152,9 +152,9 @@ public class Controller {
     private static Response attemptMarkTask(String[] inputTokens) {
         try {
             int taskNumber = tryGetTaskNumber(inputTokens);
-            return taskManager.markTask(taskNumber);
+            return TASK_MANAGER.markTask(taskNumber);
         } catch (IllegalArgumentException e) {
-            return dialog.printMessage(e.getMessage());
+            return DIALOG.printMessage(e.getMessage());
         }
     }
 
@@ -168,9 +168,9 @@ public class Controller {
     private static Response attemptUnmarkTask(String[] inputTokens) {
         try {
             int taskNumber = tryGetTaskNumber(inputTokens);
-            return taskManager.unmarkTask(taskNumber);
+            return TASK_MANAGER.unmarkTask(taskNumber);
         } catch (IllegalArgumentException e) {
-            return dialog.printMessage(e.getMessage());
+            return DIALOG.printMessage(e.getMessage());
         }
     }
 
@@ -183,9 +183,9 @@ public class Controller {
      */
     private static Response attemptMakeTodo(String[] inputTokens) {
         try {
-            return dialog.printMessage(taskManager.addTask(TaskFactory.makeTodo(inputTokens)));
+            return DIALOG.printMessage(TASK_MANAGER.addTask(TaskFactory.makeTodo(inputTokens)));
         } catch (ParseException e) {
-            return dialog.printMessage(getParseExceptionResponse(e) + "Command syntax: todo <task name>");
+            return DIALOG.printMessage(getParseExceptionResponse(e) + "Command syntax: todo <task name>");
         }
     }
 
@@ -198,12 +198,12 @@ public class Controller {
      */
     private static Response attemptMakeDeadline(String[] inputTokens) {
         try {
-            return dialog.printMessage(taskManager.addTask(TaskFactory.makeDeadline(inputTokens)));
+            return DIALOG.printMessage(TASK_MANAGER.addTask(TaskFactory.makeDeadline(inputTokens)));
         } catch (ParseException e) {
-            return dialog.printMessage(getParseExceptionResponse(e)
+            return DIALOG.printMessage(getParseExceptionResponse(e)
                     + "Command syntax: deadline <task name> /by <due date>");
         } catch (DateTimeParseException e) {
-            return dialog.printInvalidDateTimeError(e.getParsedString());
+            return DIALOG.printInvalidDateTimeError(e.getParsedString());
         }
     }
 
@@ -216,15 +216,15 @@ public class Controller {
      */
     private static Response attemptMakeEvent(String[] inputTokens) {
         try {
-            return dialog.printMessage(
-                    taskManager.addTask(TaskFactory.makeEvent(inputTokens)));
+            return DIALOG.printMessage(
+                    TASK_MANAGER.addTask(TaskFactory.makeEvent(inputTokens)));
         } catch (ParseException e) {
-            return dialog.printMessage(getParseExceptionResponse(e)
+            return DIALOG.printMessage(getParseExceptionResponse(e)
                     + "Command syntax: event <task name> /from <start date time> /to <end date time>");
         } catch (DateTimeParseException e) {
-            return dialog.printInvalidDateTimeError(e.getParsedString());
+            return DIALOG.printInvalidDateTimeError(e.getParsedString());
         } catch (IllegalArgumentException e) {
-            return dialog.printMessage(e.getMessage());
+            return DIALOG.printMessage(e.getMessage());
         }
     }
 
@@ -238,48 +238,63 @@ public class Controller {
     private static Response attemptDeleteTask(String[] inputTokens) {
         try {
             int taskNumber = tryGetTaskNumber(inputTokens);
-            return dialog.printMessage(taskManager.deleteTask(taskNumber));
+            return TASK_MANAGER.deleteTask(taskNumber);
         } catch (IllegalArgumentException e) {
-            return dialog.printMessage(e.getMessage());
+            return DIALOG.printMessage(e.getMessage());
         }
     }
 
+    /**
+     * Handles a user command and returns the corresponding response.
+     *
+     * @param input The command entered by the user.
+     * @return The command result, or a message explaining invalid input.
+     */
     public Response getResponse(String input) {
+        if (input.isBlank()) {
+            return DIALOG.printKeywordInvalidError();
+        }
+
         String[] inputTokens = input.split(" ");
         try {
             Keyword keyword = Keyword.valueOf(inputTokens[0].toUpperCase());
             return keyword.action.apply(inputTokens);
         } catch (IllegalArgumentException e) {
-            return dialog.printKeywordInvalidError();
+            return DIALOG.printKeywordInvalidError();
         }
     }
 
+    /**
+     * Loads saved tasks into the initially empty task manager.
+     *
+     * @return Whether at least one task was loaded.
+     */
     public boolean loadTasks() {
-        return taskManager.loadTaskList(SaveDataController.readTaskData());
+        return TASK_MANAGER.loadTaskList(SaveDataController.readTaskData());
     }
 
     /** Starts the command-line application. */
     static void main() {
-        dialog.greetUser();
+        DIALOG.greetUser();
 
         Scanner sc = new Scanner(System.in);
         boolean isReadingInput = true;
         Keyword keyword;
 
-        taskManager.loadTaskList(SaveDataController.readTaskData());
+        TASK_MANAGER.loadTaskList(SaveDataController.readTaskData());
 
-        if (taskManager.hasTasks()) {
-            dialog.printTasksLoaded();
+        if (TASK_MANAGER.hasTasks()) {
+            DIALOG.printTasksLoaded();
         }
 
         while (isReadingInput) {
-            String input = dialog.promptForInput(sc);
+            String input = DIALOG.promptForInput(sc);
             String[] inputTokens = input.split(" ");
 
             try {
                 keyword = Keyword.valueOf(inputTokens[0].toUpperCase());
             } catch (IllegalArgumentException e) {
-                dialog.printKeywordInvalidError();
+                DIALOG.printKeywordInvalidError();
                 continue;
             }
 
@@ -292,6 +307,6 @@ public class Controller {
         }
 
         sc.close();
-        dialog.sayGoodbye();
+        DIALOG.sayGoodbye();
     }
 }

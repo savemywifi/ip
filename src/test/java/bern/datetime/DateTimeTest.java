@@ -8,6 +8,7 @@ import java.time.LocalTime;
 
 import org.junit.jupiter.api.Test;
 
+/** Verifies date-time formatting and chronological ordering with optional times. */
 public class DateTimeTest {
     @Test
     public void dateTimeString_nullTime_displays() {
@@ -33,5 +34,27 @@ public class DateTimeTest {
         assertTrue(dateTime.compareTo(nullDateTime1) > 0);
         assertTrue(nullDateTime1.compareTo(dateTime) < 0);
         assertEquals(0, nullDateTime1.compareTo(nullDateTime2));
+    }
+
+    @Test
+    public void compareDate_distantDates_preservesChronologicalOrder() {
+        DateTime earliest = new DateTime(LocalDate.EPOCH, null);
+        DateTime latest = new DateTime(LocalDate.EPOCH.plusDays((long) Integer.MAX_VALUE + 1), null);
+
+        assertTrue(earliest.compareDate(latest) < 0);
+        assertTrue(latest.compareDate(earliest) > 0);
+        assertTrue(earliest.compareTo(latest) < 0);
+        assertTrue(latest.compareTo(earliest) > 0);
+    }
+
+    @Test
+    public void compareTo_timesWithinSameMinute_preservesChronologicalOrder() {
+        LocalDate date = LocalDate.of(2026, 9, 15);
+        DateTime earlier = new DateTime(date, LocalTime.of(9, 0, 1));
+        DateTime later = new DateTime(date, LocalTime.of(9, 0, 2));
+
+        assertTrue(earlier.compareTo(later) < 0);
+        assertTrue(later.compareTo(earlier) > 0);
+        assertEquals(0, earlier.compareDate(later));
     }
 }
