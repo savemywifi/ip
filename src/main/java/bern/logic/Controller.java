@@ -152,7 +152,7 @@ public class Controller {
     private static Response attemptMarkTask(String[] inputTokens) {
         try {
             int taskNumber = tryGetTaskNumber(inputTokens);
-            return dialog.printMessage(taskManager.markTask(taskNumber));
+            return taskManager.markTask(taskNumber);
         } catch (IllegalArgumentException e) {
             return dialog.printMessage(e.getMessage());
         }
@@ -168,7 +168,7 @@ public class Controller {
     private static Response attemptUnmarkTask(String[] inputTokens) {
         try {
             int taskNumber = tryGetTaskNumber(inputTokens);
-            return dialog.printMessage(taskManager.unmarkTask(taskNumber));
+            return taskManager.unmarkTask(taskNumber);
         } catch (IllegalArgumentException e) {
             return dialog.printMessage(e.getMessage());
         }

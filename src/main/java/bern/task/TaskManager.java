@@ -6,6 +6,7 @@ import java.util.List;
 import bern.datetime.DateTime;
 import bern.logic.Response;
 import bern.logic.ScheduleResponse;
+import bern.logic.TaskResponse;
 import bern.ui.Dialog;
 
 /** Stores and manages the application's tasks. */
@@ -167,16 +168,16 @@ public class TaskManager {
      * @param i The one-based task index
      * @return The message marking the task as completed
      */
-    public String markTask(int i) {
+    public Response markTask(int i) {
         assert 1 <= i && i <= tasks.size();
         Task task = tasks.get(i - 1);
         if (task.isDone()) {
-            return "The following task is already marked as done:\n" + task;
+            return new TaskResponse(task, "The following task is already marked as done:");
         }
 
         task.setDone(true);
 
-        return "Nice! I've marked this task as done:\n" + task;
+        return new TaskResponse(task, "Nice! I've marked this task as done:");
     }
 
     /**
@@ -185,17 +186,17 @@ public class TaskManager {
      * @param i The one-based task number.
      * @return The confirmation message for the updated task.
      */
-    public String unmarkTask(int i) {
+    public Response unmarkTask(int i) {
         assert 1 <= i && i <= tasks.size();
         Task task = tasks.get(i - 1);
 
         if (!task.isDone()) {
-            return "The following task is already not marked as done: \n" + task;
+            return new TaskResponse(task, "The following task is already marked as not done:");
         }
 
         task.setDone(false);
 
-        return "OK, I've marked this task as not done yet:\n" + task;
+        return new TaskResponse(task, "OK, I've marked this task as not done yet:");
     }
 
     /**
