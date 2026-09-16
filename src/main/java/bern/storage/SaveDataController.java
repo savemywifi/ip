@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.ParseException;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,7 @@ import bern.task.TaskFactory;
 import bern.ui.Dialog;
 
 /**
- * Provides methods for serializing tasks to the save file and reconstructing tasks from saved records
+ * Provides methods for serializing tasks to the save file and reconstructing tasks from saved records.
  */
 public class SaveDataController {
     /** Separates fields in a saved task record. */
@@ -68,7 +69,7 @@ public class SaveDataController {
             for (String taskString : savedData) {
                 try {
                     savedTasks.add(dataStringToTask(taskString));
-                } catch (ParseException | IllegalArgumentException e) {
+                } catch (ParseException | IllegalArgumentException | DateTimeParseException e) {
                     success = false;
                 }
             }
@@ -83,6 +84,7 @@ public class SaveDataController {
         return savedTasks;
     }
 
+    /** Returns the save-file contents with one task record per line. */
     private static String tasksToDataString(List<Task> tasks) {
         StringBuilder dataString = new StringBuilder();
         for (Task task : tasks) {
@@ -99,6 +101,7 @@ public class SaveDataController {
      * @return The task reconstructed from the saved record.
      * @throws ParseException If the record contains an invalid task type.
      * @throws IllegalArgumentException If the record is malformed.
+     * @throws DateTimeParseException If a saved date or time cannot be parsed.
      */
     private static Task dataStringToTask(String dataString)
             throws ParseException, IllegalArgumentException {

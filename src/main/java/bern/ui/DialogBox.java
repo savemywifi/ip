@@ -28,7 +28,8 @@ public class DialogBox extends HBox {
     @FXML
     private ImageView userDisplayPicture;
 
-    private DialogBox(String text, Image img, boolean isUser) {
+    /** Creates a dialog using the picture and alignment of the selected speaker. */
+    private DialogBox(String text, boolean isUser) {
         assert userImage != null;
         assert bernImage != null;
 
@@ -46,16 +47,37 @@ public class DialogBox extends HBox {
         ImageView nonDisplayPicture = isUser ? bernDisplayPicture : userDisplayPicture;
 
         dialog.setText(text);
-        displayPicture.setImage(img);
+        displayPicture.setImage(isUser ? userImage : bernImage);
         nonDisplayPicture.setOpacity(0d);
     }
 
+    /**
+     * Returns a dialog displaying the user's message and picture.
+     *
+     * @param text The user's message.
+     * @return The user dialog.
+     */
     public static DialogBox getUserDialog(String text) {
-        return new DialogBox(text, userImage, true);
+        return new DialogBox(text, true);
     }
 
+    /**
+     * Returns a dialog displaying Bern's message and picture.
+     *
+     * @param text Bern's message.
+     * @return The Bern dialog.
+     */
     public static DialogBox getBernDialog(String text) {
-        return new DialogBox(text, bernImage, false);
+        return new DialogBox(text, false);
+    }
+
+    /**
+     * Adds a node to the dialog box.
+     *
+     * @param n The node to be added.
+     */
+    public void add(Node n) {
+        addons.getChildren().add(n);
     }
 
     /**

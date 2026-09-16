@@ -1,10 +1,7 @@
 package bern.ui;
 
-import java.io.IOException;
-
 import bern.task.Deadline;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 
 /**
@@ -22,14 +19,7 @@ public class DeadlineBox extends TaskBox {
      * @param deadline The deadline represented by the task box.
      */
     public DeadlineBox(Deadline deadline) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(MainWindow.class.getResource("/view/DeadlineBox.fxml"));
-            fxmlLoader.setController(this);
-            fxmlLoader.setRoot(this);
-            fxmlLoader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        loadView("/view/DeadlineBox.fxml");
 
         setMark(deadline.isDone());
         time.setText(deadline.getDateTimeString());

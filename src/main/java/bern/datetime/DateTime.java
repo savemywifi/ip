@@ -3,7 +3,6 @@ package bern.datetime;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 
 /**
  * Stores a given date, and optionally, a given time. A <code>DateTime</code> object corresponds to a date and time
@@ -23,7 +22,7 @@ public class DateTime implements Comparable<DateTime> {
     private final LocalTime localTime;
 
     /**
-     * A constructor for the DateTime class
+     * Creates a date with an optional time component.
      *
      * @param localDate The date stored
      * @param localTime The time stored, or null
@@ -42,8 +41,21 @@ public class DateTime implements Comparable<DateTime> {
         return new DateTime(LocalDate.now(), LocalTime.now());
     }
 
+    public LocalDate getDate() {
+        return localDate;
+    }
+
     /**
-     * A string representation of the DateTime
+     * Returns the specified time, or {@code null} when only a date was given.
+     *
+     * @return The optional time component.
+     */
+    public LocalTime getTime() {
+        return localTime;
+    }
+
+    /**
+     * Returns the formatted date and its time, when specified.
      *
      * @return The formatted date, optionally followed by the formatted time when one is present
      */
@@ -68,9 +80,9 @@ public class DateTime implements Comparable<DateTime> {
      */
     @Override
     public int compareTo(DateTime other) {
-        int dayDifference = (int) ChronoUnit.DAYS.between(other.localDate, localDate);
-        if (dayDifference != 0) {
-            return dayDifference;
+        int dateOrder = compareDate(other);
+        if (dateOrder != 0) {
+            return dateOrder;
         }
 
         if (localTime == null && other.localTime == null) {
@@ -81,11 +93,16 @@ public class DateTime implements Comparable<DateTime> {
             return 1;
         }
 
-        return (int) ChronoUnit.MINUTES.between(other.localTime, localTime);
+        return localTime.compareTo(other.localTime);
     }
 
-
+    /**
+     * Compares the calendar dates without considering either time component.
+     *
+     * @param other The date-time to compare with.
+     * @return A negative value, zero, or a positive value when this date is earlier, equal, or later.
+     */
     public int compareDate(DateTime other) {
-        return (int) ChronoUnit.DAYS.between(other.localDate, localDate);
+        return localDate.compareTo(other.localDate);
     }
 }

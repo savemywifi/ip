@@ -1,6 +1,8 @@
 package bern.task;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import bern.datetime.DateTime;
@@ -12,7 +14,7 @@ import bern.ui.Dialog;
 /** Stores and manages the application's tasks. */
 public class TaskManager {
     private static TaskManager instance;
-    private static Dialog dialog = Dialog.getInstance();
+    private static final Dialog DIALOG = Dialog.getInstance();
 
     private final ArrayList<Task> tasks = new ArrayList<>();
 
@@ -84,10 +86,10 @@ public class TaskManager {
      * @param task The task to add.
      * @return The confirmation message for the added task.
      */
-    public String addTask(Task task) {
+    public Response addTask(Task task) {
         tasks.add(task);
 
-        return "added: " + task;
+        return new TaskResponse(task, "Added a new task.");
     }
 
     /**
@@ -97,10 +99,10 @@ public class TaskManager {
      */
     public Response listTasks() {
         if (tasks.isEmpty()) {
-            return dialog.printNoTasksError();
+            return DIALOG.printNoTasksError();
         }
 
-        return ScheduleResponse.getScheduleResponse("Here are your tasks: ", tasks);
+        return ScheduleResponse.getScheduleResponse("Here are your tasks: ", tasks).withTaskNumbers(tasks);
     }
 
     /**
@@ -111,29 +113,30 @@ public class TaskManager {
      */
     public Response findTasks(String searchToken) {
         if (tasks.isEmpty()) {
-            return dialog.printNoTasksError();
+            return DIALOG.printNoTasksError();
         }
 
-        ArrayList<Task> filteredTasks = new ArrayList<>();
-
-        for (int i = 0; i < tasks.size(); i++) {
-            for (String word : tasks.get(i).getName().split(" ")) {
-                if (word.equalsIgnoreCase(searchToken)) {
-                    filteredTasks.add(tasks.get(i));
-                    break;
-                }
-            }
-        }
+        List<Task> filteredTasks = tasks.stream()
+                .filter(task -> containsWord(task.getName(), searchToken))
+                .toList();
 
         if (filteredTasks.isEmpty()) {
-            return dialog.printMessage("No tasks match the given search token.");
+            return DIALOG.printMessage("No tasks match the given search token.");
         }
 
-        return ScheduleResponse.getScheduleResponse("Here are matching tasks in your list:", filteredTasks);
+        return ScheduleResponse.getScheduleResponse("Here are matching tasks in your list:", filteredTasks)
+                .withTaskNumbers(tasks);
     }
 
     /**
-     * Displays schedule for a specific day
+     * Returns whether the task name contains the search token as a case-insensitive whole word.
+     */
+    private static boolean containsWord(String taskName, String searchToken) {
+        return Arrays.stream(taskName.split(" ")).anyMatch(word -> word.equalsIgnoreCase(searchToken));
+    }
+
+    /**
+     * Returns the schedule for a specific day.
      *
      * @param dateTime The given date time
      * @return The schedule for that specific date
@@ -152,25 +155,24 @@ public class TaskManager {
         }
 
         if (schedule.isEmpty()) {
-            return dialog.printNoTasksError();
+            return DIALOG.printNoTasksError();
         }
 
-        schedule.sort((task1, task2) -> (
-                (IDateTimeComparable) task1).compareDateTime((IDateTimeComparable) task2));
+        schedule.sort(Comparator.comparing(task -> ((IDateTimeComparable) task).getReferenceDateTime()));
 
         return ScheduleResponse.getScheduleResponse(
-                "Here are the tasks for " + dateTime.toString(), schedule);
+                "Here are the tasks for " + dateTime, schedule, dateTime.getDate()).withTaskNumbers(tasks);
     }
 
     /**
      * Marks a task as complete
      *
-     * @param i The one-based task index
+     * @param taskNumber The one-based task number.
      * @return The message marking the task as completed
      */
-    public Response markTask(int i) {
-        assert 1 <= i && i <= tasks.size();
-        Task task = tasks.get(i - 1);
+    public Response markTask(int taskNumber) {
+        assert 1 <= taskNumber && taskNumber <= tasks.size();
+        Task task = tasks.get(taskNumber - 1);
         if (task.isDone()) {
             return new TaskResponse(task, "The following task is already marked as done:");
         }
@@ -183,12 +185,12 @@ public class TaskManager {
     /**
      * Marks the task at the one-based index as not done.
      *
-     * @param i The one-based task number.
+     * @param taskNumber The one-based task number.
      * @return The confirmation message for the updated task.
      */
-    public Response unmarkTask(int i) {
-        assert 1 <= i && i <= tasks.size();
-        Task task = tasks.get(i - 1);
+    public Response unmarkTask(int taskNumber) {
+        assert 1 <= taskNumber && taskNumber <= tasks.size();
+        Task task = tasks.get(taskNumber - 1);
 
         if (!task.isDone()) {
             return new TaskResponse(task, "The following task is already marked as not done:");
@@ -202,14 +204,12 @@ public class TaskManager {
     /**
      * Deletes the task at the one-based index.
      *
-     * @param i The one-based task number.
-     * @return The confirmation message for the deleted task.
+     * @param taskNumber The one-based task number.
+     * @return The deleted task and its confirmation message.
      */
-    public String deleteTask(int i) {
-        assert 1 <= i && i <= tasks.size();
-        Task task = tasks.get(i - 1);
-
-        tasks.remove(i - 1);
-        return "OK, I've removed this task:\n" + task;
+    public Response deleteTask(int taskNumber) {
+        assert 1 <= taskNumber && taskNumber <= tasks.size();
+        Task task = tasks.remove(taskNumber - 1);
+        return new TaskResponse(task, "OK, I've removed this task:");
     }
 }

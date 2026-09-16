@@ -111,16 +111,14 @@ public class DateTimeFactory {
         return time;
     }
 
+    /** Returns whether the string matches a supported time format. */
     private static boolean isTime(String timeString) {
-        for (String format : TIME_FORMATS) {
-            try {
-                LocalTime.parse(timeString, DateTimeFormatter.ofPattern(format));
-                return true;
-            } catch (DateTimeParseException e) {
-                continue;
-            }
+        try {
+            parseTime(timeString);
+            return true;
+        } catch (DateTimeParseException e) {
+            return false;
         }
-        return false;
     }
 
     private static ArrayList<String> generateDateFormats() {
