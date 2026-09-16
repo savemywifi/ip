@@ -26,8 +26,7 @@ public class ScheduleTaskCard extends VBox {
         ScheduleViewLoader.load(this, "/view/ScheduleTaskCard.fxml");
 
         String taskNumberPrefix = taskNumber == null ? "" : taskNumber + ". ";
-        String completionMarker = task.isDone() ? "[X] " : "[ ] ";
-        description.setText(taskNumberPrefix + completionMarker + task.getName());
+        description.setText(taskNumberPrefix + task.getName());
         time.setText(timing);
         if (task.isDone()) {
             getStyleClass().add("schedule-completed");
