@@ -53,6 +53,14 @@ public class TaskManager {
     }
 
     /**
+     * Clears all tasks
+     *
+     */
+    public void clear() {
+        tasks.clear();
+    }
+
+    /**
      * Returns a shallow copy of the stored task list.
      *
      * @return A shallow copy of the stored task list.
