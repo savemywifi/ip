@@ -142,8 +142,6 @@ public class DateTimeFactory {
                             dateSeparator,
                             "d"
                     ));
-                    // Middle-Endian
-                    // TODO
                 }
             }
 

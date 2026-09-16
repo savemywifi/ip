@@ -10,4 +10,8 @@ public abstract class Response {
     protected String text;
 
     public abstract List<Node> getResponseNodes();
+
+    public String getResponseText() {
+        return text;
+    }
 }

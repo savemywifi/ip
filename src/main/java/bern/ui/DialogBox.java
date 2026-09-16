@@ -79,13 +79,4 @@ public class DialogBox extends HBox {
     public void add(Node n) {
         addons.getChildren().add(n);
     }
-
-    /**
-     * Adds a node to the dialog box.
-     *
-     * @param n The node to be added.
-     */
-    public void add(Node n) {
-        addons.getChildren().add(n);
-    }
 }
