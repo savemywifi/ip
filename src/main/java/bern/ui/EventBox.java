@@ -1,10 +1,7 @@
 package bern.ui;
 
-import java.io.IOException;
-
 import bern.task.Event;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 
 /**
@@ -24,14 +21,7 @@ public class EventBox extends TaskBox {
      * @param event The event represented by the task box.
      */
     public EventBox(Event event) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(MainWindow.class.getResource("/view/EventBox.fxml"));
-            fxmlLoader.setController(this);
-            fxmlLoader.setRoot(this);
-            fxmlLoader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        loadView("/view/EventBox.fxml");
 
         setMark(event.isDone());
         startTime.setText(event.getStartDateTimeString());

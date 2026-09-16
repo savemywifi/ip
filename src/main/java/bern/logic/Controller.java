@@ -254,7 +254,7 @@ public class Controller {
             return DIALOG.printKeywordInvalidError();
         }
 
-        String[] inputTokens = input.split(" ");
+        String[] inputTokens = input.strip().split(" ");
         try {
             Keyword keyword = Keyword.valueOf(inputTokens[0].toUpperCase());
             return keyword.action.apply(inputTokens);

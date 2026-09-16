@@ -16,7 +16,6 @@ import javafx.scene.Node;
  * A response from Bern that contains a Task
  */
 public class TaskResponse extends Response {
-    private String text;
     private Task task;
 
     /**
