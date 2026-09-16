@@ -10,8 +10,8 @@ public class Dialog {
 
     /** Message line printed after user-facing output. */
     private static final String MESSAGE_LINE = "____________________________________\n";
-    private static final String MESSAGE_TASK_LOADED = "Loaded saved tasks. Use list to view them.";
-    private static final String MESSAGE_GOODBYE = "Bye. Hope to see you again soon!";
+    private static final String MESSAGE_TASK_LOADED = "*Sizzle*. Loaded saved tasks. Use list to view them.";
+    private static final String MESSAGE_GOODBYE = "Burning out...";
 
     /** ASCII-art banner intended for chatbot identification. */
     private static final String CHATBOT_BANNER = """
@@ -26,19 +26,19 @@ public class Dialog {
     private static final String CHATBOT_NAME = "Bern Tokens";
 
     /** Template used for the greeting. */
-    private static final String TEMPLATE_GREETING = "Hello! I'm %s. \n"
-            + "What can I do for you?";
+    private static final String TEMPLATE_GREETING = "*Sizzle* Hello! I'm %s. \n"
+            + "Feed me tokens~";
 
     /** Error message for an unknown command. */
     private static final String ERROR_KEYWORD_INVALID = "Command not recognised.\n"
-            + "List of commands: todo, deadline, event, mark, unmark, delete, list, bye";
+            + "List of commands: todo, deadline, event, mark, unmark, delete, list, bye, find, schedule";
 
-    private static final String ERROR_DIRECTORY = "Unable to create directory for save file";
-    private static final String ERROR_SAVE = "Unable to save task data.";
-    private static final String ERROR_LOAD = "Couldn't access a previous save for some reason.";
-    private static final String ERROR_LOAD_TASK = "Some tasks were unable to be retrieved.";
+    private static final String ERROR_DIRECTORY = "Unable to create directory for save file. Environment is too wet.";
+    private static final String ERROR_SAVE = "Unable to save task data. Was it burnt?";
+    private static final String ERROR_LOAD = "Couldn't access a previous save for some reason. Burnt to cinders.";
+    private static final String ERROR_LOAD_TASK = "Some tasks were unable to be retrieved. Burned.";
 
-    private static final String ERROR_NO_TASKS = "There are no tasks.";
+    private static final String ERROR_NO_TASKS = "There are no tasks. No tokens to burn :(";
     private static final String ERROR_TEMPLATE_INVALID_TASK_NUMBER = "Given task number must be from 1 to %d";
     private static final String ERROR_TEMPLATE_INCORRECT_KEYWORD_USAGE = "Incorrect usage of %s. Expected: %s";
 

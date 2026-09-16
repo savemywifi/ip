@@ -28,7 +28,9 @@ public class DialogBox extends HBox {
     @FXML
     private ImageView userDisplayPicture;
 
-    /** Creates a dialog using the picture and alignment of the selected speaker. */
+    /**
+     * Creates a dialog using the picture and alignment of the selected speaker.
+     */
     private DialogBox(String text, boolean isUser) {
         assert userImage != null;
         assert bernImage != null;
@@ -69,15 +71,6 @@ public class DialogBox extends HBox {
      */
     public static DialogBox getBernDialog(String text) {
         return new DialogBox(text, false);
-    }
-
-    /**
-     * Adds a node to the dialog box.
-     *
-     * @param n The node to be added.
-     */
-    public void add(Node n) {
-        addons.getChildren().add(n);
     }
 
     /**
