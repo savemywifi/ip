@@ -31,6 +31,7 @@ public class ScheduleTaskCard extends VBox {
         time.setText(timing);
         if (task.isDone()) {
             getStyleClass().add("schedule-completed");
+            this.setDisable(true);
         }
         setAccessibleText(task.toString());
         Tooltip.install(this, new Tooltip(task.toString()));

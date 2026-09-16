@@ -183,7 +183,7 @@ public class Controller {
      */
     private static Response attemptMakeTodo(String[] inputTokens) {
         try {
-            return DIALOG.printMessage(TASK_MANAGER.addTask(TaskFactory.makeTodo(inputTokens)));
+            return TASK_MANAGER.addTask(TaskFactory.makeTodo(inputTokens));
         } catch (ParseException e) {
             return DIALOG.printMessage(getParseExceptionResponse(e) + "Command syntax: todo <task name>");
         }
@@ -198,7 +198,7 @@ public class Controller {
      */
     private static Response attemptMakeDeadline(String[] inputTokens) {
         try {
-            return DIALOG.printMessage(TASK_MANAGER.addTask(TaskFactory.makeDeadline(inputTokens)));
+            return TASK_MANAGER.addTask(TaskFactory.makeDeadline(inputTokens));
         } catch (ParseException e) {
             return DIALOG.printMessage(getParseExceptionResponse(e)
                     + "Command syntax: deadline <task name> /by <due date>");
@@ -216,8 +216,7 @@ public class Controller {
      */
     private static Response attemptMakeEvent(String[] inputTokens) {
         try {
-            return DIALOG.printMessage(
-                    TASK_MANAGER.addTask(TaskFactory.makeEvent(inputTokens)));
+            return TASK_MANAGER.addTask(TaskFactory.makeEvent(inputTokens));
         } catch (ParseException e) {
             return DIALOG.printMessage(getParseExceptionResponse(e)
                     + "Command syntax: event <task name> /from <start date time> /to <end date time>");

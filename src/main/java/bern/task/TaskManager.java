@@ -86,10 +86,10 @@ public class TaskManager {
      * @param task The task to add.
      * @return The confirmation message for the added task.
      */
-    public String addTask(Task task) {
+    public Response addTask(Task task) {
         tasks.add(task);
 
-        return "added: " + task;
+        return new TaskResponse(task, "Added a new task.");
     }
 
     /**
