@@ -89,7 +89,7 @@ public class TaskManager {
     public Response addTask(Task task) {
         tasks.add(task);
 
-        return new TaskResponse(task, "Added a new task.");
+        return new TaskResponse(task, "*sizzle* Added a new task.");
     }
 
     /**
@@ -102,7 +102,7 @@ public class TaskManager {
             return DIALOG.printNoTasksError();
         }
 
-        return ScheduleResponse.getScheduleResponse("Here are your tasks: ", tasks).withTaskNumbers(tasks);
+        return ScheduleResponse.getScheduleResponse("*sizzle* Here are your tasks: ", tasks).withTaskNumbers(tasks);
     }
 
     /**
@@ -121,10 +121,10 @@ public class TaskManager {
                 .toList();
 
         if (filteredTasks.isEmpty()) {
-            return DIALOG.printMessage("No tasks match the given search token.");
+            return DIALOG.printMessage("*fsss...* No tasks match the given search token.");
         }
 
-        return ScheduleResponse.getScheduleResponse("Here are matching tasks in your list:", filteredTasks)
+        return ScheduleResponse.getScheduleResponse("*FWOOSH* Here are matching tasks in your list:", filteredTasks)
                 .withTaskNumbers(tasks);
     }
 
@@ -161,7 +161,7 @@ public class TaskManager {
         schedule.sort(Comparator.comparing(task -> ((IDateTimeComparable) task).getReferenceDateTime()));
 
         return ScheduleResponse.getScheduleResponse(
-                "Here are the tasks for " + dateTime, schedule, dateTime.getDate()).withTaskNumbers(tasks);
+                "HOT! Here are the tasks for " + dateTime, schedule, dateTime.getDate()).withTaskNumbers(tasks);
     }
 
     /**
@@ -174,12 +174,12 @@ public class TaskManager {
         assert 1 <= taskNumber && taskNumber <= tasks.size();
         Task task = tasks.get(taskNumber - 1);
         if (task.isDone()) {
-            return new TaskResponse(task, "The following task is already marked as done:");
+            return new TaskResponse(task, "*Sizzle* The following task is already marked as done:");
         }
 
         task.setDone(true);
 
-        return new TaskResponse(task, "Nice! I've marked this task as done:");
+        return new TaskResponse(task, "*FWOOSH* I've marked this task as done:");
     }
 
     /**
@@ -193,12 +193,12 @@ public class TaskManager {
         Task task = tasks.get(taskNumber - 1);
 
         if (!task.isDone()) {
-            return new TaskResponse(task, "The following task is already marked as not done:");
+            return new TaskResponse(task, "*ss..* The following task is already marked as not done:");
         }
 
         task.setDone(false);
 
-        return new TaskResponse(task, "OK, I've marked this task as not done yet:");
+        return new TaskResponse(task, "*sss...* OK, I've marked this task as not done yet:");
     }
 
     /**
@@ -210,6 +210,6 @@ public class TaskManager {
     public Response deleteTask(int taskNumber) {
         assert 1 <= taskNumber && taskNumber <= tasks.size();
         Task task = tasks.remove(taskNumber - 1);
-        return new TaskResponse(task, "OK, I've removed this task:");
+        return new TaskResponse(task, "*FWOOSH* OK, I've removed this task:");
     }
 }
