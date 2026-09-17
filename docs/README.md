@@ -1,7 +1,7 @@
 # Bern User Guide
 
 ## Product Introduction
-![A screenshot of Bern's user interface.](/docs/Ui.png)
+![A screenshot of Bern's user interface.](/Ui.png)
 > *"In the process of resolving the Navier-Stokes problem, the agents sent 2.7 million messages and used approximately
 > 130 billion output tokens."*
 > 
@@ -9,7 +9,7 @@
 
 ---
 Ever wanted to tokenmaxx but don't want to pay for a premium model? Try Bern Tokens, our newest Artifical
-nonIntelligence (AnI) model! :fire:
+nonIntelligence (AnI) model!
 
 Use Bern Tokens to:
 * Keep track of your to-do list, upcoming deadlines and events
@@ -46,6 +46,7 @@ Todos are tasks with no deadline.
 todo <task-name>
 ```
 #### Parameter Values
+
 | Parameter     | Description                         |
 |---------------|-------------------------------------|
 | `<task-name>` | The display name of the to-do item. |
@@ -57,6 +58,7 @@ Deadlines are tasks that need to be done by a specific date, sometimes at a spec
 deadline <task-name> /by <deadline-date-time>
 ```
 #### Parameter Values
+
 | Parameter              | Description                                                                                                                |
 |------------------------|----------------------------------------------------------------------------------------------------------------------------|
 | `<task-name>`          | The display name of the to-do item.                                                                                        |
@@ -69,6 +71,7 @@ Events are tasks that start and end at specific dates, sometimes at specific tim
 event <task-name> /from <event-start-date-time> /to <event-end-date-time>
 ```
 #### Parameter Values
+
 | Parameter                 | Description                                                                                                   |
 |---------------------------|---------------------------------------------------------------------------------------------------------------|
 | `<task-name>`             | The display name of the to-do item.                                                                           |
@@ -83,6 +86,7 @@ Tasks can be marked as done. This causes the task to be disabled (greyed-out) wh
 mark <task-number>
 ```
 #### Parameter Values
+
 | Parameter       | Description                               |
 |-----------------|-------------------------------------------|
 | `<task-number>` | The task number of the task to be marked. |
@@ -94,6 +98,7 @@ Tasks can be unmarked, indicating they are not yet done. This re-enables the tas
 unmark <task-number>
 ```
 #### Parameter Values
+
 | Parameter       | Description                                 |
 |-----------------|---------------------------------------------|
 | `<task-number>` | The task number of the task to be unmarked. |
@@ -105,6 +110,7 @@ Tasks can be deleted. Once deleted, the task cannot be retrieved again.
 delete <task-number>
 ```
 #### Parameter Values
+
 | Parameter       | Description                                |
 |-----------------|--------------------------------------------|
 | `<task-number>` | The task number of the task to be deleted. |
@@ -129,6 +135,7 @@ command.
 find <task-keyword>
 ```
 #### Parameter Values
+
 | Parameter        | Description                              |
 |------------------|------------------------------------------|
 | `<task-keyword>` | The search keyword used to filter tasks. |
@@ -140,6 +147,7 @@ View the schedule for a specified date.
 schedule <date>
 ```
 #### Parameter Values
+
 | Parameter | Description                                                                                                             |
 |-----------|-------------------------------------------------------------------------------------------------------------------------|
 | `<date>`  | The date of the schedule to be displayed. To be given in [DateTime format](#datetime-format), excluding the time field. |
