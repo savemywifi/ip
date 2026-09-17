@@ -170,7 +170,7 @@ The following formats are accepted for the date and time:
 ### Date Formats
 #### Numeric Formats
 Numeric dates are only accepted in little-endian (`17/09/2026`) and big-endian (`2026/09/17`) formats.
-Accepted separators include `/`, `.` and `-`, but only one can be used. Years must be given in full
+Accepted separators include `/`, `.` and `-`, but only one can be used. Years are assumed to be given in full
 ```
 Accepted
 17/09/2026 (/ seperator, little-endian)
@@ -179,7 +179,7 @@ Accepted
 
 Not Accepted
 09/17/2026 (middle-endian format is not accepted)
-17.09.26 (year 2026 must be 4 digits long)
+17.09.26 (will register as 17 September 0026)
 ```
 #### Mixed Formats
 Mixed format dates are accepted in little-/middle-/big-endian formats. Months may be abbreviated. Years must be given
@@ -192,7 +192,7 @@ Accepted
 Sept 17 2026 (middle-endian)
 
 Not Accepted
-17 Sept 26 (year 2026 must be 4 digit long)
+17 Sept 26 (will register as 17 September 0026)
 ```
 
 ### Time Formats
