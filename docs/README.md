@@ -122,6 +122,7 @@ Displays all tasks by date, then type. The display order is:
 2. Tasks, by date
    1. Deadlines due on this date
    2. Event Schedule for this date
+
 #### Syntax
 ```
 list
