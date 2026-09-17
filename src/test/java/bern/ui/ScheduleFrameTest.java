@@ -54,6 +54,11 @@ public class ScheduleFrameTest {
     private static final int FRAME_HEIGHT = 440;
     private static final LocalDate DATE = LocalDate.of(2026, 9, 15);
 
+    /**
+     * Starts JavaFX without opening a window, skipping Linux environments without a display server.
+     *
+     * @throws InterruptedException If interrupted while waiting for JavaFX to initialize.
+     */
     @BeforeAll
     public static void startToolkit() throws InterruptedException {
         assumeFalse(System.getProperty("os.name").startsWith("Linux") && System.getenv("DISPLAY") == null,
@@ -373,6 +378,12 @@ public class ScheduleFrameTest {
 
     /**
      * Creates a saved event, including equal-time legacy entries that still need to be displayed.
+     *
+     * @param name The event description.
+     * @param start The saved start date and optional time.
+     * @param end The saved end date and optional time.
+     * @return The incomplete event reconstructed from saved task data.
+     * @throws ParseException If either date or time cannot be parsed.
      */
     private Task makeEvent(String name, String start, String end) throws ParseException {
         return TaskFactory.makeTaskFromData(new String[] {"E", "0", name, start, end});
@@ -380,6 +391,10 @@ public class ScheduleFrameTest {
 
     /**
      * Loads the response's actual FXML and stylesheets in a scene without showing a stage.
+     *
+     * @param response The response whose schedule is rendered.
+     * @param width The scene and root width in pixels.
+     * @return The laid-out root containing the schedule frame.
      */
     private StackPane render(ScheduleResponse response, double width) {
         List<Node> nodes = response.getResponseNodes();
@@ -396,13 +411,23 @@ public class ScheduleFrameTest {
 
     /**
      * Finds a task's card using its full accessible description, independent of display order.
+     *
+     * @param root The subtree to search.
+     * @param task The task whose card is needed.
+     * @return The first card with the task's accessible description.
+     * @throws java.util.NoSuchElementException If no matching card exists.
      */
     private Node findCard(Node root, Task task) {
         return root.lookupAll(".schedule-card").stream()
                 .filter(card -> task.toString().equals(card.getAccessibleText())).findFirst().orElseThrow();
     }
 
-    /** Returns the text of labels displayed in the supplied subtree. */
+    /**
+     * Returns the text of labels marked visible in the supplied subtree.
+     *
+     * @param root The subtree containing the labels.
+     * @return The distinct text values of labels whose visible property is true.
+     */
     private Set<String> getVisibleLabelTexts(Node root) {
         return root.lookupAll(".label").stream().filter(Node::isVisible).map(node -> ((Label) node).getText())
                 .collect(Collectors.toSet());
@@ -410,6 +435,9 @@ public class ScheduleFrameTest {
 
     /**
      * Returns a task column's actual width, including the margins around its card.
+     *
+     * @param card The laid-out card in a task column.
+     * @return The card width plus its horizontal grid margins, in pixels.
      */
     private double getColumnWidth(Node card) {
         Insets margin = GridPane.getMargin(card);
@@ -419,7 +447,14 @@ public class ScheduleFrameTest {
         return card.getLayoutBounds().getWidth() + margin.getLeft() + margin.getRight();
     }
 
-    /** Checks that wrapping expands a shared row and moves subsequent events below it. */
+    /**
+     * Checks that wrapping expands a shared row and moves subsequent events below it.
+     *
+     * @param grid The laid-out timetable grid.
+     * @param longCard The card whose description should wrap.
+     * @param shortCard A card occupying the same time range in another column.
+     * @param laterCard A card in the following row.
+     */
     private void assertWrappedRowAlignment(GridPane grid, Node longCard, Node shortCard, Node laterCard) {
         Label description = (Label) longCard.lookup(".schedule-task-name");
         assertTrue(description.getHeight() > description.prefHeight(-1) + 1,
@@ -434,7 +469,11 @@ public class ScheduleFrameTest {
                 "Growing a row must move the following event below it");
     }
 
-    /** Checks that wide content exposes a usable horizontal scrollbar. */
+    /**
+     * Checks that wide content exposes a usable horizontal scrollbar.
+     *
+     * @param scroll The laid-out schedule scroll pane.
+     */
     private void assertHorizontalScrollingAvailable(ScrollPane scroll) {
         assertTrue(scroll.getContent().getLayoutBounds().getWidth() > scroll.getViewportBounds().getWidth());
         assertTrue(scroll.lookupAll(".scroll-bar").stream().map(node -> (ScrollBar) node)
@@ -442,7 +481,11 @@ public class ScheduleFrameTest {
                 "Wide task columns must remain horizontally scrollable in a narrow frame");
     }
 
-    /** Checks that each label has room for all wrapped lines and remains inside its card's padding. */
+    /**
+     * Checks that each label has room for all wrapped lines and remains inside its card's padding.
+     *
+     * @param card The laid-out task card to inspect.
+     */
     private void assertCardTextFits(Node card) {
         VBox box = (VBox) card;
         Insets insets = box.getInsets();
@@ -459,7 +502,11 @@ public class ScheduleFrameTest {
         }
     }
 
-    /** Checks that every row background fills the grid width after the time axis. */
+    /**
+     * Checks that every row background fills the grid width after the time axis.
+     *
+     * @param grid The laid-out timetable grid.
+     */
     private void assertRowBackgroundsFillGrid(GridPane grid) {
         Set<Node> backgrounds = grid.lookupAll(".schedule-row");
         assertFalse(backgrounds.isEmpty());
@@ -475,6 +522,8 @@ public class ScheduleFrameTest {
 
     /**
      * Checks actual laid-out card rectangles rather than trusting the logical column assignments.
+     *
+     * @param cards The cards sharing a timetable grid.
      */
     private void assertNonintersectingCards(List<Node> cards) {
         for (int i = 0; i < cards.size(); i++) {
@@ -489,6 +538,8 @@ public class ScheduleFrameTest {
 
     /**
      * Checks that time labels appear in increasing order down the shared vertical axis.
+     *
+     * @param root The subtree containing one timetable's time axis.
      */
     private void assertOrderedTimes(Node root) {
         List<String> times = getTimeLabels(root).stream().map(Label::getText).toList();
@@ -496,7 +547,12 @@ public class ScheduleFrameTest {
         assertEquals(times.stream().sorted().toList(), times);
     }
 
-    /** Returns the time-axis labels in display order within the supplied subtree. */
+    /**
+     * Returns the time-axis labels in display order within the supplied subtree.
+     *
+     * @param root The subtree containing one timetable's time axis.
+     * @return The time-axis labels sorted by their vertical layout positions.
+     */
     private List<Label> getTimeLabels(Node root) {
         return root.lookupAll(".schedule-time").stream().map(node -> (Label) node)
                 .sorted(Comparator.comparingDouble(Node::getLayoutY)).toList();
@@ -504,6 +560,10 @@ public class ScheduleFrameTest {
 
     /**
      * Saves a rendered preview for visual inspection without adding a javafx-swing dependency.
+     *
+     * @param root The laid-out node to capture.
+     * @param filename The PNG filename within {@code build/reports/timetable}.
+     * @throws IOException If the output directory cannot be created or the PNG cannot be written.
      */
     private void writeSnapshot(Node root, String filename) throws IOException {
         WritableImage snapshot = root.snapshot(null, null);
@@ -522,6 +582,11 @@ public class ScheduleFrameTest {
 
     /**
      * Executes JavaFX work on its application thread and propagates assertion or loading failures to JUnit.
+     *
+     * @param <T> The action's result type.
+     * @param action The work to execute on the JavaFX application thread.
+     * @return The action's result.
+     * @throws Exception If waiting is interrupted, the action fails, or the 20-second timeout expires.
      */
     private static <T> T onFxThread(Callable<T> action) throws Exception {
         FutureTask<T> task = new FutureTask<>(action);

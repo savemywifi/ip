@@ -14,12 +14,16 @@ import bern.task.TaskManager;
 import bern.ui.Dialog;
 import javafx.application.Platform;
 
-/** Processes user commands and coordinates task-management operations */
+/**
+ * Processes user commands and coordinates task-management operations.
+ */
 public class Controller {
     private static final TaskManager TASK_MANAGER = TaskManager.getInstance();
     private static final Dialog DIALOG = Dialog.getInstance();
 
-    /** Stores the commands supported by the application and their handlers. */
+    /**
+     * Stores the commands supported by the application and their handlers.
+     */
     private enum Keyword {
         BYE(Controller::attemptExit),
         LIST(Controller::attemptListTasks),
@@ -32,18 +36,33 @@ public class Controller {
         FIND(Controller::attemptFindTasks),
         SCHEDULE(Controller::attemptShowSchedule);
 
+        /**
+         * Handles the full tokenized command, including the command keyword at index zero.
+         */
         private final Function<String[], Response> action;
 
+        /**
+         * Associates a command keyword with its handler.
+         *
+         * @param action The function that handles this command's input tokens.
+         */
         Keyword(Function<String[], Response> action) {
             this.action = action;
         }
     }
 
     /**
-     * Takes the parse exception passed from bern.task.TaskFactory and parses it into an appropriate error message
+     * Creates a command controller that uses the application's shared task manager and dialog.
+     */
+    public Controller() {
+    }
+
+    /**
+     * Converts a task factory parsing failure into an error message.
+     * An offset of -1 identifies missing arguments; other offsets identify a missing keyword.
      *
-     * @param e The received parse exception to parse
-     * @return An error message reflecting the exception details
+     * @param e The task factory exception whose message names the relevant keyword.
+     * @return An error message reflecting the exception details.
      */
     private static String getParseExceptionResponse(ParseException e) {
         if (e.getErrorOffset() == -1) {
@@ -54,11 +73,10 @@ public class Controller {
     }
 
     /**
-     * Attempt to exit the program, or print an error message otherwise
+     * Saves the tasks and requests JavaFX shutdown when the exit command is valid.
      *
-     * @param inputTokens The tokens in the input
-     *
-     * @return A response containing the goodbye or error message displayed to the user.
+     * @param inputTokens The command tokens, including the keyword at index zero.
+     * @return The goodbye response, or a usage or save error without requesting shutdown.
      */
     private static Response attemptExit(String[] inputTokens) {
         if (inputTokens.length != 1) {
@@ -72,11 +90,10 @@ public class Controller {
     }
 
     /**
-     * Attempt to list tasks, or print an error message otherwise
+     * Returns the task list when the command has no extra arguments.
      *
-     * @param inputTokens The tokens in the input
-     *
-     * @return The formatted task list or an error message displayed to the user.
+     * @param inputTokens The command tokens, including the keyword at index zero.
+     * @return The task list, or a message for invalid usage or an empty task list.
      */
     private static Response attemptListTasks(String[] inputTokens) {
         if (inputTokens.length != 1) {
@@ -86,7 +103,12 @@ public class Controller {
         return TASK_MANAGER.listTasks();
     }
 
-    /** Returns matching tasks, or a usage error if the command does not contain exactly one search token. */
+    /**
+     * Returns matching tasks, or a usage error if the command does not contain exactly one search token.
+     *
+     * @param inputTokens The command tokens, including the keyword at index zero.
+     * @return The matching tasks, or a message for invalid usage or no matching tasks.
+     */
     private static Response attemptFindTasks(String[] inputTokens) {
         if (inputTokens.length != 2) {
             return DIALOG.printIncorrectKeywordUsageError(
@@ -96,7 +118,12 @@ public class Controller {
         return TASK_MANAGER.findTasks(inputTokens[1]);
     }
 
-    /** Returns the requested day's schedule, defaulting to today when the command has no arguments. */
+    /**
+     * Returns the requested day's schedule, defaulting to today when the command has no arguments.
+     *
+     * @param inputTokens The command tokens, including the keyword at index zero.
+     * @return The schedule, or a message for an invalid date or a day without tasks.
+     */
     private static Response attemptShowSchedule(String[] inputTokens) {
         try {
             String dateArgument = String.join(" ", Arrays.copyOfRange(inputTokens, 1, inputTokens.length));
@@ -110,13 +137,11 @@ public class Controller {
     }
 
     /**
-     * Attempt to extract a task number from the second argument. Assumes only two tokens are given and rejects all
-     * other inputs
+     * Extracts and validates the one-based task number from a command containing exactly two tokens.
      *
-     * @param inputTokens The tokens in the input
-     *
+     * @param inputTokens The nonempty command tokens, including the keyword at index zero.
      * @return The valid one-based task number.
-     * @throws IllegalArgumentException If the input is invalid or no tasks exist.
+     * @throws IllegalArgumentException If no tasks exist, the token count is not two, or the number is invalid.
      */
     private static int tryGetTaskNumber(String[] inputTokens) throws IllegalArgumentException {
         if (!TASK_MANAGER.hasTasks()) {
@@ -144,10 +169,10 @@ public class Controller {
     }
 
     /**
-     * Attempt to mark a task as done, or print an error message otherwise
+     * Marks the requested task as done, returning an error response for an invalid task number.
      *
-     * @param inputTokens The tokens in the input
-     * @return The confirmation or error message displayed to the user.
+     * @param inputTokens The command tokens, including the keyword at index zero.
+     * @return The task's completion status, or a response describing the invalid input.
      */
     private static Response attemptMarkTask(String[] inputTokens) {
         try {
@@ -159,11 +184,10 @@ public class Controller {
     }
 
     /**
-     * Attempt to mark a task as undone, or print an error message otherwise
+     * Marks the requested task as not done, returning an error response for an invalid task number.
      *
-     * @param inputTokens The tokens in the input
-     *
-     * @return The confirmation or error message displayed to the user.
+     * @param inputTokens The command tokens, including the keyword at index zero.
+     * @return The task's completion status, or a response describing the invalid input.
      */
     private static Response attemptUnmarkTask(String[] inputTokens) {
         try {
@@ -175,11 +199,10 @@ public class Controller {
     }
 
     /**
-     * Attempt to make and add a todo, or print an error message otherwise
+     * Creates and adds a todo, returning an error response when its description is missing.
      *
-     * @param inputTokens The tokens in the input
-     *
-     * @return The confirmation or error message displayed to the user.
+     * @param inputTokens The command tokens, including the keyword at index zero.
+     * @return The added task and its confirmation, or a response describing the invalid input.
      */
     private static Response attemptMakeTodo(String[] inputTokens) {
         try {
@@ -190,11 +213,10 @@ public class Controller {
     }
 
     /**
-     * Attempt to make and add a deadline, or print an error message otherwise
+     * Creates and adds a deadline, returning an error response when its arguments are invalid.
      *
-     * @param inputTokens The tokens in the input
-     *
-     * @return The confirmation or error message displayed to the user.
+     * @param inputTokens The command tokens, including the keyword at index zero.
+     * @return The added task and its confirmation, or a response describing the invalid input.
      */
     private static Response attemptMakeDeadline(String[] inputTokens) {
         try {
@@ -208,11 +230,10 @@ public class Controller {
     }
 
     /**
-     * Attempt to make and add an event, or print an error message otherwise
+     * Creates and adds an event, returning an error response when its arguments or time range are invalid.
      *
-     * @param inputTokens The tokens in the input
-     *
-     * @return The confirmation or error message displayed to the user.
+     * @param inputTokens The command tokens, including the keyword at index zero.
+     * @return The added task and its confirmation, or a response describing the invalid input.
      */
     private static Response attemptMakeEvent(String[] inputTokens) {
         try {
@@ -228,11 +249,10 @@ public class Controller {
     }
 
     /**
-     * Attempt to delete a task, or print an error message otherwise
+     * Deletes the requested task, returning an error response for an invalid task number.
      *
-     * @param inputTokens The tokens in the input
-     *
-     * @return The confirmation or error message displayed to the user.
+     * @param inputTokens The command tokens, including the keyword at index zero.
+     * @return The deleted task and its confirmation, or a response describing the invalid input.
      */
     private static Response attemptDeleteTask(String[] inputTokens) {
         try {
@@ -246,7 +266,7 @@ public class Controller {
     /**
      * Handles a user command and returns the corresponding response.
      *
-     * @param input The command entered by the user.
+     * @param input The non-null command entered by the user.
      * @return The command result, or a message explaining invalid input.
      */
     public Response getResponse(String input) {
@@ -264,15 +284,17 @@ public class Controller {
     }
 
     /**
-     * Loads saved tasks into the initially empty task manager.
+     * Loads saved tasks if the shared task manager is empty.
      *
-     * @return Whether at least one task was loaded.
+     * @return Whether at least one task was loaded; false if the manager was already populated or no tasks were read.
      */
     public boolean loadTasks() {
         return TASK_MANAGER.loadTaskList(SaveDataController.readTaskData());
     }
 
-    /** Starts the command-line application. */
+    /**
+     * Loads saved tasks and handles command-line input until a standalone bye command is received.
+     */
     static void main() {
         DIALOG.greetUser();
 

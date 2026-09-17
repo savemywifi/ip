@@ -21,7 +21,13 @@ import javafx.scene.layout.RowConstraints;
  */
 public class ScheduleTimetable extends GridPane {
     private static final int MINUTES_PER_HOUR = 60;
+    /**
+     * Index of the first task column, after the time axis at column zero.
+     */
     private static final int FIRST_TASK_COLUMN = 1;
+    /**
+     * Minimum height per minute before the FXML minimum and wrapped content are considered.
+     */
     private static final double PIXELS_PER_MINUTE = 1.0;
 
     /**
@@ -29,7 +35,8 @@ public class ScheduleTimetable extends GridPane {
      * A day without timed events produces an empty grid without time labels or rows.
      *
      * @param schedule The day's timed events and their column assignments.
-     * @param taskNumbers The original one-based task numbers.
+     * @param taskNumbers The original one-based task numbers; absent entries produce unnumbered cards.
+     * @throws IllegalStateException If a required timetable or task card layout cannot be found or loaded.
      */
     public ScheduleTimetable(DaySchedule schedule, Map<Task, Integer> taskNumbers) {
         ScheduleViewLoader.load(this, "/view/ScheduleFrame.fxml");
@@ -41,6 +48,10 @@ public class ScheduleTimetable extends GridPane {
     /**
      * Expands the FXML column and row defaults to match the day's overlaps and exact time boundaries.
      * Reuses the FXML hourly labels and allows rows to grow when task descriptions wrap.
+     *
+     * @param columnCount The number of task columns required for overlapping events.
+     * @param boundaries The sorted, distinct row boundaries in minutes after midnight.
+     * @throws IllegalStateException If a task column or row background cannot be loaded.
      */
     private void configureTimetable(int columnCount, List<Integer> boundaries) {
         try {
@@ -52,7 +63,12 @@ public class ScheduleTimetable extends GridPane {
         }
     }
 
-    /** Adds task columns between the fixed time axis and the flexible background-only column. */
+    /**
+     * Adds task columns between the fixed time axis and the flexible background-only column.
+     *
+     * @param columnCount The total number of task columns required.
+     * @throws IOException If an additional column's FXML cannot be loaded.
+     */
     private void configureColumns(int columnCount) throws IOException {
         for (int taskColumn = 1; taskColumn < columnCount; taskColumn++) {
             ColumnConstraints constraints = FXMLLoader.load(
@@ -62,7 +78,11 @@ public class ScheduleTimetable extends GridPane {
         }
     }
 
-    /** Places the FXML hourly labels at their corresponding rows, removing hours outside the schedule. */
+    /**
+     * Places the FXML hourly labels at their corresponding rows, removing hours outside the schedule.
+     *
+     * @param boundaries The sorted, distinct row boundaries in minutes after midnight.
+     */
     private void alignTimeLabels(List<Integer> boundaries) {
         List<Label> timeLabels = getChildren().stream()
                 .filter(Label.class::isInstance).map(Label.class::cast).toList();
@@ -78,7 +98,12 @@ public class ScheduleTimetable extends GridPane {
         }
     }
 
-    /** Creates rows with a duration-based minimum height and room for wrapped task descriptions. */
+    /**
+     * Creates rows with a duration-based minimum height and room for wrapped task descriptions.
+     *
+     * @param boundaries The sorted, distinct row boundaries in minutes after midnight.
+     * @throws IOException If a row background's FXML cannot be loaded.
+     */
     private void configureRows(List<Integer> boundaries) throws IOException {
         RowConstraints rowDefaults = getRowConstraints().getFirst();
         getRowConstraints().clear();
@@ -94,7 +119,14 @@ public class ScheduleTimetable extends GridPane {
         }
     }
 
-    /** Adds task cards to the loaded grid between their start and end boundaries. */
+    /**
+     * Adds task cards to the loaded grid between their start and end boundaries.
+     *
+     * @param entries The timed events and their assigned overlap columns.
+     * @param boundaries The sorted row boundaries containing every entry's start and end times.
+     * @param taskNumbers The original one-based task numbers; absent entries produce unnumbered cards.
+     * @throws IllegalStateException If a task card layout cannot be found or loaded.
+     */
     private void addTaskCards(List<ScheduleEntry> entries, List<Integer> boundaries, Map<Task, Integer> taskNumbers) {
         for (ScheduleEntry entry : entries) {
             int firstRow = boundaries.indexOf(entry.getStartMinute());
@@ -108,7 +140,12 @@ public class ScheduleTimetable extends GridPane {
         }
     }
 
-    /** Returns sorted event boundaries and hourly ticks covering the occupied part of the day. */
+    /**
+     * Returns sorted event boundaries and hourly ticks covering the occupied part of the day.
+     *
+     * @param entries The timed events whose boundaries define the occupied range.
+     * @return Distinct boundaries in minutes after midnight, or an empty list when there are no events.
+     */
     private List<Integer> getTimeBoundaries(List<ScheduleEntry> entries) {
         if (entries.isEmpty()) {
             return List.of();
@@ -126,7 +163,12 @@ public class ScheduleTimetable extends GridPane {
         return new ArrayList<>(boundaries);
     }
 
-    /** Formats minutes after midnight, preserving 24:00 for the end of the day. */
+    /**
+     * Formats minutes after midnight, preserving 24:00 for the end of the day.
+     *
+     * @param minute The minute offset from midnight, from 0 through 1440 inclusive.
+     * @return The time in zero-padded {@code HH:mm} format.
+     */
     private String formatMinute(int minute) {
         return String.format("%02d:%02d", minute / MINUTES_PER_HOUR, minute % MINUTES_PER_HOUR);
     }

@@ -27,7 +27,13 @@ public class MainWindow extends AnchorPane {
     private Controller control;
 
     /**
-     * Initializes the main view, displays the greeting, and loads saved tasks.
+     * Creates a main window controller whose view fields are populated later by the FXML loader.
+     */
+    public MainWindow() {
+    }
+
+    /**
+     * Binds scrolling to the dialog container's height and displays the greeting.
      */
     @FXML
     public void initialize() {
@@ -49,7 +55,7 @@ public class MainWindow extends AnchorPane {
     }
 
     /**
-     * Displays startup messages.
+     * Loads saved tasks through the injected controller and displays a message when at least one task is loaded.
      */
     public void displayStartupMessages() {
         /* Load Save Data */
@@ -62,8 +68,8 @@ public class MainWindow extends AnchorPane {
     }
 
     /**
-     * Creates two dialog boxes, one echoing user input and the other containing Bern's reply and then appends them to
-     * the dialog container. Clears the user input after processing.
+     * Processes non-blank input and appends the user's message and Bern's response nodes to the dialog container.
+     * Clears the user input after processing and ignores blank input.
      */
     @FXML
     private void handleUserInput() {

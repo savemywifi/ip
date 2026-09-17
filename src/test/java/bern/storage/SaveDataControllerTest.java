@@ -19,7 +19,9 @@ import org.junit.jupiter.api.parallel.Resources;
 
 import bern.task.Task;
 
-/** Verifies that invalid saved records are reported without preventing later tasks from loading. */
+/**
+ * Verifies that invalid saved records are reported without preventing later tasks from loading.
+ */
 @ResourceLock(Resources.SYSTEM_PROPERTIES)
 @ResourceLock(Resources.SYSTEM_OUT)
 public class SaveDataControllerTest {
@@ -44,7 +46,14 @@ public class SaveDataControllerTest {
         assertSkipsInvalidRecords(workingDirectory, invalidRecords);
     }
 
-    /** Checks the real save-file reader using an isolated directory and restores the process state afterward. */
+    /**
+     * Verifies that the save-file reader skips and reports invalid records while loading a following valid task.
+     * Restores the working-directory property and console output after using an isolated save directory.
+     *
+     * @param workingDirectory The temporary working directory in which to create the save file.
+     * @param invalidRecords The malformed records to place before the valid task.
+     * @throws IOException If creating the temporary save directory or writing the test records fails.
+     */
     private void assertSkipsInvalidRecords(Path workingDirectory, List<String> invalidRecords) throws IOException {
         Path saveDirectory = Files.createDirectories(workingDirectory.resolve("data"));
         List<String> records = new ArrayList<>(invalidRecords);

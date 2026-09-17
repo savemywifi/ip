@@ -18,7 +18,9 @@ import bern.ui.Dialog;
  * Provides methods for serializing tasks to the save file and reconstructing tasks from saved records.
  */
 public class SaveDataController {
-    /** Separates fields in a saved task record. */
+    /**
+     * Separator for saved task record.
+     */
     public static final String SEPARATOR = "\0|";
 
     private static final String SEPARATOR_REGEX = "\0\\|";
@@ -26,10 +28,16 @@ public class SaveDataController {
     private static final String SAVE_FILE = "tasks.txt";
 
     /**
-     * Saves data from a list of Tasks into the save directory.
-     * @param tasks The list of Tasks to save
+     * Creates a storage controller instance; save-file operations are provided by static methods.
+     */
+    public SaveDataController() {
+    }
+
+    /**
+     * Saves task data to {@code data/tasks.txt} under the working directory, creating the save directory if needed.
      *
-     * @return The success of the operation.
+     * @param tasks The tasks to save.
+     * @return {@code true} if the save succeeds, or {@code false} if creating the directory or writing the file fails.
      */
     public static boolean saveTaskData(List<Task> tasks) {
         String dataString = tasksToDataString(tasks);
@@ -54,10 +62,10 @@ public class SaveDataController {
     }
 
     /**
-     * Reads data from the save file and converts it into a list of Tasks. Skips and reports records with incorrect
-     * format.
+     * Reads tasks from {@code data/tasks.txt}. Skip data in unreadable formats and report if
+     * any data was skipped or if the file cannot be read.
      *
-     * @return A list of Tasks, as defined by the save data.
+     * @return The successfully reconstructed tasks, or an empty list if the file cannot be read.
      */
     public static List<Task> readTaskData() {
         List<String> savedData;
@@ -84,7 +92,12 @@ public class SaveDataController {
         return savedTasks;
     }
 
-    /** Returns the save-file contents with one task record per line. */
+    /**
+     * Convert given tasks to a String in save data format.
+     *
+     * @param tasks The tasks to be converted
+     * @return The string representing the tasks, in save data format.
+     */
     private static String tasksToDataString(List<Task> tasks) {
         StringBuilder dataString = new StringBuilder();
         for (Task task : tasks) {
@@ -95,10 +108,10 @@ public class SaveDataController {
     }
 
     /**
-     * Returns a task reconstructed from one save-file record.
+     * Convert a String in save data format into a Task
      *
-     * @param dataString One saved task record.
-     * @return The task reconstructed from the saved record.
+     * @param dataString A String in save data format.
+     * @return The task converted from the given String.
      * @throws ParseException If the record contains an invalid task type.
      * @throws IllegalArgumentException If the record is malformed.
      * @throws DateTimeParseException If a saved date or time cannot be parsed.

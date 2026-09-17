@@ -4,16 +4,25 @@ import java.util.Scanner;
 
 import bern.logic.TextResponse;
 
-/** Handles user-facing input prompts and output messages. */
+/**
+ * Handles user-facing input prompts and output messages.
+ */
 public class Dialog {
+    /**
+     * Shared dialog instance, created on first access.
+     */
     private static Dialog instance;
 
-    /** Message line printed after user-facing output. */
+    /**
+     * Message line printed after user-facing output.
+     */
     private static final String MESSAGE_LINE = "____________________________________\n";
     private static final String MESSAGE_TASK_LOADED = "*Sizzle*. Loaded saved tasks. Use list to view them.";
     private static final String MESSAGE_GOODBYE = "Burning out...";
 
-    /** ASCII-art banner intended for chatbot identification. */
+    /**
+     * ASCII-art banner intended for chatbot identification.
+     */
     private static final String CHATBOT_BANNER = """
              ____                 \s
             |  _ \\                \s
@@ -22,16 +31,22 @@ public class Dialog {
             | |_) |  __/ |  | | | |
             |____/ \\___|_|  |_| |_|""";
 
-    /** Name displayed for the chatbot. */
+    /**
+     * Name displayed for the chatbot.
+     */
     private static final String CHATBOT_NAME = "Bern Tokens";
 
-    /** Template used for the greeting. */
+    /**
+     * Template used for the greeting.
+     */
     private static final String TEMPLATE_GREETING = "*Sizzle* Hello! I'm %s. \n"
             + "Feed me tokens~";
 
-    /** Error message for an unknown command. */
+    /**
+     * Error message for an unknown command.
+     */
     private static final String ERROR_KEYWORD_INVALID = "Command not recognised.\n"
-            + "List of commands: todo, deadline, event, mark, unmark, delete, list, bye, find, schedule";
+            + "List of commands: bye, list, mark, unmark, todo, deadline, event, delete, find, schedule";
 
     private static final String ERROR_DIRECTORY = "Unable to create directory for save file. Environment is too wet.";
     private static final String ERROR_SAVE = "Unable to save task data. Was it burnt?";
@@ -44,6 +59,9 @@ public class Dialog {
 
     private static final String ERROR_TEMPLATE_INVALID_DATE_TIME = "%s is not a valid date or time";
 
+    /**
+     * Prevents callers from creating additional instances of the shared dialog.
+     */
     private Dialog() {
     }
 
@@ -64,8 +82,9 @@ public class Dialog {
      * Reads the next non-blank input line, strips leading and trailing whitespace, and prints a separator afterward.
      *
      * @param sc Scanner to receive input from.
-     *
-     * @return Received input, stripped of whitespace.
+     * @return The next non-blank input line with leading and trailing whitespace removed.
+     * @throws java.util.NoSuchElementException If input ends before a non-blank line is read.
+     * @throws IllegalStateException If the scanner is closed.
      */
     public String promptForInput(Scanner sc) {
         String input = "";
@@ -79,7 +98,7 @@ public class Dialog {
     }
 
     /**
-     * The message the user is presented with on startup of the chatbot
+     * Prints and returns the greeting presented on startup of the chatbot.
      *
      * @return The greeting message displayed to the user.
      */
@@ -88,7 +107,7 @@ public class Dialog {
     }
 
     /**
-     * The message displayed to the user if tasks are loaded on startup
+     * Prints and returns the message confirming that saved tasks were loaded on startup.
      *
      * @return The loaded-task message displayed to the user.
      */
@@ -97,7 +116,7 @@ public class Dialog {
     }
 
     /**
-     * The message displayed when the bot closes
+     * Prints and returns the farewell message used when the bot closes.
      *
      * @return The farewell message displayed to the user.
      */
@@ -107,10 +126,10 @@ public class Dialog {
 
     //TODO: reframe to keyword
     /**
-     * Displays a message showing correct use of a specified keyword
+     * Prints and returns a message showing correct use of a specified keyword.
      *
-     * @param keyword A keyword to be used by the user
-     * @param expected The expected usage of this keyword
+     * @param keyword A keyword to be used by the user.
+     * @param expected The expected usage of this keyword.
      * @return The usage error message displayed to the user.
      */
     public TextResponse printIncorrectKeywordUsageError(Object keyword, Object expected) {
@@ -118,7 +137,7 @@ public class Dialog {
     }
 
     /**
-     * Displays a message showing that there are no tasks
+     * Prints and returns a message showing that there are no tasks.
      *
      * @return The no-tasks error message displayed to the user.
      */
@@ -127,7 +146,7 @@ public class Dialog {
     }
 
     /**
-     * Displays a message showing the range of valid task numbers
+     * Prints and returns a message showing the range of valid task numbers.
      *
      * @param taskCount The number of valid tasks.
      * @return The invalid-task-number error message displayed to the user.
@@ -137,9 +156,9 @@ public class Dialog {
     }
 
     /**
-     * Displays a message showing the user's invalid date-time input
+     * Prints and returns a message showing the user's invalid date-time input.
      *
-     * @param invalidDateTime The invalid date-time input given by the user
+     * @param invalidDateTime The invalid date-time input given by the user.
      * @return The invalid-date-time error message displayed to the user.
      */
     public TextResponse printInvalidDateTimeError(String invalidDateTime) {
@@ -147,7 +166,7 @@ public class Dialog {
     }
 
     /**
-     * Displays an error for a directory that cannot be created.
+     * Prints and returns an error for a directory that cannot be created.
      *
      * @return The directory-error message displayed to the user.
      */
@@ -156,7 +175,7 @@ public class Dialog {
     }
 
     /**
-     * Displays an error for task data that cannot be saved.
+     * Prints and returns an error for task data that cannot be saved.
      *
      * @return The save-error message displayed to the user.
      */
@@ -165,7 +184,7 @@ public class Dialog {
     }
 
     /**
-     * Displays an error for task data that cannot be loaded.
+     * Prints and returns an error for task data that cannot be loaded.
      *
      * @return The load-error message displayed to the user.
      */
@@ -174,7 +193,7 @@ public class Dialog {
     }
 
     /**
-     * Displays an error for an individual task that cannot be loaded.
+     * Prints and returns an error for an individual task that cannot be loaded.
      *
      * @return The task-load-error message displayed to the user.
      */
@@ -183,7 +202,7 @@ public class Dialog {
     }
 
     /**
-     * Displays an error for an unknown command keyword.
+     * Prints and returns an error for an unknown command keyword.
      *
      * @return The invalid-keyword error message displayed to the user.
      */
@@ -192,11 +211,10 @@ public class Dialog {
     }
 
     /**
-     * Prints a message to standard output, appended with a message line.
+     * Prints a message and separator to standard output and wraps the message in a text response.
      *
      * @param msg The message to be printed.
-     *
-     * @return The message printed
+     * @return A response containing the message without the separator.
      */
     public TextResponse printMessage(String msg) {
         System.out.print(msg + "\n" + MESSAGE_LINE);

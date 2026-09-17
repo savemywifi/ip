@@ -19,10 +19,11 @@ public class ScheduleFrame extends VBox {
     private Label emptyMessage;
 
     /**
-     * Creates a scrollable timetable containing the supplied days and undated tasks.
+     * Creates a scrollable schedule with unnumbered cards for the supplied days and undated tasks.
      *
      * @param schedules The daily layouts in display order.
      * @param undatedTasks The tasks without an associated date.
+     * @throws IllegalStateException If a required schedule layout cannot be found or loaded.
      */
     public ScheduleFrame(List<DaySchedule> schedules, List<Task> undatedTasks) {
         this(schedules, undatedTasks, Map.of());
@@ -33,7 +34,8 @@ public class ScheduleFrame extends VBox {
      *
      * @param schedules The daily layouts in display order.
      * @param undatedTasks The tasks without an associated date.
-     * @param taskNumbers The original one-based task numbers.
+     * @param taskNumbers The original one-based task numbers; absent entries produce unnumbered cards.
+     * @throws IllegalStateException If a required schedule layout cannot be found or loaded.
      */
     public ScheduleFrame(List<DaySchedule> schedules, List<Task> undatedTasks, Map<Task, Integer> taskNumbers) {
         Map<Task, Integer> displayedTaskNumbers = Map.copyOf(taskNumbers);

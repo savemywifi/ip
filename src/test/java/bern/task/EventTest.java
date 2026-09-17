@@ -12,7 +12,9 @@ import org.junit.jupiter.api.Test;
 
 import bern.datetime.DateTimeFactory;
 
-/** Verifies event date membership at timed, all-day, and legacy invalid boundaries. */
+/**
+ * Verifies event date membership at timed, all-day, and legacy invalid boundaries.
+ */
 public class EventTest {
     private static final LocalDate DATE = LocalDate.of(2026, 9, 15);
 
@@ -68,7 +70,14 @@ public class EventTest {
         }
     }
 
-    /** Creates events through storage so tests can include legacy nonpositive durations. */
+    /**
+     * Creates an event through storage so tests can include legacy nonpositive durations.
+     *
+     * @param start The saved start date and optional time.
+     * @param end The saved end date and optional time.
+     * @return The reconstructed event.
+     * @throws ParseException If the saved task type is invalid.
+     */
     private Event makeEvent(String start, String end) throws ParseException {
         return (Event) TaskFactory.makeTaskFromData(new String[] {"E", "0", "Event", start, end});
     }

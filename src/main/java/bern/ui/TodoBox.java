@@ -12,7 +12,7 @@ public class TodoBox extends TaskBox {
     private Label description;
 
     /**
-     * Create a task box with the given todo.
+     * Creates a task box with the given todo.
      *
      * @param todo The todo represented by the task box.
      */

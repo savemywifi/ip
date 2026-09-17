@@ -5,27 +5,38 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 /**
- * Stores a given date, and optionally, a given time. A <code>DateTime</code> object corresponds to a date and time
- * represented using Java's LocalDate and LocalTime classes e.g. 28 August 2026 @ 12.24pm
+ * Stores an immutable date with an optional time, without a time zone.
+ * Values are ordered chronologically, with a missing time sorting before any specified time on the same date.
+ * This natural ordering is inconsistent with {@link Object#equals(Object)} because equality uses object identity.
  */
 public class DateTime implements Comparable<DateTime> {
-    /** Formats dates for display and storage. */
+    /**
+     * Formats dates for display and storage.
+     */
     static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd MMMM yyyy");
 
-    /** Formats times for display and storage. */
+    /**
+     * Formats times for display and storage.
+     */
     static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("hh.mma");
 
-    /** Separates the date and time parts in stored date-time values. */
+    /**
+     * Separates the date and time parts in stored date-time values.
+     */
     static final String SEPARATOR = " @ ";
 
     private final LocalDate localDate;
+
+    /**
+     * Stores the optional time, or {@code null} when only a calendar date was specified.
+     */
     private final LocalTime localTime;
 
     /**
      * Creates a date with an optional time component.
      *
-     * @param localDate The date stored
-     * @param localTime The time stored, or null
+     * @param localDate The non-null date to store.
+     * @param localTime The time to store, or {@code null} for a date without a specified time.
      */
     DateTime(LocalDate localDate, LocalTime localTime) {
         this.localDate = localDate;
@@ -33,7 +44,7 @@ public class DateTime implements Comparable<DateTime> {
     }
 
     /**
-     * Returns a DateTime of the current date and time.
+     * Returns the current date and time using the system's default time zone.
      *
      * @return A DateTime containing the current date and time.
      */
@@ -41,6 +52,11 @@ public class DateTime implements Comparable<DateTime> {
         return new DateTime(LocalDate.now(), LocalTime.now());
     }
 
+    /**
+     * Returns the stored calendar date.
+     *
+     * @return The calendar date.
+     */
     public LocalDate getDate() {
         return localDate;
     }
@@ -56,8 +72,10 @@ public class DateTime implements Comparable<DateTime> {
 
     /**
      * Returns the formatted date and its time, when specified.
+     * Uses {@code dd MMMM yyyy} for the date and appends {@code " @ "} plus {@code hh.mma} when a time is present.
+     * Month names and the AM/PM marker use the formatters' default locale; seconds and nanoseconds are omitted.
      *
-     * @return The formatted date, optionally followed by the formatted time when one is present
+     * @return The formatted date, optionally followed by the formatted time when one is present.
      */
     @Override
     public String toString() {
@@ -70,13 +88,13 @@ public class DateTime implements Comparable<DateTime> {
     }
 
     /**
-     * Compares two DateTimes. Returns a negative integer if the other date/time is after the current date/time, 0 if
-     * they are equal, or a positive integer if the other date/time is before the current date/time. If one object has
-     * no specified time value (it is null), that time will be "before" the DateTime with a specified time field if
-     * they contain the same date.
+     * Compares this value with another date and optional time in chronological order.
+     * On the same date, an omitted time sorts before any specified time, including midnight.
+     * Two values with the same date and no specified times compare as equal.
      *
-     * @param other the object to be compared.
-     * @return An integer indicating which DateTime object is greater.
+     * @param other The non-null date and optional time to compare with.
+     * @return A negative value, zero, or a positive value when this value is earlier, equal, or later.
+     * @throws NullPointerException If {@code other} is {@code null}.
      */
     @Override
     public int compareTo(DateTime other) {
@@ -99,8 +117,9 @@ public class DateTime implements Comparable<DateTime> {
     /**
      * Compares the calendar dates without considering either time component.
      *
-     * @param other The date-time to compare with.
+     * @param other The non-null date-time to compare with.
      * @return A negative value, zero, or a positive value when this date is earlier, equal, or later.
+     * @throws NullPointerException If {@code other} is {@code null}.
      */
     public int compareDate(DateTime other) {
         return localDate.compareTo(other.localDate);

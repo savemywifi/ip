@@ -17,10 +17,12 @@ public class ScheduleTaskCard extends VBox {
 
     /**
      * Creates a task card from its FXML layout and fills in the task's display details.
+     * Disables completed tasks and applies their completed styling.
      *
      * @param task The task represented by the card.
      * @param timing The time range or other timing description to display.
      * @param taskNumber The one-based command index, or {@code null} when no index is supplied.
+     * @throws IllegalStateException If the task card layout cannot be found or loaded.
      */
     public ScheduleTaskCard(Task task, String timing, Integer taskNumber) {
         ScheduleViewLoader.load(this, "/view/ScheduleTaskCard.fxml");

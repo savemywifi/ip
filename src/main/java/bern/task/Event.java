@@ -16,9 +16,9 @@ public class Event extends Task implements IDateTimeComparable {
     /**
      * Creates an event with the specified date and time boundaries.
      *
-     * @param name The name of the task
-     * @param startDateTime The date (and time, if any) the event starts
-     * @param endDateTime The date (and time, if any) the event ends
+     * @param name The name of the task.
+     * @param startDateTime The date and optional time when the event starts.
+     * @param endDateTime The date and optional time when the event ends.
      */
     Event(String name, DateTime startDateTime, DateTime endDateTime) {
         super(name);
@@ -36,18 +36,38 @@ public class Event extends Task implements IDateTimeComparable {
         return "E";
     }
 
+    /**
+     * Returns the event's start formatted for display and storage.
+     *
+     * @return The formatted start date and optional time.
+     */
     public String getStartDateTimeString() {
         return startDateTime.toString();
     }
 
+    /**
+     * Returns the event's end formatted for display and storage.
+     *
+     * @return The formatted end date and optional time.
+     */
     public String getEndDateTimeString() {
         return endDateTime.toString();
     }
 
+    /**
+     * Returns the event's start date and optional time.
+     *
+     * @return The start date and optional time.
+     */
     public DateTime getStartDateTime() {
         return startDateTime;
     }
 
+    /**
+     * Returns the event's end date and optional time.
+     *
+     * @return The end date and optional time.
+     */
     public DateTime getEndDateTime() {
         return endDateTime;
     }
@@ -98,6 +118,8 @@ public class Event extends Task implements IDateTimeComparable {
 
     /**
      * Returns whether the event occupies the specified calendar date.
+     * A timed midnight end excludes its date; an omitted end time includes its entire date.
+     * Events without positive durations occupy only their start date.
      *
      * @param date The date to check.
      * @return Whether the date is within the event's occupied dates.
@@ -107,7 +129,7 @@ public class Event extends Task implements IDateTimeComparable {
     }
 
     /**
-     * Returns the task description followed by its start and end.
+     * Returns the task type, completion marker, and name followed by its start and end.
      *
      * @return A string representation of an Event.
      */
@@ -119,7 +141,7 @@ public class Event extends Task implements IDateTimeComparable {
     /**
      * Returns the task fields followed by its start and end in save-file order.
      *
-     * @return A list of String data representing the Event
+     * @return The fields used to save this event.
      */
     @Override
     public ArrayList<String> toDataList() {
@@ -134,6 +156,11 @@ public class Event extends Task implements IDateTimeComparable {
         return occursOn(dateTime.getDate());
     }
 
+    /**
+     * Returns the event's start as the reference used for chronological ordering.
+     *
+     * @return The start date and optional time.
+     */
     @Override
     public DateTime getReferenceDateTime() {
         return startDateTime;

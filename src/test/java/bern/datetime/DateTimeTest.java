@@ -8,7 +8,9 @@ import java.time.LocalTime;
 
 import org.junit.jupiter.api.Test;
 
-/** Verifies date-time formatting and chronological ordering with optional times. */
+/**
+ * Verifies date-time formatting and chronological ordering with optional times.
+ */
 public class DateTimeTest {
     @Test
     public void dateTimeString_nullTime_displays() {

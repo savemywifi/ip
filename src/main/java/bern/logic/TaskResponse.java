@@ -13,13 +13,13 @@ import bern.ui.TodoBox;
 import javafx.scene.Node;
 
 /**
- * A response from Bern that contains a Task
+ * Represents a response from Bern that contains a task and an optional message.
  */
 public class TaskResponse extends Response {
     private Task task;
 
     /**
-     * Creates a TaskResponse from a given task.
+     * Creates a response displaying a task without a message.
      *
      * @param task The task to be included in the response.
      */
@@ -29,7 +29,7 @@ public class TaskResponse extends Response {
     }
 
     /**
-     * Creates a TaskResponse with a given message
+     * Creates a response displaying a task with a message.
      *
      * @param task The task to be included in the response.
      * @param text The text to be included in the response.
@@ -39,6 +39,12 @@ public class TaskResponse extends Response {
         this.text = text;
     }
 
+    /**
+     * Creates a task card, enclosing it in Bern's dialog box when a message is present.
+     *
+     * @return A one-element list containing the task card and optional message.
+     * @throws UnsupportedOperationException If the task is not a todo, deadline, or event.
+     */
     @Override
     public List<Node> getResponseNodes() {
         Node taskBox;

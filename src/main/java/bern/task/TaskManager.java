@@ -11,13 +11,18 @@ import bern.logic.ScheduleResponse;
 import bern.logic.TaskResponse;
 import bern.ui.Dialog;
 
-/** Stores and manages the application's tasks. */
+/**
+ * Stores and manages the application's tasks.
+ */
 public class TaskManager {
     private static TaskManager instance;
     private static final Dialog DIALOG = Dialog.getInstance();
 
     private final ArrayList<Task> tasks = new ArrayList<>();
 
+    /**
+     * Creates the initially empty manager used by the singleton instance.
+     */
     private TaskManager() {
     }
 
@@ -53,8 +58,7 @@ public class TaskManager {
     }
 
     /**
-     * Clears all tasks
-     *
+     * Removes all stored tasks.
      */
     public void clear() {
         tasks.clear();
@@ -103,7 +107,7 @@ public class TaskManager {
     /**
      * Returns a formatted list of the current tasks.
      *
-     * @return A formatted message containing the current tasks.
+     * @return A schedule response containing the current tasks, or a message indicating that no tasks are stored.
      */
     public Response listTasks() {
         if (tasks.isEmpty()) {
@@ -114,10 +118,11 @@ public class TaskManager {
     }
 
     /**
-     * Returns a formatted message containing tasks whose names include a case-insensitive whole-word match for the
-     * search token.
-     * @param searchToken The token that tasks will be matched to
-     * @return A formatted message containing matching tasks, or a message indicating that no tasks match.
+     * Returns tasks whose names contain a case-insensitive match for a space-delimited search token.
+     * Punctuation remains part of each token.
+     *
+     * @param searchToken The token to match against the space-delimited parts of each task name.
+     * @return A schedule response containing matching tasks, or a message indicating no stored tasks or no matches.
      */
     public Response findTasks(String searchToken) {
         if (tasks.isEmpty()) {
@@ -137,17 +142,22 @@ public class TaskManager {
     }
 
     /**
-     * Returns whether the task name contains the search token as a case-insensitive whole word.
+     * Returns whether a space-delimited part of the task name equals the search token, ignoring case.
+     *
+     * @param taskName The task name to split on spaces.
+     * @param searchToken The token to match.
+     * @return {@code true} if at least one part matches; {@code false} otherwise.
      */
     private static boolean containsWord(String taskName, String searchToken) {
         return Arrays.stream(taskName.split(" ")).anyMatch(word -> word.equalsIgnoreCase(searchToken));
     }
 
     /**
-     * Returns the schedule for a specific day.
+     * Returns the tasks associated with a calendar date, ordered by their reference date and time.
+     * Todos are excluded because they have no associated date.
      *
-     * @param dateTime The given date time
-     * @return The schedule for that specific date
+     * @param dateTime The date to show; its optional time does not affect which tasks are included.
+     * @return The schedule for that date, or a message indicating that no tasks are scheduled.
      */
     public Response showSchedule(DateTime dateTime) {
         ArrayList<Task> schedule = new ArrayList<>();
@@ -173,10 +183,10 @@ public class TaskManager {
     }
 
     /**
-     * Marks a task as complete
+     * Marks a task as complete, or reports that it is already complete.
      *
-     * @param taskNumber The one-based task number.
-     * @return The message marking the task as completed
+     * @param taskNumber The one-based task number, between {@code 1} and {@link #size()} inclusive.
+     * @return The task and a message describing its updated or existing completion state.
      */
     public Response markTask(int taskNumber) {
         assert 1 <= taskNumber && taskNumber <= tasks.size();
@@ -191,10 +201,10 @@ public class TaskManager {
     }
 
     /**
-     * Marks the task at the one-based index as not done.
+     * Marks a task as incomplete, or reports that it is already incomplete.
      *
-     * @param taskNumber The one-based task number.
-     * @return The confirmation message for the updated task.
+     * @param taskNumber The one-based task number, between {@code 1} and {@link #size()} inclusive.
+     * @return The task and a message describing its updated or existing completion state.
      */
     public Response unmarkTask(int taskNumber) {
         assert 1 <= taskNumber && taskNumber <= tasks.size();
@@ -212,7 +222,7 @@ public class TaskManager {
     /**
      * Deletes the task at the one-based index.
      *
-     * @param taskNumber The one-based task number.
+     * @param taskNumber The one-based task number, between {@code 1} and {@link #size()} inclusive.
      * @return The deleted task and its confirmation message.
      */
     public Response deleteTask(int taskNumber) {

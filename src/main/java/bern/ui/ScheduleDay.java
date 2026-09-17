@@ -33,7 +33,8 @@ public class ScheduleDay extends VBox {
      * Creates a day's FXML layout and fills in its date and task sections.
      *
      * @param schedule The day's tasks and their timetable positions.
-     * @param taskNumbers The original one-based task numbers.
+     * @param taskNumbers The original one-based task numbers; absent entries produce unnumbered cards.
+     * @throws IllegalStateException If a required schedule layout cannot be found or loaded.
      */
     public ScheduleDay(DaySchedule schedule, Map<Task, Integer> taskNumbers) {
         ScheduleViewLoader.load(this, "/view/ScheduleDay.fxml");
@@ -49,7 +50,13 @@ public class ScheduleDay extends VBox {
         }
     }
 
-    /** Adds the untimed heading only when the day contains tasks outside the timetable. */
+    /**
+     * Adds a heading and cards when the day contains tasks outside the timetable.
+     *
+     * @param tasks The tasks to display outside the timetable, in display order.
+     * @param taskNumbers The original one-based task numbers; absent entries produce unnumbered cards.
+     * @throws IllegalStateException If a task card layout cannot be found or loaded.
+     */
     private void addUntimedTasks(List<Task> tasks, Map<Task, Integer> taskNumbers) {
         if (tasks.isEmpty()) {
             return;
@@ -60,7 +67,12 @@ public class ScheduleDay extends VBox {
         }
     }
 
-    /** Returns a timing description for tasks whose duration is unspecified or zero. */
+    /**
+     * Returns a timing description for tasks whose duration is unspecified or zero.
+     *
+     * @param task The task to describe.
+     * @return The due time, event timing, or a message indicating no time was specified.
+     */
     private String getTaskTiming(Task task) {
         if (task instanceof Deadline deadline) {
             LocalTime dueTime = deadline.getReferenceDateTime().getTime();

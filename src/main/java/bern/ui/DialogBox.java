@@ -30,6 +30,9 @@ public class DialogBox extends HBox {
 
     /**
      * Creates a dialog using the picture and alignment of the selected speaker.
+     *
+     * @param text The speaker's message.
+     * @param isUser Whether the speaker is the user rather than Bern.
      */
     private DialogBox(String text, boolean isUser) {
         assert userImage != null;

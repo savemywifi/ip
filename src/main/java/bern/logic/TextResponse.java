@@ -6,9 +6,14 @@ import bern.ui.DialogBox;
 import javafx.scene.Node;
 
 /**
- * A response from Bern that only contains text
+ * Represents a response from Bern that contains only text.
  */
 public class TextResponse extends Response {
+    /**
+     * Creates a response with the supplied message.
+     *
+     * @param text The message to display in Bern's dialog box.
+     */
     public TextResponse(String text) {
         this.text = text;
     }
@@ -18,6 +23,11 @@ public class TextResponse extends Response {
         return List.of(DialogBox.getBernDialog(text));
     }
 
+    /**
+     * Returns the response message as plain text.
+     *
+     * @return The message supplied when this response was created.
+     */
     @Override
     public String toString() {
         return text;

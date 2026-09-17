@@ -6,8 +6,13 @@ import java.net.URL;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 
-/** Loads schedule components whose Java object is both the FXML root and controller. */
+/**
+ * Loads schedule components whose Java object is both the FXML root and controller.
+ */
 final class ScheduleViewLoader {
+    /**
+     * Prevents instantiation of this utility class.
+     */
     private ScheduleViewLoader() {
     }
 
@@ -16,6 +21,7 @@ final class ScheduleViewLoader {
      *
      * @param component The existing root and controller to populate.
      * @param resourcePath The absolute classpath location of its FXML layout.
+     * @throws IllegalStateException If the layout cannot be found or loaded.
      */
     static void load(Parent component, String resourcePath) {
         URL resource = ScheduleViewLoader.class.getResource(resourcePath);

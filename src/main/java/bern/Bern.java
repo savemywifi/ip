@@ -18,6 +18,18 @@ public class Bern extends Application {
     private final Controller control = new Controller();
     private Image bernImage = new Image(this.getClass().getResourceAsStream("/images/DaBern.png"));
 
+    /**
+     * Creates the application instance that JavaFX initializes before calling {@link #start(Stage)}.
+     */
+    public Bern() {
+    }
+
+    /**
+     * Loads the main window, connects its controller, and displays startup messages before showing the stage.
+     * Prints a stack trace if loading the FXML raises an {@link IOException}.
+     *
+     * @param stage The primary stage supplied by JavaFX.
+     */
     @Override
     public void start(Stage stage) {
         try {

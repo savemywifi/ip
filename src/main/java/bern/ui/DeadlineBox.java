@@ -14,7 +14,7 @@ public class DeadlineBox extends TaskBox {
     private Label description;
 
     /**
-     * Create a task box with the given deadline.
+     * Creates a task box with the given deadline.
      *
      * @param deadline The deadline represented by the task box.
      */

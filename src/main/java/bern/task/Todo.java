@@ -3,13 +3,13 @@ package bern.task;
 import bern.datetime.DateTime;
 
 /**
- * A task with no deadline
+ * Represents a task without an associated date or time.
  */
 public class Todo extends Task {
     /**
-     * Constructor for a Todo
+     * Creates an incomplete todo with the given name.
      *
-     * @param name The name of the task
+     * @param name The name of the task.
      */
     Todo(String name) {
         super(name);

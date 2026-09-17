@@ -1,14 +1,15 @@
 package bern.datetime;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * Verifies that supported date and time formats produce equivalent values and that times may be omitted.
+ */
 public class DateTimeFactoryTest {
     private static final String[] dates = {
         "16/9/2026", "16/09/2026", "16-9-2026", "16-09-2026",

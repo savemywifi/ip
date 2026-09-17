@@ -9,7 +9,9 @@ import org.junit.jupiter.api.Test;
 
 import bern.ui.Dialog;
 
-/** Verifies that invalid command input produces a readable response without changing tasks. */
+/**
+ * Verifies that blank command input produces the invalid-keyword response.
+ */
 public class ControllerTest {
     @Test
     public void getResponse_blankInput_returnsInvalidKeywordMessage() {

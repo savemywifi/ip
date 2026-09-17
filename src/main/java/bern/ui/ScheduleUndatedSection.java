@@ -14,7 +14,8 @@ public class ScheduleUndatedSection extends VBox {
      * Creates an undated section and fills it with task cards in the supplied order.
      *
      * @param tasks The undated tasks to display.
-     * @param taskNumbers The original one-based task numbers.
+     * @param taskNumbers The original one-based task numbers; absent entries produce unnumbered cards.
+     * @throws IllegalStateException If a required schedule layout cannot be found or loaded.
      */
     public ScheduleUndatedSection(List<Task> tasks, Map<Task, Integer> taskNumbers) {
         ScheduleViewLoader.load(this, "/view/ScheduleUndatedSection.fxml");

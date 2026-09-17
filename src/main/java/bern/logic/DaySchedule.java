@@ -13,7 +13,9 @@ import bern.task.Deadline;
 import bern.task.Event;
 import bern.task.Task;
 
-/** Groups one day's tasks and assigns overlapping event intervals to the minimum number of columns. */
+/**
+ * Groups one day's tasks and assigns overlapping event intervals to the minimum number of columns.
+ */
 public final class DaySchedule {
     private static final int MINUTES_PER_DAY = 24 * 60;
     private static final int SECONDS_PER_MINUTE = 60;
@@ -21,13 +23,15 @@ public final class DaySchedule {
     private final LocalDate date;
     private final List<ScheduleEntry> entries;
 
-    /** Preserves deadlines, all-day events, and events without a positive duration outside timed columns. */
+    /**
+     * Preserves deadlines and events without a usable timed duration outside timed columns.
+     */
     private final List<Task> otherTasks;
     private final int columnCount;
 
     /**
      * Creates a timetable for the given date, clipping events that span several days.
-     * Deadlines and events without a usable timed duration remain in a separate list.
+     * Deadlines and events without a usable timed duration remain in a separate list; undated todos are omitted.
      *
      * @param date The calendar day to display.
      * @param tasks The tasks to consider, including tasks outside this day.
@@ -54,7 +58,7 @@ public final class DaySchedule {
      * Undated todos are left for the response to display separately.
      *
      * @param tasks The tasks to group, preserving repeated task instances.
-     * @return The schedules for all occupied dates.
+     * @return An unmodifiable list of schedules for all occupied dates, in chronological order.
      */
     public static List<DaySchedule> createSchedules(List<Task> tasks) {
         Map<LocalDate, List<Task>> tasksByDate = new TreeMap<>();
@@ -71,23 +75,48 @@ public final class DaySchedule {
                 .toList();
     }
 
+    /**
+     * Returns the calendar date represented by this schedule.
+     *
+     * @return The scheduled date.
+     */
     public LocalDate getDate() {
         return date;
     }
 
+    /**
+     * Returns timed event segments in start-time order, breaking ties by end time.
+     *
+     * @return An unmodifiable list of segments with their assigned columns.
+     */
     public List<ScheduleEntry> getEntries() {
         return entries;
     }
 
+    /**
+     * Returns this day's deadlines and events without a usable timed duration.
+     *
+     * @return An unmodifiable list preserving input order and the original task objects.
+     */
     public List<Task> getOtherTasks() {
         return otherTasks;
     }
 
+    /**
+     * Returns the minimum number of columns required for the timed event segments.
+     *
+     * @return The maximum number of overlapping segments, or zero when there are no timed segments.
+     */
     public int getColumnCount() {
         return columnCount;
     }
 
-    /** Adds an event to each occupied date without stepping beyond its final date. */
+    /**
+     * Adds an event to each occupied date without stepping beyond its final date.
+     *
+     * @param tasksByDate The date groups to update.
+     * @param event The event to add to each date it occupies.
+     */
     private static void addEventToDates(Map<LocalDate, List<Task>> tasksByDate, Event event) {
         LocalDate firstDate = event.getStartDateTime().getDate();
         LocalDate lastDate = event.getLastOccupiedDate();
@@ -99,14 +128,24 @@ public final class DaySchedule {
         addTaskToDate(tasksByDate, lastDate, event);
     }
 
-    /** Appends a task to its date's group, preserving input order and repeated task instances. */
+    /**
+     * Appends a task to its date's group, preserving input order and repeated task instances.
+     *
+     * @param tasksByDate The date groups to update.
+     * @param date The date whose group receives the task.
+     * @param task The task to append.
+     */
     private static void addTaskToDate(Map<LocalDate, List<Task>> tasksByDate, LocalDate date, Task task) {
         tasksByDate.computeIfAbsent(date, key -> new ArrayList<>()).add(task);
     }
 
     /**
      * Adds this day's event segment at minute precision.
-     * Events whose boundaries round to the same minute remain outside the timed grid.
+     * Events whose boundaries truncate to the same minute remain outside the timed grid.
+     *
+     * @param event The event to consider; events outside this day are ignored.
+     * @param intervals The list receiving a timed segment when one exists.
+     * @param untimedTasks The list receiving all-day events and events without a usable timed duration.
      */
     private void addEvent(Event event, List<ScheduleEntry> intervals, List<Task> untimedTasks) {
         if (!event.occursOn(date)) {
@@ -132,6 +171,9 @@ public final class DaySchedule {
      * Tracks active intervals by end time and available columns by their index.
      * A new column is needed only when every existing column overlaps the next interval;
      * this makes the column count equal to the maximum number of simultaneous events.
+     *
+     * @param intervals The event segments, sorted in place by start time and then end time.
+     * @return New segments with assigned columns, in the sorted order.
      */
     private static List<ScheduleEntry> assignColumns(List<ScheduleEntry> intervals) {
         intervals.sort(Comparator.comparingInt(ScheduleEntry::getStartMinute)
@@ -160,13 +202,23 @@ public final class DaySchedule {
         return placements;
     }
 
-    /** Returns the start minute, using midnight when no start time was supplied. */
+    /**
+     * Returns the start minute, using midnight when no start time was supplied.
+     *
+     * @param event The event whose original start time is used.
+     * @return Whole minutes after midnight, truncating any seconds.
+     */
     private static int getStartMinute(Event event) {
         LocalTime time = event.getStartDateTime().getTime();
         return time == null ? 0 : time.toSecondOfDay() / SECONDS_PER_MINUTE;
     }
 
-    /** Returns the end minute, using the end of the day when no end time was supplied. */
+    /**
+     * Returns the end minute, using the end of the day when no end time was supplied.
+     *
+     * @param event The event whose original end time is used.
+     * @return Whole minutes after midnight, truncating seconds, or 1440 when no end time was supplied.
+     */
     private static int getEndMinute(Event event) {
         LocalTime time = event.getEndDateTime().getTime();
         return time == null ? MINUTES_PER_DAY : time.toSecondOfDay() / SECONDS_PER_MINUTE;

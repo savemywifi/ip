@@ -7,6 +7,9 @@ import java.text.ParseException;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * Tests command argument extraction with empty keyword lists and missing keyword arguments.
+ */
 public class ParseFactoryTest {
     @Test
     public void parseData_noKeywords() {

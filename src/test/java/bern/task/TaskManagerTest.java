@@ -13,9 +13,15 @@ import org.junit.jupiter.api.Test;
 import bern.logic.Response;
 import bern.logic.ScheduleResponse;
 
+/**
+ * Verifies task completion messages, token-based searches, and defensive list copies.
+ */
 public class TaskManagerTest {
     private TaskManager taskManager;
 
+    /**
+     * Resets the singleton manager and adds three incomplete tasks before each test.
+     */
     @BeforeEach
     public void init() {
         taskManager = TaskManager.getInstance();

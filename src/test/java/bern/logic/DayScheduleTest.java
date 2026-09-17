@@ -253,17 +253,39 @@ public class DayScheduleTest {
         assertTrue(DaySchedule.createSchedules(List.of()).isEmpty());
     }
 
-    /** Creates an event through saved data, including legacy records with equal start and end times. */
+    /**
+     * Creates an event through saved data, including legacy records with equal start and end times.
+     *
+     * @param name The event description.
+     * @param start The saved start date and optional time.
+     * @param end The saved end date and optional time.
+     * @return The reconstructed event.
+     * @throws ParseException If the task factory rejects the saved record.
+     */
     private Task makeEvent(String name, String start, String end) throws ParseException {
         return TaskFactory.makeTaskFromData(new String[] {"E", "0", name, start, end});
     }
 
-    /** Creates a deadline through the public task factory. */
+    /**
+     * Creates a deadline through the public task factory.
+     *
+     * @param name The deadline description.
+     * @param dateTime The saved due date and optional time.
+     * @return The reconstructed deadline.
+     * @throws ParseException If the task factory rejects the saved record.
+     */
     private Task makeDeadline(String name, String dateTime) throws ParseException {
         return TaskFactory.makeTaskFromData(new String[] {"D", "0", name, dateTime});
     }
 
-    /** Verifies a single daily event segment, including its original task identity. */
+    /**
+     * Verifies a single daily event segment, including its original task identity.
+     *
+     * @param schedule The daily schedule to inspect.
+     * @param task The expected original task object.
+     * @param startMinute The expected inclusive start in minutes after midnight.
+     * @param endMinute The expected exclusive end in minutes after midnight.
+     */
     private void assertSingleEntry(DaySchedule schedule, Task task, int startMinute, int endMinute) {
         assertEquals(1, schedule.getEntries().size());
         ScheduleEntry entry = schedule.getEntries().getFirst();
@@ -274,7 +296,11 @@ public class DayScheduleTest {
         assertValidMinimumColumns(schedule);
     }
 
-    /** Checks collision freedom and compares the column count against an independent minute-by-minute overlap count. */
+    /**
+     * Checks collision freedom and compares the column count against an independent minute-by-minute overlap count.
+     *
+     * @param schedule The schedule whose placements and column count must be valid.
+     */
     private void assertValidMinimumColumns(DaySchedule schedule) {
         List<ScheduleEntry> entries = schedule.getEntries();
         int maximumOverlap = 0;

@@ -3,46 +3,53 @@ package bern.task;
 import java.util.ArrayList;
 
 import bern.datetime.DateTime;
+
 /**
- * A task that is to be completed. Contains a String description and can be marked as done or not done.
+ * Represents a named task that can be marked as complete or incomplete.
  */
 public abstract class Task {
     private boolean done;
     private String name;
 
     /**
-     * Constructor for Task object
-     * @param name The name of the task
+     * Creates an incomplete task with the given name.
+     *
+     * @param name The name of the task.
      */
     Task(String name) {
         this.name = name;
         this.done = false;
     }
 
+    /**
+     * Returns the task name.
+     *
+     * @return The task name.
+     */
     public String getName() {
         return name;
     }
 
     /**
-     * Checks if the task is done
+     * Returns whether the task is complete.
      *
-     * @return true if the task is done, false otherwise
+     * @return {@code true} if the task is complete; {@code false} otherwise.
      */
     public boolean isDone() {
         return done;
     }
 
     /**
-     * Marks the task to be done or not done
+     * Sets whether the task is complete.
      *
-     * @param isDone the state to set the task to
+     * @param isDone {@code true} to mark the task complete; {@code false} to mark it incomplete.
      */
     public void setDone(boolean isDone) {
         done = isDone;
     }
 
     /**
-     * The string representation of the task.
+     * Returns the task type, completion marker, and name for display.
      *
      * @return The task's display string; [X] means done and [ ] means incomplete.
      */
@@ -56,7 +63,8 @@ public abstract class Task {
     }
 
     /**
-     * Returns the task fields in save-file order: task symbol, completion flag (1 or 0) and task name
+     * Returns the task fields in save-file order: task symbol, completion flag (1 or 0), and task name.
+     * Subclasses append their additional fields to this list.
      *
      * @return The task fields in save-file order.
      */
@@ -68,9 +76,19 @@ public abstract class Task {
         return dataList;
     }
 
-    /** Returns the one-letter symbol used when displaying this task. */
+    /**
+     * Returns the one-letter task type symbol used for display and storage.
+     *
+     * @return The task type symbol.
+     */
     protected abstract String getSymbol();
 
-    /** Returns true if the task is associated with a specific day */
+    /**
+     * Returns whether the task is associated with the given calendar date, ignoring the supplied time.
+     * Tasks without an associated date return {@code false}.
+     *
+     * @param dateTime The date to check, with an optional time that is ignored.
+     * @return {@code true} if the task belongs in that day's schedule; {@code false} otherwise.
+     */
     protected abstract boolean isOnDay(DateTime dateTime);
 }
